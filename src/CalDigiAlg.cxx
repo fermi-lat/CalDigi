@@ -45,7 +45,7 @@ Algorithm(name, pSvcLocator) {
     
     // Declare the properties that may be set in the job options file
     declareProperty ("xmlFile", m_xmlFile="$(CALDIGIROOT)/xml/CalDigi.xml");
-    declareProperty ("taperToolName", m_taperToolName="linearTaper");
+    declareProperty ("taperToolName", m_taperToolName="OnePlusExpTaper");
 
 }
 
