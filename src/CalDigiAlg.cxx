@@ -55,6 +55,7 @@ StatusCode CalDigiAlg::initialize() {
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
 
+    double value;
     typedef std::map<int*,std::string> PARAMAP;
 
     PARAMAP param;
@@ -76,6 +77,12 @@ StatusCode CalDigiAlg::initialize() {
         return sc;
     }
 
+    for(PARAMAP::iterator it=param.begin(); it!=param.end();it++){
+        if(!detSvc->getNumericConstByName((*it).second, &value)) {
+            log << MSG::ERROR << " constant " <<(*it).second <<" not defined" << endreq;
+            return StatusCode::FAILURE;
+        } else *((*it).first)=(int)value;
+    }
 
 
 
@@ -182,14 +189,16 @@ StatusCode CalDigiAlg::createDigis() {
 
                 PreDigiMap::iterator hitListIt=m_idMcIntPreDigi.find(mapId);
 
-                if (hitListIt == m_idMcIntPreDigi.end()) 
+                if (hitListIt == m_idMcIntPreDigi.end()){ 
                     hitList = &nullList;
+                    continue;
+                }
                 else hitList = &(m_idMcIntPreDigi[mapId]);
 
                 idents::CalXtalId::AdcRange rangeP; // output - best range
                 idents::CalXtalId::AdcRange rangeN;  // output - best range
-                std::vector<int> adcP;              // output - ADC's for all ranges 0-3
-                std::vector<int> adcN;              // output - ADC's for all ranges 0-3
+                std::vector<int> adcP(4,0);              // output - ADC's for all ranges 0-3
+                std::vector<int> adcN(4,0);              // output - ADC's for all ranges 0-3
 
                 bool lacP, lacN;
 
@@ -208,6 +217,14 @@ StatusCode CalDigiAlg::createDigis() {
                 unsigned short status = 0;
 
                 if (!lacP && !lacN) continue;  // nothing more to see here. Move along.
+
+                log << MSG::DEBUG; 
+                if (log.isActive()){ 
+                    log.stream() <<" id=" << mapId 
+                        << " rangeP=" << int(rangeP) << " adcP=" << adcP[rangeP]
+                        << " rangeN=" << int(rangeN) << " adcN=" << adcN[rangeN];
+                } 
+                log << endreq;
 
                 // check for failure mode. If killed, set to zero and set DEAD bit
 
