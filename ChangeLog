@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Tue Oct  8 10:09:28 PDT 2002
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+comment out verbose DEBUG message
+    *
+------------------------------------------------------------
 User: richard  Tue Sep 24 19:43:09 PDT 2002
 CalDigi/doc
 
