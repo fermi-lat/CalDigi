@@ -1,6 +1,8 @@
 package CalDigi
 
 version v1r3
+author Richard Dubois <richard@slac.stanford.edu>
+author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
 
 branches src mgr doc
 
