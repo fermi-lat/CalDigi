@@ -228,11 +228,11 @@ StatusCode CalDigiAlg::createDigis() {
                     if (m_FailSvc->matchChannel(mapId,
                         (idents::CalXtalId::POS))) {
 
-                            if (lacP) (status | Event::CalDigi::CalXtalReadout::DEAD_P);
+                            if (lacP) (status = status | Event::CalDigi::CalXtalReadout::DEAD_P);
                         }
                         if (m_FailSvc->matchChannel(mapId,
                             (idents::CalXtalId::NEG))) {
-                                if (lacN) (status | Event::CalDigi::CalXtalReadout::DEAD_N);
+                                if (lacN) (status = status | Event::CalDigi::CalXtalReadout::DEAD_N);
 
                             }
                 }
