@@ -7,7 +7,7 @@ author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
 branches src mgr doc
 
 use GlastSvc v*
-use CalibSvc v*
+#use CalibSvc v*
 use Event v*
 use CalUtil v1r*	
 

@@ -1,17 +1,13 @@
 #ifndef _GlastDigi_CalDigiAlg_H
 #define _GlastDigi_CalDigiAlg_H 1
 
+
 // Include files
 #include "ITaper.h"
 #include "CalUtil/ICalFailureModeSvc.h"
 #include "CalUtil/IConvertAdc.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/Service.h"
-#include "CalibData/CalibModel.h"
-#include "CalibData/Cal/CalCalibPed.h"
-#include "CalibData/Cal/CalCalibGain.h"
 #include <vector>
 #include <map>
 // MC classes
@@ -27,9 +23,6 @@
  * Author:  A.Chekhtman
  *
 */
-
-// Forward declarations
-class IDetDataSvc;
 
 class CalDigiAlg : public Algorithm {
     
@@ -76,7 +69,7 @@ public:
     protected:
         StatusCode fillSignalEnergies();
         StatusCode addNoiseToSignals();
-        //StatusCode addNewNoiseHits();
+        StatusCode addNewNoiseHits();
         StatusCode createDigis();
     
     private:
@@ -133,9 +126,9 @@ public:
         /// Xtal length
         double m_CsILength;  
         /// input XML file containing parameters for Digitization
-        std::string  m_xmlFile;
+        std::string	m_xmlFile;
         /// electrons per MeV for diodes
-        double  m_ePerMeVinDiode;
+        double	m_ePerMeVinDiode;
         /// name of Tool for calculating light taper
         std::string m_taperToolName;
         /// pointer to actual tool for calculating light taper
@@ -158,25 +151,6 @@ public:
         std::string m_convertAdcToolName;
         /// pointer to actual tool for converting energy to ADC
         IConvertAdc* m_convertAdc;
-        
-        // Calibration Services
-         IDataProviderSvc* m_pCalibDataSvc;
-  
-        /// Handle to the IDetDataSvc interface of the CalibDataSvc
-        IDetDataSvc* m_detDataSvc;
-
-        /// Absolute time of first event (yyyy-mm-dd_hh:mm, trailing fields
-        /// optional)
-        std::string m_startTimeAsc;
-
-        /// Absolute time of first event (seconds)
-        long m_startTime;
-    
-        /// "flavor" of calibration files
-        std::string m_calibFlavor;
-
-        CalibData::CalCalibPed* pPeds;
-        CalibData::CalCalibGain* pGains;
 };
 
 

@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalDigi
+ * v1r5       06-Aug-2004 BG  Set all back as it was in v1r3p7 for RespSvc
  * v1r4p2     21-Jun-2004 RXD fix windows system includes 
  * v1r4p1     20-Apr-2004 PAC add CalibData objects for reading pedestal and gain values, pedestal noise is now added in CalUtil 
  * v1r3p7     07-Feb-2004 RXD set failsvc ptr to zero if not found
