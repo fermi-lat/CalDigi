@@ -5,6 +5,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IToolSvc.h"
 
 /// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
@@ -24,6 +25,9 @@
 #include <algorithm>
 #include <math.h>
 
+// to access an XML containing Digi parameters file
+#include "xml/IFile.h"
+
 // std stuff
 #include <utility>
 #include <map>
@@ -40,6 +44,9 @@ CalDigiAlg::CalDigiAlg(const std::string& name, ISvcLocator* pSvcLocator) :
 Algorithm(name, pSvcLocator) {
     
     // Declare the properties that may be set in the job options file
+    declareProperty ("xmlFile", m_xmlFile="$(CALDIGIROOT)/xml/CalDigi.xml");
+    declareProperty ("taperToolName", m_taperToolName="linearTaper");
+
 }
 
 
@@ -83,13 +90,13 @@ StatusCode CalDigiAlg::initialize() {
     
     for(PARAMAP::iterator it=param.begin(); it!=param.end();it++){
         if(!detSvc->getNumericConstByName((*it).second, &value)) {
-            log << MSG::ERROR << " constant " <<(*it).second <<" not defined" << endreq;
+             log << MSG::ERROR << " constant " <<(*it).second <<" not defined" << endreq;
             return StatusCode::FAILURE;
         } else *((*it).first)=value;
     }
     
     int nTowers = m_xNum * m_yNum;
-    
+
     // extracting double constants from detModel. Store into local cache - member variables.
     
     typedef std::map<double*,std::string> DPARAMAP;
@@ -113,7 +120,18 @@ StatusCode CalDigiAlg::initialize() {
     // scale max energies and thresholds from GeV to MeV
     for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
     m_thresh *= 1000.;
+
+    // Read in the parameters from the XML file
+    xml::IFile m_ifile(m_xmlFile.c_str());
+    m_ePerMeVinDiode = m_ifile.getDouble("cal", "ePerMeVinDiode");
     
+
+    sc = toolSvc()->retrieveTool(m_taperToolName,m_taper);
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to create " << m_taperToolName << endreq;
+        return sc;
+    }
+
     return StatusCode::SUCCESS;
 }
 
@@ -176,7 +194,14 @@ StatusCode CalDigiAlg::execute() {
         idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*it)->volumeID());
         double ene = (*it)->totalEnergy();
         HepPoint3D mom1 = (*it)->moment1();
-        
+
+        log << MSG::DEBUG <<  "McIntegratingHits info \n"  
+             << " ID " << volId.name()
+             <<  " energy " << ene
+             <<  " moments " << mom1.x()
+             << endreq;
+
+
         //   extracting parameters from volume Id identifying as in CAL
         
         if (volId[fLATObjects] == m_eLatTowers &&
@@ -187,8 +212,18 @@ StatusCode CalDigiAlg::execute() {
             int towy = volId[fTowerY];
             int towx = volId[fTowerX];
             int tower = m_xNum*towy+towx; 
-            
+            int segm = volId[fSegment];
+             
             idents::CalXtalId mapId(tower,layer,col);
+
+            log << MSG::DEBUG <<  "Identifier decomposition \n"  
+                << " col " << col
+                << " layer " << layer
+                << " towy " << towy
+                << " towx " << towx
+                << " segm " << segm
+                << endreq;
+            
             XtalSignal& xtalSignalRef = signalMap[mapId];
             
             // Insertion of the id - McIntegratingHit pair
@@ -209,8 +244,7 @@ StatusCode CalDigiAlg::execute() {
             
             else if(volId[fCellCmp] ==  m_eXtal ){
                 
-                int segm = volId[fSegment];
-                
+               
                 // let's define the position of the segment along the crystal
                 
                 double relpos = (segm+0.5)/m_nCsISeg;
@@ -219,23 +253,20 @@ StatusCode CalDigiAlg::execute() {
                 // in local reference system x is always oriented along the crystal
                 double dpos =  mom1.x(); 
                 
-                // to correct for local reference system orientation in Y layers
-                if (volId[fMeasure] == m_eMeasureY) dpos = -dpos;
                 relpos += dpos/m_CsILength;
                 
                 
                 
                 // take into account light tapering
-                
-                double norm = 0.5+0.5*m_lightAtt; // light tapering in the center of crystal (relpos=0.5)
-                double s2 = ene*(1-relpos*(1-m_lightAtt))/norm;
-                double s1 = ene*(1-(1-relpos)*(1-m_lightAtt))/norm;
-                
+                                
+                std::pair<double,double> signals;
+                signals = m_taper->calculateSignals(mapId,relpos,ene);
+
                 // set up a XtalMap to act as key for the map - if there is no entry, add
                 // add one, otherwise add signal to existing map element.
                 
                 
-                xtalSignalRef.addSignal(s1,s2);
+                xtalSignalRef.addSignal(signals.first,signals.second);
                 
                 
                 
@@ -243,12 +274,7 @@ StatusCode CalDigiAlg::execute() {
         }
     }
     
-    
-    double ePerMeVinDiode = 1e6/3.6; 
-    // number of electrons per MeV of direct enegy deposition in a diode
-    //  3.6 eV - energy to create 1 electron in silicon
-    //  this is temporary - constant should be moved probably to xml file
-    
+       
     // add electronic noise to the diode response and add to the crystal 
     // response. The diodeEnergy becomes the readout source.
     
@@ -265,7 +291,7 @@ StatusCode CalDigiAlg::execute() {
             
             // convert energy deposition in a diode to
             // the equivalent energy in a crystal 
-            diode_ene *= ePerMeVinDiode/m_ePerMeV[diode_type];
+            diode_ene *= m_ePerMeVinDiode/m_ePerMeV[diode_type];
             
             // add crystal signal - now diode energy contains
             // the signal at given diode in energy units
@@ -304,7 +330,7 @@ StatusCode CalDigiAlg::execute() {
             }
         }
     }
-    /*	
+    	
     log << MSG::DEBUG << signalMap.size() << "calorimeter hits in signalMap" << endreq;
     for( mit=signalMap.begin(); mit!=signalMap.end();mit++){
     log << MSG::DEBUG << " id " << (*mit).first
@@ -316,7 +342,7 @@ StatusCode CalDigiAlg::execute() {
     << " d3=" << (*mit).second.getDiodeEnergy(3)
     << endreq;
     }
-    */	
+    	
     
     Event::CalDigiCol* digiCol = new Event::CalDigiCol;
     

@@ -3,6 +3,7 @@
 
 
 // Include files
+#include "ITaper.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include <vector>
@@ -114,7 +115,15 @@ public:
         double m_lightAtt;  
         /// Xtal length
         double m_CsILength;  
-        
+        /// input XML file containing parameters for Digitization
+        std::string	m_xmlFile;
+        /// electrons per MeV for diodes
+        double	m_ePerMeVinDiode;
+        /// name of Tool for calculating light taper
+        std::string m_taperToolName;
+        /// pointer to actual tool for calculating light taper
+        ITaper* m_taper;
+
 };
 
 
