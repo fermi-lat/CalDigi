@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: burnett  Wed May 15 17:35:27 PDT 2002
+CalDigi/cmt
+
+Added Files:
+	.cvsignore 
+Removed Files:
+	cleanup.bat setup.bat 
+Log Message:
+cleanup a little
+    *
+------------------------------------------------------------
 User: burnett  Wed May 15 17:04:42 PDT 2002
 CalDigi/src/Dll
 
