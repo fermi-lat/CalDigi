@@ -55,8 +55,6 @@ std::pair<double, double> LinearTaper::calculateSignals(idents::CalXtalId id,
     // Inputs: crystal id, deposited energy and relative position in the crystal
     // Outputs: energy seen at the two crystal ends
 
-    MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "execute" << endreq;
 
     double norm = 0.5+0.5*m_lightAtt; // light tapering in the center of crystal (relpos=0.5)
 
