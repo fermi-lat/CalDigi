@@ -4,7 +4,7 @@
 
 // primary DLLs
 
-ApplicationMgr.DLLs+= {"RootIo","CalDigi","CalUtil"};
+ApplicationMgr.DLLs+= {"RootIo","CalDigi","CalUtil", "CalibSvc" };
 
 // ----------------------------
 // setup basic event loop stuff
@@ -15,6 +15,24 @@ ApplicationMgr.ExtSvc = {
     };
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
 EventSelector.Input = "NONE";
+
+// Start up a CalibDataSvc 
+ApplicationMgr.ExtSvc += {"CalibDataSvc"};
+
+ApplicationMgr.ExtSvc += {"CalibMySQLCnvSvc", "CalibXmlCnvSvc" };
+
+DetectorPersistencySvc.CnvServices += {"CalibMySQLCnvSvc"};
+DetectorPersistencySvc.CnvServices += {"CalibXmlCnvSvc"};
+
+// CalibDataSvc properties below are explicitly set to the
+// default values as established in CalibDataSvc.cxx.  
+// They're listed below in order of likelihood of need to override, 
+// from most to least likely.
+// Storage type of 14 corresponds to MYSQL
+CalibDataSvc.CalibInstrumentName = "LAT";
+CalibDataSvc.CalibStorageType = 14;
+CalibDataSvc.CalibRootName = "Calib";
+CalibDataSvc.CalibFlavorList = {"ideal"};
 
 
 // ----------------------------
