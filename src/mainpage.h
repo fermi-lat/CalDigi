@@ -83,6 +83,9 @@
  * must be quantized into ADC units. Recall that there are two diodes per
  * crystal end, with two gain ranges each. So, there are 4 possible ranges
  * to choose from per end.
+ * 
+ * The conversion from deposited energy to ADC is handled by a converter Gaudi Tool
+ * in CalUtil. The Tool is selectable from the jobOptions file.
  *
  * See the CAL PDR report for a fuller <a href="https://www-doc.slac.stanford.edu/CyberDOCS/quickstart.asp?show=COPY:505:&user=glastguest:guest&library=SLAC&noframes">description</a> of the PIN diode readout, especially Section 10.3.
  *
@@ -100,6 +103,9 @@
  * @param CalDigiAlg.taperToolName
  *  Select the tool to perform the light attenuation
  *  Available choices are "OnePlusExpTaper" and "LinearTaper"
+ * @param CalDigiAlg.convertAdcToolName
+ *  Select the tool to perform the conversion from energy to ADC units
+ *  Available choice is "LinearConvertAdc
  * @param CalDigiAlg.doFluctuations
  *  Flag to enable electron counting statistics fluctuations
  *
