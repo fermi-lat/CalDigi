@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Mon Aug 26 11:48:26 PDT 2002
+CalDigi/src
+
+Modified Files:
+	OnePlusExpTaper.cxx CalDigiAlg.cxx 
+Log Message:
+check existence of xml parameters
+    *
+------------------------------------------------------------
 User: richard  Sun Aug 25 17:52:31 PDT 2002
 CalDigi/src/test
 
