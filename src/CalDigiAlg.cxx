@@ -278,8 +278,8 @@ StatusCode CalDigiAlg::execute() {
     sc = fillSignalEnergies();
     if (sc != StatusCode::SUCCESS) return sc;
     
-    //sc = addNoiseToSignals();
-    //if (sc != StatusCode::SUCCESS) return sc;
+    sc = addNoiseToSignals();
+    if (sc != StatusCode::SUCCESS) return sc;
     
     //sc = addNewNoiseHits();
     //if (sc != StatusCode::SUCCESS) return sc;
@@ -371,10 +371,6 @@ StatusCode CalDigiAlg::createDigis() {
                   (idents::CalXtalId::XtalFace)face, 
                   resp+4*face, pPeds, pGains );
 
-              // resp[range]==0 if and only if LEX8<zero_suppress
-              // in which case there is no hit on this end of the log
-              if( resp[range+4*face]==0 ) continue;
-
               adc= (short unsigned int) resp[range+4*face];
             }
 
@@ -382,6 +378,9 @@ StatusCode CalDigiAlg::createDigis() {
             if(face == idents::CalXtalId::POS){ adcP=adc; rangeP=range;}
             else { adcM=adc; rangeM=range;}
           }
+          // zero suppress
+          if( adcM==0 && adcP==0 ) continue;
+
 
           log << MSG::DEBUG; 
           if (log.isActive()){ 
