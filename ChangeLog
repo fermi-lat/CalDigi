@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Tue Sep 14 10:21:10 PDT 2004
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h mainpage.h 
+Log Message:
+revised for CalResponse tools in CalUtil
+    *
+------------------------------------------------------------
 User: berrie  Tue Aug 10 00:10:12 PDT 2004
 CalDigi/doc
 
