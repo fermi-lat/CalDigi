@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: kyoung  Thu Apr 24 14:43:05 PDT 2003
+CalDigi/src
+
+Modified Files:
+	mainpage.h 
+Log Message:
+Fixed reference to images in mainpage.h
+    *
+------------------------------------------------------------
 User: chehtman  Tue Mar 25 10:24:29 PST 2003
 CalDigi/doc
 
