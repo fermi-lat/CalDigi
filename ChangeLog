@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Fri Jan 24 11:42:39 PST 2003
+CalDigi/src/test
+
+Modified Files:
+	jobOptions.txt 
+Log Message:
+add CalUtil to test app dll list
+    *
+------------------------------------------------------------
 User: als  Thu Jan  9 16:53:30 PST 2003
 CalDigi/cmt
 
