@@ -193,16 +193,16 @@ StatusCode CalDigiAlg::execute() {
     
     
     
-    log << MSG::DEBUG << m_signalMap.size() << "calorimeter hits in m_signalMap" << endreq;
+    log << MSG::DEBUG; if (log.isActive()){ log.stream() << m_signalMap.size() << "calorimeter hits in m_signalMap";}  log << endreq;
     for( SignalMap::iterator jit=m_signalMap.begin(); jit!=m_signalMap.end();jit++){
-        log << MSG::DEBUG << " id " << (*jit).first
+        log << MSG::DEBUG; if (log.isActive()){ log.stream() << " id " << (*jit).first
             << " s0=" << (*jit).second.getSignal(idents::CalXtalId::POS)
             << " s1=" << (*jit).second.getSignal(idents::CalXtalId::NEG)
             << " d0=" << (*jit).second.getDiodeEnergy(idents::CalXtalId::POS)
             << " d1=" << (*jit).second.getDiodeEnergy(idents::CalXtalId::NEG)
             << " d2=" << (*jit).second.getDiodeEnergy(idents::CalXtalId::POS+2)
             << " d3=" << (*jit).second.getDiodeEnergy(idents::CalXtalId::NEG+2)
-            << endreq;
+           ;} log << endreq;
     }
     
     sc = createDigis();
@@ -288,9 +288,9 @@ StatusCode CalDigiAlg::createDigis() {
 
             }
 
-            log << MSG::DEBUG <<" id=" << xtalId 
+            log << MSG::DEBUG; if (log.isActive()){ log.stream() <<" id=" << xtalId 
             << " rangeP=" << int(rangeP) << " adcP=" << adcP
-            << " rangeM=" << int(rangeM) << " adcM=" << adcM << endreq;
+            << " rangeM=" << int(rangeM) << " adcM=" << adcM;} log << endreq;
            
 
 			// set status to ok for POS and NEG if no other bits set.
@@ -342,7 +342,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
     SmartDataPtr<Event::McIntegratingHitVector> McCalHits(eventSvc(),EventModel::MC::McIntegratingHitCol ); //"/Event/MC/IntegratingHitsCol");
     
     if (McCalHits == 0) {
-        log << MSG::DEBUG << "no calorimeter hits found" << endreq;
+        log << MSG::DEBUG; if (log.isActive()){ log.stream() << "no calorimeter hits found" ;} log << endreq;
         return sc;
     }
     
@@ -379,13 +379,13 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
             
             idents::CalXtalId mapId(tower,layer,col);
             
-            log << MSG::DEBUG <<  "Identifier decomposition \n"  
+            log << MSG::DEBUG; if (log.isActive()){ log.stream() <<  "Identifier decomposition \n"  
                 << " col " << col
                 << " layer " << layer
                 << " towy " << towy
                 << " towx " << towx
                 << " segm " << segm
-                << endreq;
+                ;} log << endreq;
             
             XtalSignal& xtalSignalRef = m_signalMap[mapId];
             
