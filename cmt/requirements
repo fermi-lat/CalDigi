@@ -1,11 +1,11 @@
 package CalDigi
 
-version v1r0
+version v1r2p2
 
 branches src mgr doc
 
 use GlastSvc v8*
-use Event v8*
+use Event v*
 use GuiSvc                v3*
 
 use facilities
