@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Thu Feb  6 20:45:14 PST 2003
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+cleanup DEBUG messages using log.isActive
+    *
+------------------------------------------------------------
 User: richard  Fri Jan 24 11:42:39 PST 2003
 CalDigi/src/test
 
