@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sun Aug 18 10:03:48 PDT 2002
+CalDigi/src
+
+Modified Files:
+	ITaper.h 
+Log Message:
+add <vector> include for linux path to std::pair
+    *
+------------------------------------------------------------
 User: richard  Sun Aug 18 10:01:50 PDT 2002
 CalDigi/src/test
 
