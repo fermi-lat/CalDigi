@@ -8,7 +8,6 @@
 
 /// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
-//#include "Event/TopLevel/Event.h"
 #include "GaudiKernel/ObjectVector.h"
 
 // MC classes
@@ -40,11 +39,14 @@ Algorithm(name, pSvcLocator) {
 
 
 StatusCode CalDigiAlg::initialize() {
-    
+    // Purpose and Method: initialize the algorithm. Set up parameters from detModel
+    // Inputs: detModel parameters
+     
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
     
-    // extracting int constants
+    // extracting int constants from detModel. Store into local cache - member variables.
+    
     double value;
     typedef std::map<int*,std::string> PARAMAP;
     PARAMAP param;
@@ -84,7 +86,7 @@ StatusCode CalDigiAlg::initialize() {
     
     int nTowers = m_xNum * m_yNum;
     
-    // extracting double constants
+    // extracting double constants from detModel. Store into local cache - member variables.
     
     typedef std::map<double*,std::string> DPARAMAP;
     DPARAMAP dparam;
@@ -103,16 +105,30 @@ StatusCode CalDigiAlg::initialize() {
         } 
     }
     
-    for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; // from GeV to MeV
-	m_thresh *= 1000.;								// from GeV to MeV
+    
+    // scale max energies and thresholds from GeV to MeV
+    for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
+    m_thresh *= 1000.;
     
     return StatusCode::SUCCESS;
 }
 
 
 StatusCode CalDigiAlg::execute() {
+    // Purpose and Method: take Hits from McIntegratingHit and perform the following steps:
+    //  for deposit in a crystal segment, take into account light propagation to the two ends and 
+    // apply light taper based on position along the length.
+    //  keep track of direct deposit in the diode.
+    // Then combine diode (with appropriate scale factor) and crystal deposits and add noise.
+    // Then, add noise to 'unhit' crystals.
+    //  Finally, convert to ADC units and pick the range for hits above threshold.
+    // Inputs: McIntegratingHit
+    
+    
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
+    
+    // get McIntegratingHit collection. Abort if empty.
     
     SmartDataPtr<Event::McIntegratingHitVector> McCalHits(eventSvc(),EventModel::MC::McIntegratingHitCol ); //"/Event/MC/IntegratingHitsCol");
     
@@ -135,158 +151,163 @@ StatusCode CalDigiAlg::execute() {
     
     
     
-    //  clear signal array
+    //  clear signal array: map relating xtal signal to id. Map holds diode and crystal responses
+    //  separately during accumulation.
     
     typedef std::map<idents::CalXtalId,XtalSignal> SignalMap;
     SignalMap signalMap;
     
     
-    // loop over hits
+    // loop over hits - pick out CAL hits
+
     for (Event::McIntegratingHitVector::const_iterator it = McCalHits->begin(); it != McCalHits->end(); it++) {
         
         
-        //   extracting hit parameters
+        //   extracting hit parameters - get energy and first moment
         
         idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*it)->volumeID());
         double ene = (*it)->totalEnergy();
         HepPoint3D mom1 = (*it)->moment1();
         
-        //   extracting parameters from volume Id 
+        //   extracting parameters from volume Id identifying as in CAL
         
         if (volId[fLATObjects] == m_eLATTowers &&
             volId[fTowerObjects] == m_eTowerCAL){ 
-			
+            
             int col = volId[fCALXtal];
             int layer = volId[fLayer];
             int towy = volId[fTowerY];
             int towx = volId[fTowerX];
             int tower = m_xNum*towy+towx; 
-
+            
             idents::CalXtalId mapId(tower,layer,col);
-			XtalSignal& xtalSignalRef = signalMap[mapId];
-
-
-
+            XtalSignal& xtalSignalRef = signalMap[mapId];
+            
+            
+            
             if(volId[fCellCmp] == m_eDiodeMLarge)
-				xtalSignalRef.addDiodeEnergy(ene,0);
-
-			else if(volId[fCellCmp] == m_eDiodePLarge)
-				xtalSignalRef.addDiodeEnergy(ene,1);
-			
-			else if(volId[fCellCmp] == m_eDiodeMSmall )
-				xtalSignalRef.addDiodeEnergy(ene,2);
-
-			else if(volId[fCellCmp] == 	m_eDiodePSmall ) 
-				xtalSignalRef.addDiodeEnergy(ene,3);
-
-			else if(volId[fCellCmp] ==  m_eXtal ){
-
-            int segm = volId[fSegment];
+                xtalSignalRef.addDiodeEnergy(ene,0);
             
-            // let's define the position of the segment along the crystal
+            else if(volId[fCellCmp] == m_eDiodePLarge)
+                xtalSignalRef.addDiodeEnergy(ene,1);
             
-            double relpos = (segm+0.5)/m_nCsISeg;
+            else if(volId[fCellCmp] == m_eDiodeMSmall )
+                xtalSignalRef.addDiodeEnergy(ene,2);
             
+            else if(volId[fCellCmp] == 	m_eDiodePSmall ) 
+                xtalSignalRef.addDiodeEnergy(ene,3);
             
-            // in local reference system x is always oriented along the crystal
-            double dpos =  mom1.x(); 
-            
-            // to correct for local reference system orientation in Y layers
-            if (volId[fMeasure] == m_eMeasureY) dpos = -dpos;
-            relpos += dpos/m_CsILength;
-            
-            
-            
-            // take into account light tapering
-            
-            double norm = 0.5+0.5*m_lightAtt; // light tapering in the center of crystal (relpos=0.5)
-            double s2 = ene*(1-relpos*(1-m_lightAtt))/norm;
-            double s1 = ene*(1-(1-relpos)*(1-m_lightAtt))/norm;
-            
-            // set up a XtalMap to act as key for the map - if there is no entry, add
-            // add one, otherwise add signal to existing map element.
-            
-            
-			 xtalSignalRef.addSignal(s1,s2);
-            
-
-			
-			}
-		}
+            else if(volId[fCellCmp] ==  m_eXtal ){
+                
+                int segm = volId[fSegment];
+                
+                // let's define the position of the segment along the crystal
+                
+                double relpos = (segm+0.5)/m_nCsISeg;
+                
+                
+                // in local reference system x is always oriented along the crystal
+                double dpos =  mom1.x(); 
+                
+                // to correct for local reference system orientation in Y layers
+                if (volId[fMeasure] == m_eMeasureY) dpos = -dpos;
+                relpos += dpos/m_CsILength;
+                
+                
+                
+                // take into account light tapering
+                
+                double norm = 0.5+0.5*m_lightAtt; // light tapering in the center of crystal (relpos=0.5)
+                double s2 = ene*(1-relpos*(1-m_lightAtt))/norm;
+                double s1 = ene*(1-(1-relpos)*(1-m_lightAtt))/norm;
+                
+                // set up a XtalMap to act as key for the map - if there is no entry, add
+                // add one, otherwise add signal to existing map element.
+                
+                
+                xtalSignalRef.addSignal(s1,s2);
+                
+                
+                
+            }
+        }
     }
     
-
-	double ePerMeVinDiode = 1e6/3.6; 
-	// number of electrons per MeV of direct enegy deposition in a diode
-	//  3.6 eV - energy to create 1 electron in silicon
-	//  this is temporary - constant should be moved probably to xml file
+    
+    double ePerMeVinDiode = 1e6/3.6; 
+    // number of electrons per MeV of direct enegy deposition in a diode
+    //  3.6 eV - energy to create 1 electron in silicon
+    //  this is temporary - constant should be moved probably to xml file
+    
+    // add electronic noise to the diode response and add to the crystal 
+    // response. The diodeEnergy becomes the readout source.
     
     for(SignalMap::iterator mit=signalMap.begin(); mit!=signalMap.end();mit++){
         XtalSignal* xtal_signal = &(*mit).second;
-		
-		for ( int idiode =0; idiode < 4; idiode++){
-			int diode_type = idiode/2;
-			int face  = idiode%2;
-			double signal = xtal_signal->getSignal(face);
-
-			double diode_ene = xtal_signal->getDiodeEnergy(idiode);
-
-			
-			// convert energy deposition in a diode to
-			// the equivalent energy in a crystal 
-			diode_ene *= ePerMeVinDiode/m_ePerMeV[diode_type];
-
-			// add crystal signal - now diode energy contains
-			// the signal at given diode in energy units
-			// (equivalent energy deposition at the crystal center)
-			diode_ene += signal;
-
-			// add poissonic fluctuations in the number of electrons in a diode
-			diode_ene += sqrt(diode_ene/m_ePerMeV[diode_type])*RandGauss::shoot();
-
-			// add electronic noise
-			diode_ene += RandGauss::shoot()*m_noise[diode_type]/m_ePerMeV[diode_type];
-
-			//store modified diode signal in the signal map
-			xtal_signal->setDiodeEnergy(diode_ene,idiode);
-
-		}
+        
+        for ( int idiode =0; idiode < 4; idiode++){
+            int diode_type = idiode/2;
+            int face  = idiode%2;
+            double signal = xtal_signal->getSignal(face);
+            
+            double diode_ene = xtal_signal->getDiodeEnergy(idiode);
+            
+            
+            // convert energy deposition in a diode to
+            // the equivalent energy in a crystal 
+            diode_ene *= ePerMeVinDiode/m_ePerMeV[diode_type];
+            
+            // add crystal signal - now diode energy contains
+            // the signal at given diode in energy units
+            // (equivalent energy deposition at the crystal center)
+            diode_ene += signal;
+            
+            // add poissonic fluctuations in the number of electrons in a diode
+            diode_ene += sqrt(diode_ene/m_ePerMeV[diode_type])*RandGauss::shoot();
+            
+            // add electronic noise
+            diode_ene += RandGauss::shoot()*m_noise[diode_type]/m_ePerMeV[diode_type];
+            
+            //store modified diode signal in the signal map
+            xtal_signal->setDiodeEnergy(diode_ene,idiode);
+            
+        }
     }
-
-//  adding electronic noise to the channels without signal,
-// 	storing it in the signal map if  one of crystal faces
-//	has the noise above the threshold 	
-
-	double noise_MeV = double(m_noise[0])/double(m_ePerMeV[0]); // noise in MeV for the large diode
-	for (int tower = 0; tower < m_xNum*m_yNum; tower++){
-		for (int layer = 0; layer < m_CALnLayer; layer++){
-			for (int col = 0; col < m_nCsIPerLayer; col++){
-				double eneM = noise_MeV*RandGauss::shoot();
-				double eneP = noise_MeV*RandGauss::shoot();
-	            idents::CalXtalId mapId(tower,layer,col);
-				if((eneM > m_thresh || eneP > m_thresh) &&
-					signalMap.find(mapId) == signalMap.end()){
-					XtalSignal& xtalSignalRef = signalMap[mapId];
-					xtalSignalRef.addDiodeEnergy(eneM,0);
-					xtalSignalRef.addDiodeEnergy(eneP,1);
-				}
-			}
-		}
-	}
-/*	
+    
+    //  adding electronic noise to the channels without signal,
+    // 	storing it in the signal map if  one of crystal faces
+    //	has the noise above the threshold 	
+    
+    double noise_MeV = double(m_noise[0])/double(m_ePerMeV[0]); // noise in MeV for the large diode
+    for (int tower = 0; tower < m_xNum*m_yNum; tower++){
+        for (int layer = 0; layer < m_CALnLayer; layer++){
+            for (int col = 0; col < m_nCsIPerLayer; col++){
+                double eneM = noise_MeV*RandGauss::shoot();
+                double eneP = noise_MeV*RandGauss::shoot();
+                idents::CalXtalId mapId(tower,layer,col);
+                if((eneM > m_thresh || eneP > m_thresh) &&
+                    signalMap.find(mapId) == signalMap.end()){
+                    XtalSignal& xtalSignalRef = signalMap[mapId];
+                    xtalSignalRef.addDiodeEnergy(eneM,0);
+                    xtalSignalRef.addDiodeEnergy(eneP,1);
+                }
+            }
+        }
+    }
+    /*	
     log << MSG::DEBUG << signalMap.size() << "calorimeter hits in signalMap" << endreq;
     for( mit=signalMap.begin(); mit!=signalMap.end();mit++){
-        log << MSG::DEBUG << " id " << (*mit).first
-            << " s0=" << (*mit).second.getSignal(0)
-            << " s1=" << (*mit).second.getSignal(1)
-			<< " d0=" << (*mit).second.getDiodeEnergy(0)
-			<< " d1=" << (*mit).second.getDiodeEnergy(1)
-			<< " d2=" << (*mit).second.getDiodeEnergy(2)
-			<< " d3=" << (*mit).second.getDiodeEnergy(3)
-            << endreq;
+    log << MSG::DEBUG << " id " << (*mit).first
+    << " s0=" << (*mit).second.getSignal(0)
+    << " s1=" << (*mit).second.getSignal(1)
+    << " d0=" << (*mit).second.getDiodeEnergy(0)
+    << " d1=" << (*mit).second.getDiodeEnergy(1)
+    << " d2=" << (*mit).second.getDiodeEnergy(2)
+    << " d3=" << (*mit).second.getDiodeEnergy(3)
+    << endreq;
     }
-*/	
-	
+    */	
+    
     Event::CalDigiCol* digiCol = new Event::CalDigiCol;
     
     // iterate through the SignalMap to look at only those Xtals that had energy deposited.
@@ -304,35 +325,49 @@ StatusCode CalDigiAlg::execute() {
             
             char rangeP,rangeM;
             unsigned short adcP,adcM;
+
+            // loop over the plus and minus faces of the crystal 
+            
             for (int face=0; face<2; face++){
                 double resp;
                 int br;
+
+                // loop over the diodes and fetch the response
                 for (int r = 0;r<4;r++){
-					int diode_type = r/2;
-					int diode = 2*diode_type+face;
-					resp = signal->getDiodeEnergy(diode);
-
-
+                    int diode_type = r/2;
+                    int diode = 2*diode_type+face;
+                    resp = signal->getDiodeEnergy(diode);
+                    
+                    
                     br=r;
                     if( resp < m_maxEnergy[r]) break;														
                 }
+
+                // set readout to rail if saturated
+                
                 if(resp > m_maxEnergy[br])resp = m_maxEnergy[br];
+ 
+                // convert energy to ADC units here
+                
                 unsigned short adc = (resp/m_maxEnergy[br])*(m_maxAdc-m_pedestal)+m_pedestal;
+
+                // assign the plus/minus readouts
+                
                 if(face == idents::CalXtalId::POS){ adcP=adc; rangeP=br;}
                 else { adcM=adc; rangeM=br;}
             }
-/*            
+            /*            
             log << MSG::DEBUG <<" id=" << xtalId 
-                << " rangeP=" << int(rangeP) << " adcP=" << adcP
-                << " rangeM=" << int(rangeM) << " adcM=" << adcM << endreq;
-*/            
-			Event::CalDigi::CalXtalReadout read = Event::CalDigi::CalXtalReadout(rangeP, adcP, rangeM, adcM);
-			Event::CalDigi* curDigi = new Event::CalDigi(idents::CalXtalId::BESTRANGE, xtalId);
+            << " rangeP=" << int(rangeP) << " adcP=" << adcP
+            << " rangeM=" << int(rangeM) << " adcM=" << adcM << endreq;
+            */            
+            Event::CalDigi::CalXtalReadout read = Event::CalDigi::CalXtalReadout(rangeP, adcP, rangeM, adcM);
+            Event::CalDigi* curDigi = new Event::CalDigi(idents::CalXtalId::BESTRANGE, xtalId);
             curDigi->addReadout(read);
             digiCol->push_back(curDigi);
         }
     }
-
+    
     sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol /*"/Event/Digi/CalDigis"*/, digiCol);
     
     
@@ -349,17 +384,17 @@ StatusCode CalDigiAlg::finalize() {
 CalDigiAlg::XtalSignal::XtalSignal() {
     m_signal[0] = 0;
     m_signal[1] = 0;
-
-	for(int i=0; i<4; i++)m_Diodes_Energy.push_back(0.);
-
+    
+    for(int i=0; i<4; i++)m_Diodes_Energy.push_back(0.);
+    
 }
 
 CalDigiAlg::XtalSignal::XtalSignal(double s1, double s2) {
     m_signal[0] = s1;
     m_signal[1] = s2;
-
-	for(int i=0; i<4; i++)m_Diodes_Energy.push_back(0.);
-
+    
+    for(int i=0; i<4; i++)m_Diodes_Energy.push_back(0.);
+    
 }
 void CalDigiAlg::XtalSignal::addSignal(double s1, double s2) {
     m_signal[0] += s1;
