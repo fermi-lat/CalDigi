@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: burnett  Wed May 15 17:04:42 PDT 2002
+CalDigi/src/Dll
+
+Added Files:
+	CalDigi_dll.cxx CalDigi_load.cxx 
+Removed Files:
+	GlastDigi_dll.cxx GlastDigi_load.cxx 
+Log Message:
+rename the dll files for Gaudi
+    *
+------------------------------------------------------------
 User: chehtman  Wed May 15 15:31:39 PDT 2002
 CalDigi
 
