@@ -1,4 +1,18 @@
 ------------------------------------------------------------
+User: fewtrell  Tue Mar  1 23:17:46 PST 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h mainpage.h 
+Removed Files:
+      Tag: v1r6p2
+	CalDigiRandom.cxx ITaper.h LinearTaper.cxx LinearTaper.h 
+	OnePlusExpTaper.cxx OnePlusExpTaper.h 
+Log Message:
+removed large amount of obsolete code & comments.
+most has been taken over by CalXtalResponse
+    *
+------------------------------------------------------------
 User: fewtrell  Tue Mar  1 23:17:45 PST 2005
 CalDigi/doc
 
