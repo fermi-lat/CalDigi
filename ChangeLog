@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: frailis  Tue Jul 30 10:00:18 PDT 2002
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+Added a a table relating CalDigis to McIntegratingHits to CalDigiAlg.cxx. ToDo: code which test the table retrieving it from the TDS and doing some query.
+    *
+------------------------------------------------------------
 User: richard  Fri Jun 14 13:40:16 PDT 2002
 CalDigi/doc
 
