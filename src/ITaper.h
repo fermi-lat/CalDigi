@@ -23,7 +23,7 @@ class ITaper : virtual public IAlgTool {
 public:
     
     ITaper() {}; 
-    ~ITaper() {};
+    virtual ~ITaper() {};
 
     static const InterfaceID& interfaceID() { return IID_ITaper; }
 

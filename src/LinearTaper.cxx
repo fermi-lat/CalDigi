@@ -30,7 +30,7 @@ StatusCode LinearTaper::initialize() {
     IGlastDetSvc* detSvc;
 
     if( serviceLocator() ) {
-      StatusCode sc = serviceLocator()->service( "GlastDetSvc", detSvc, true );
+      sc = serviceLocator()->service( "GlastDetSvc", detSvc, true );
     }
     if(sc.isFailure())
     {

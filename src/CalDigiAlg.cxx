@@ -92,10 +92,9 @@ StatusCode CalDigiAlg::initialize() {
         if(!detSvc->getNumericConstByName((*it).second, &value)) {
              log << MSG::ERROR << " constant " <<(*it).second <<" not defined" << endreq;
             return StatusCode::FAILURE;
-        } else *((*it).first)=value;
+        } else *((*it).first)=(int)value;
     }
     
-    int nTowers = m_xNum * m_yNum;
 
     // extracting double constants from detModel. Store into local cache - member variables.
     
@@ -208,8 +207,8 @@ StatusCode CalDigiAlg::execute() {
 
         //   extracting parameters from volume Id identifying as in CAL
         
-        if (volId[fLATObjects] == m_eLatTowers &&
-            volId[fTowerObjects] == m_eTowerCal){ 
+        if ((int)volId[fLATObjects] == m_eLatTowers &&
+            (int)volId[fTowerObjects] == m_eTowerCal){ 
             
             int col = volId[fCALXtal];
             int layer = volId[fLayer];
@@ -234,19 +233,19 @@ StatusCode CalDigiAlg::execute() {
 
             idMcInt.insert(std::make_pair(mapId,*it));
             
-            if(volId[fCellCmp] == m_eDiodeMLarge)
+            if((int)volId[fCellCmp] == m_eDiodeMLarge)
                 xtalSignalRef.addDiodeEnergy(ene,0);
             
-            else if(volId[fCellCmp] == m_eDiodePLarge)
+            else if((int)volId[fCellCmp] == m_eDiodePLarge)
                 xtalSignalRef.addDiodeEnergy(ene,1);
             
-            else if(volId[fCellCmp] == m_eDiodeMSmall )
+            else if((int)volId[fCellCmp] == m_eDiodeMSmall )
                 xtalSignalRef.addDiodeEnergy(ene,2);
             
-            else if(volId[fCellCmp] == 	m_eDiodePSmall ) 
+            else if((int)volId[fCellCmp] == 	m_eDiodePSmall ) 
                 xtalSignalRef.addDiodeEnergy(ene,3);
             
-            else if(volId[fCellCmp] ==  m_eXtal ){
+            else if((int)volId[fCellCmp] ==  m_eXtal ){
                 
                
                 // let's define the position of the segment along the crystal
@@ -337,14 +336,14 @@ StatusCode CalDigiAlg::execute() {
     }
     	
     log << MSG::DEBUG << signalMap.size() << "calorimeter hits in signalMap" << endreq;
-    for( mit=signalMap.begin(); mit!=signalMap.end();mit++){
-    log << MSG::DEBUG << " id " << (*mit).first
-    << " s0=" << (*mit).second.getSignal(0)
-    << " s1=" << (*mit).second.getSignal(1)
-    << " d0=" << (*mit).second.getDiodeEnergy(0)
-    << " d1=" << (*mit).second.getDiodeEnergy(1)
-    << " d2=" << (*mit).second.getDiodeEnergy(2)
-    << " d3=" << (*mit).second.getDiodeEnergy(3)
+    for( SignalMap::iterator jit=signalMap.begin(); jit!=signalMap.end();jit++){
+    log << MSG::DEBUG << " id " << (*jit).first
+    << " s0=" << (*jit).second.getSignal(0)
+    << " s1=" << (*jit).second.getSignal(1)
+    << " d0=" << (*jit).second.getDiodeEnergy(0)
+    << " d1=" << (*jit).second.getDiodeEnergy(1)
+    << " d2=" << (*jit).second.getDiodeEnergy(2)
+    << " d3=" << (*jit).second.getDiodeEnergy(3)
     << endreq;
     }
     	
@@ -392,7 +391,7 @@ StatusCode CalDigiAlg::execute() {
  
                 // convert energy to ADC units here
                 
-                unsigned short adc = (resp/m_maxEnergy[br])*(m_maxAdc-m_pedestal)+m_pedestal;
+                unsigned short adc = (short unsigned int)(resp/m_maxEnergy[br])*(m_maxAdc-m_pedestal)+m_pedestal;
 
                 // assign the plus/minus readouts
                 
