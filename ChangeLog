@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: davezac  Mon Mar 29 00:26:28 PST 2004
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.h 
+Log Message:
+deleted wrong include #include<iostream.h>
+    *
+------------------------------------------------------------
 User: davezac  Fri Mar 19 04:22:03 PST 2004
 CalDigi/src
 
