@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Fri Aug 30 17:33:32 PDT 2002
+CalDigi/src
+
+Modified Files:
+	LinearTaper.cxx OnePlusExpTaper.cxx 
+Log Message:
+remove INFO messages
+    *
+------------------------------------------------------------
 User: richard  Tue Aug 27 11:27:25 PDT 2002
 CalDigi/doc
 
