@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Mon Jun 21 05:16:48 PDT 2004
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+fix windows system includes
+    *
+------------------------------------------------------------
 User: richard  Mon Jun 21 05:16:00 PDT 2004
 CalDigi/doc
 
