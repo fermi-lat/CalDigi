@@ -123,7 +123,10 @@ public:
         std::string m_taperToolName;
         /// pointer to actual tool for calculating light taper
         ITaper* m_taper;
-
+        /// string flag for applying electron statistics fluctuations per channel
+        std::string m_doFluctuations;
+        /// string flag for applying electron statistics fluctuations per channel
+        bool m_doFluctuationsBool;
 };
 
 
