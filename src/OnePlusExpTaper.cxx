@@ -71,10 +71,10 @@ std::pair<double, double> OnePlusExpTaper::calculateSignals(idents::CalXtalId,
 
     
 
-    double s1 = depositedEnergy*(m_offset+m_scaleExponential*exp(-relativePosition*m_scaleExponent) -
+    double s2 = depositedEnergy*(m_offset+m_scaleExponential*exp(-relativePosition*m_scaleExponent) -
                  m_scaleTurnoverExponential*exp(m_scaleTurnoverExponent*relativePosition));
     
-    double s2 = depositedEnergy*(m_offset+m_scaleExponential*exp(-(1-relativePosition)*m_scaleExponent) -
+    double s1 = depositedEnergy*(m_offset+m_scaleExponential*exp(-(1-relativePosition)*m_scaleExponent) -
                  m_scaleTurnoverExponential*exp(m_scaleTurnoverExponent*(1-relativePosition)));
 
     return std::pair<double,double>(s1,s2);
