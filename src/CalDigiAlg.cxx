@@ -1,17 +1,18 @@
+// LOCAL include files
 #include "CalDigiAlg.h"
-#include "CalUtil/ICalFailureModeSvc.h"
-#include "CalUtil/CalDefs.h"
-/// Gaudi specific include files
+// Gaudi specific include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IToolSvc.h"
 
-/// Glast specific includes
+// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
 #include "Event/TopLevel/DigiEvent.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "CalUtil/ICalFailureModeSvc.h"
+#include "CalUtil/CalDefs.h"
 
 // Relational Table
 #include "Event/RelTable/Relation.h"
@@ -30,10 +31,8 @@
 static const AlgFactory<CalDigiAlg>  Factory;
 const IAlgFactory& CalDigiAlgFactory = Factory;
 
-
 // Algorithm parameters which can be set at run time must be declared.
 // This should be done in the constructor.
-
 
 CalDigiAlg::CalDigiAlg(const std::string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator) {
@@ -120,11 +119,8 @@ StatusCode CalDigiAlg::execute() {
   //  Finally, convert to ADC units and pick the range for hits above threshold.
   // Inputs: McIntegratingHit
 
-
   StatusCode  sc = StatusCode::SUCCESS;
-  MsgStream   msglog( msgSvc(), name() );
-
-
+  
   //Take care of insuring that data area has been created
   DataObject* pNode = 0;
   sc = eventSvc()->retrieveObject( EventModel::Digi::Event /*"/Event/Digi"*/, pNode);
@@ -132,12 +128,11 @@ StatusCode CalDigiAlg::execute() {
   if (sc.isFailure()) {
     sc = eventSvc()->registerObject(EventModel::Digi::Event /*"/Event/Digi"*/,new Event::DigiEvent);
     if( sc.isFailure() ) {
+      MsgStream   msglog( msgSvc(), name() );
       msglog << MSG::ERROR << "could not register " << EventModel::Digi::Event /*<< /Event/Digi "*/ << endreq;
       return sc;
     }
   }
-
-
 
   //  clear signal array: map relating xtal signal to id. Map holds diode and crystal responses
   //  separately during accumulation.
@@ -147,7 +142,6 @@ StatusCode CalDigiAlg::execute() {
 
   sc = fillSignalEnergies();
   if (sc != StatusCode::SUCCESS) return sc;
-
 
   sc = createDigis();
   if (sc != StatusCode::SUCCESS) return sc;    
@@ -168,7 +162,6 @@ StatusCode CalDigiAlg::createDigis() {
   // create digis on the TDS from the deposited energies
 
   StatusCode  sc = StatusCode::SUCCESS;
-  MsgStream msglog(msgSvc(), name());
 
   Event::CalDigiCol* digiCol = new Event::CalDigiCol;
 
@@ -218,27 +211,28 @@ StatusCode CalDigiAlg::createDigis() {
                                       peggedN
                                       );
         // set status to ok for POS and NEG if no other bits set.
-
+        
         if (!((CalDefs::RngNum)rangeP).isValid() || !((CalDefs::RngNum)rangeN).isValid() ) {
-            msglog << MSG::ERROR; 
-            if (msglog.isActive()){ 
-                msglog.stream() <<"Range exceeded!!! id=" << mapId 
-                    << " rangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP[rangeP] << " lacP=" << lacP
-                    << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN;
-            } 
-            msglog << endreq;
-            return StatusCode::FAILURE;
+          MsgStream msglog(msgSvc(), name());
+          msglog << MSG::ERROR;
+          if (msglog.isActive()){
+            msglog.stream() <<"Range exceeded!!! id=" << mapId
+                            << " rangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP[rangeP] << " lacP=" << lacP
+                            << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN;
+          }
+          msglog << endreq;
+          return StatusCode::FAILURE;
         }
-
 
         unsigned short status = 0;
         if (!lacP && !lacN) continue;  // nothing more to see here. Move along.
 
+        MsgStream msglog(msgSvc(), name());
         msglog << MSG::DEBUG; 
         if (msglog.isActive()){ 
           msglog.stream() <<" id=" << mapId 
-                      << " rangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP[rangeP] << " lacP=" << lacP
-                      << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN;
+                          << " rangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP[rangeP] << " lacP=" << lacP
+                          << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN;
         } 
         msglog << endreq;
         
@@ -347,9 +341,9 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
     if ((int)volId[fLATObjects] == m_eLatTowers &&
         (int)volId[fTowerObjects] == m_eTowerCal){ 
 
-              msglog << MSG::DEBUG <<  "McIntegratingHits info \n"  
-        << " ID " << volId.name()
-        << endreq;
+      msglog << MSG::DEBUG <<  "McIntegratingHits info \n"  
+             << " ID " << volId.name()
+             << endreq;
 
       int col = volId[fCALXtal];
       int layer = volId[fLayer];
@@ -360,11 +354,11 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
       idents::CalXtalId mapId(tower,layer,col);
 
       msglog << MSG::DEBUG; if (msglog.isActive()){ msglog.stream() <<  "Identifier decomposition \n"  
-          << " col " << col
-          << " layer " << layer
-          << " towy " << towy
-          << " towx " << towx
-                                                ;} msglog << endreq;
+             << " col " << col
+             << " layer " << layer
+             << " towy " << towy
+             << " towx " << towx
+                                                      ;} msglog << endreq;
 
 
       // Insertion of the id - McIntegratingHit pair
@@ -373,7 +367,6 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
 
       m_idMcIntPreDigi[mapId].push_back((const_cast<Event::McIntegratingHit*>(*it)));
     }
-
   }
 
   return sc;

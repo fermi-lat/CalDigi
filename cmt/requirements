@@ -2,7 +2,7 @@ package CalDigi
 
 author Richard Dubois <richard@slac.stanford.edu>
 author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
-# $Id: requirements,v 1.19 2005/02/05 10:00:38 fewtrell Exp $
+# $Id: requirements,v 1.20 2005/02/08 00:46:55 fewtrell Exp $
 branches src mgr doc
 
 use GlastPolicy
@@ -18,7 +18,7 @@ private
 
 #used only by test app
 use RootIo
-use CalibSvc        v*
+use CalibSvc
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
 #apply_pattern package_include
