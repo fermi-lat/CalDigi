@@ -22,7 +22,8 @@ EventSelector.Input = "NONE";
 //
 ApplicationMgr.TopAlg = {
 	"mcRootReaderAlg",      
-    	"CalDigiAlg" 
+    	"CalDigiAlg",
+        "DigiHitsTestAlg" 
     };
 
 
