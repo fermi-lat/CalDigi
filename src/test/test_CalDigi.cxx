@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/userAlg/src/UserAlg.cxx,v 1.4 2001/06/07 23:12:05 burnett Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi.cxx,v 1.2 2002/08/18 17:01:50 richard Exp $
 
 // Include files
 // Gaudi system includes
@@ -73,7 +73,7 @@ StatusCode test_CalDigi::execute()
   SmartDataPtr<Event::CalDigiCol> digiCol(eventSvc(),EventModel::Digi::CalDigiCol );
 
   if ((digiCol == 0) || (digiCol->size()) == 0) {
-    log << MSG::DEBUG << "no/incorrect number calorimeter digis found" << endreq;
+    log << MSG::FATAL << "no/incorrect number calorimeter digis found" << endreq;
     sc = StatusCode::FAILURE;
     return sc;
   }
