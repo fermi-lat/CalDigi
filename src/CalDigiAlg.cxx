@@ -123,7 +123,9 @@ StatusCode CalDigiAlg::initialize() {
 
     // Read in the parameters from the XML file
     xml::IFile m_ifile(m_xmlFile.c_str());
-    m_ePerMeVinDiode = m_ifile.getDouble("cal", "ePerMeVinDiode");
+     if (m_ifile.contains("cal","ePerMeVinDiode")) 
+        m_ePerMeVinDiode = m_ifile.getDouble("cal", "ePerMeVinDiode");
+     else return StatusCode::FAILURE;
     
 
     sc = toolSvc()->retrieveTool(m_taperToolName,m_taper);

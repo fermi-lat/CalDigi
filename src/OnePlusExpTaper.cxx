@@ -33,12 +33,29 @@ StatusCode OnePlusExpTaper::initialize() {
 
    // Read in the parameters from the XML file
     xml::IFile m_ifile(m_xmlFile.c_str());
-    m_offset = m_ifile.getDouble("onePlusExpDigi", "offset");
-    m_scaleExponential = m_ifile.getDouble("onePlusExpDigi", "scaleExponential");
-    m_scaleExponent = m_ifile.getDouble("onePlusExpDigi", "scaleExponent");
-    m_scaleTurnoverExponential = m_ifile.getDouble("onePlusExpDigi",
+    if (m_ifile.contains("onePlusExpDigi", "offset")) 
+            m_offset = m_ifile.getDouble("onePlusExpDigi", "offset");
+    else return StatusCode::FAILURE;
+
+     if (m_ifile.contains("onePlusExpDigi", "scaleExponential")) 
+        m_scaleExponential = m_ifile.getDouble("onePlusExpDigi", "scaleExponential");
+     else return StatusCode::FAILURE;
+
+     if (m_ifile.contains("onePlusExpDigi", "scaleExponent")) 
+        m_scaleExponent = m_ifile.getDouble("onePlusExpDigi", "scaleExponent");
+      else return StatusCode::FAILURE;
+
+     if (m_ifile.contains("onePlusExpDigi",
+        "scaleTurnoverExponential")) 
+        m_scaleTurnoverExponential = m_ifile.getDouble("onePlusExpDigi",
         "scaleTurnoverExponential");
-    m_scaleTurnoverExponent = m_ifile.getDouble("onePlusExpDigi", "scaleTurnoverExponent");
+     else return StatusCode::FAILURE;
+ 
+     if (m_ifile.contains("onePlusExpDigi", 
+        "scaleTurnoverExponent")) 
+        m_scaleTurnoverExponent = m_ifile.getDouble("onePlusExpDigi",
+        "scaleTurnoverExponent");
+     else return StatusCode::FAILURE;
  
 
      return StatusCode::SUCCESS;
