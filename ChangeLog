@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sun Aug 18 09:09:53 PDT 2002
+CalDigi/src/Dll
+
+Modified Files:
+	CalDigi_load.cxx 
+Log Message:
+updates for taper models as Tools
+    *
+------------------------------------------------------------
 User: richard  Sun Aug 18 09:08:40 PDT 2002
 CalDigi/doc
 
