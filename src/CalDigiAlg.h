@@ -1,8 +1,6 @@
 #ifndef _GlastDigi_CalDigiAlg_H
 #define _GlastDigi_CalDigiAlg_H 1
 
-
-#include <iostream.h>
 // Include files
 #include "ITaper.h"
 #include "CalUtil/ICalFailureModeSvc.h"
