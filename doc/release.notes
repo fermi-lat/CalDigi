@@ -1,6 +1,8 @@
 /** @file release.notes
  * Package CalDigi
  *
+ * v1r2       27-Aug-2002 RXD include DigiHitsTestAlg in test jobOptions file
+ *
  * v1r2       23-Aug-2002 RXD change OnePlusExp taper - replace linear term with exponential.
  *                            update parameters in xml.
  *
