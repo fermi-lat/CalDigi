@@ -191,7 +191,6 @@ StatusCode CalDigiAlg::createDigis() {
 
                 if (hitListIt == m_idMcIntPreDigi.end()){ 
                     hitList = &nullList;
-                    continue;
                 }
                 else hitList = &(m_idMcIntPreDigi[mapId]);
 
