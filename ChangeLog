@@ -1,5 +1,16 @@
 ------------------------------------------------------------
 User: berrie  Tue Aug 10 00:10:12 PDT 2004
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+
+
+Fixed CalibSvc dependency
+    *
+------------------------------------------------------------
+User: berrie  Tue Aug 10 00:10:12 PDT 2004
 CalDigi/cmt
 
 Modified Files:
