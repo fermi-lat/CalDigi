@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sun Aug 25 17:52:31 PDT 2002
+CalDigi/src/test
+
+Modified Files:
+	jobOptions.txt 
+Log Message:
+add test_CalDigi to jobOptions file
+    *
+------------------------------------------------------------
 User: richard  Sun Aug 25 17:49:23 PDT 2002
 CalDigi/xml
 
