@@ -6,6 +6,7 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "idents/CalXtalId.h"
 #include <string>
+#include <vector>
 
 /** @class ITaper
  * @brief Base class for CAL Digi functions to calculate light taper
