@@ -198,11 +198,11 @@ StatusCode CalDigiAlg::execute() {
         double ene = (*it)->totalEnergy();
         HepPoint3D mom1 = (*it)->moment1();
 
-        log << MSG::DEBUG <<  "McIntegratingHits info \n"  
-             << " ID " << volId.name()
-             <<  " energy " << ene
-             <<  " moments " << mom1.x()
-             << endreq;
+	//	log << MSG::DEBUG <<  "McIntegratingHits info \n"  
+	//  << " ID " << volId.name()
+	//  <<  " energy " << ene
+	//  <<  " moments " << mom1.x()
+	//  << endreq;
 
 
         //   extracting parameters from volume Id identifying as in CAL
