@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+
+<!DOCTYPE calDigi [
+<!ELEMENT calDigi (section)* >
+<!ATTLIST calDigi cvs_Header CDATA #REQUIRED
+                     cvs_Revision CDATA #REQUIRED>
+<!ELEMENT section (#PCDATA | item | section)*  >
+<!ATTLIST section name CDATA #REQUIRED>
+<!ELEMENT item   (#PCDATA)>
+<!ATTLIST item  name CDATA #REQUIRED
+                value CDATA #REQUIRED>
+]>
+
+<!--    GLAST digi constants
+        Do not modify and check in this file without permission!
+        Note that the text in the item field cannot have direct ampersands of brackets!
+  -->
+<calDigi cvs_Header="$Header: /nfs/slac/g/glast/ground/cvs/calDigi/xml/calDigi.xml,v 1.1 2002/05/23 19:05:25 heather Exp $"
+         cvs_Revision="$Revision: 1.1 $">
+
+    <section name="cal">  CAL properties
+	<item name="ePerMeVinDiode"     value="2.77e5"> MeV 1e6/3.6</item>
+    </section>
+    <section name="onePlusExpDigi">  digi properties
+	<item name="scaleExponential"     value="0.075"> scale factor on exponential</item>
+	<item name="scaleExponent"     value="0.1"> scale factor on exponent</item>
+    </section>
+
+</calDigi>
