@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Tue Mar  1 23:57:07 PST 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+builds on linux w/out warning
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2, operation: add
 Package: CalDigi
