@@ -1,66 +1,96 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/CalRecon/src/test/CalTest.cxx,v 1.8 2001/04/25 23:46:51 igable Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/userAlg/src/UserAlg.cxx,v 1.4 2001/06/07 23:12:05 burnett Exp $
 
 // Include files
-#include "GaudiKernel/SmartIF.h"
-#include "GaudiKernel/Bootstrap.h"
-#include "GaudiKernel/IAppMgrUI.h"
-#include "GaudiKernel/IProperty.h"
-#include "GaudiKernel/Property.h"
-#include "GaudiKernel/System.h"
+// Gaudi system includes
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/Algorithm.h"
 
+// TDS class declarations: input data, and McParticle tree
 
+#include "Event/TopLevel/EventModel.h"
+
+#include "Event/Digi/CalDigi.h"
+
+// Define the class here instead of in a header file: not needed anywhere but here!
 //------------------------------------------------------------------------------
-//
-//  Package    : CalDigi
-//
-//  Description: Test Main Program
-//
-//------------------------------------------------------------------------------
-#include <iostream>
-// this needed for instrument.lib??
+/** 
+A simple algorithm.
 
+  
+*/
+class test_CalDigi : public Algorithm {
+public:
+    test_CalDigi(const std::string& name, ISvcLocator* pSvcLocator);
+    StatusCode initialize();
+    StatusCode execute();
+    StatusCode finalize();
+    
+private: 
+    //! number of times called
+    int m_count; 
+    //! the GlastDetSvc used for access to detector info
+};
+//------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-//
-//  Package    : CalDigi
-//
-//  Description: Test Main Program
-//
-//------------------------------------------------------------------------------
-int main( int argn, char** argc) {
+// necessary to define a Factory for this algorithm
+// expect that the xxx_load.cxx file contains a call     
+//     DLL_DECL_ALGORITHM( test_CalDigi );
 
-    // get the path to this package from its root environment variable: if not there,
-    // assume that we are in the root
-    const char * local_path = ::getenv("CALDIGIROOT");
-    std::string joboptions_file = std::string(local_path? local_path: "");
+static const AlgFactory<test_CalDigi>  Factory;
+const IAlgFactory& test_CalDigiFactory = Factory;
 
-    joboptions_file +=  std::string("/src/test/jobOptions.txt");
-    
-    // Create an instance of an application manager
-    IInterface* iface = Gaudi::createApplicationMgr();
-    
-    SmartIF<IProperty>     propMgr ( IID_IProperty, iface );
-    SmartIF<IAppMgrUI>     appMgr  ( IID_IAppMgrUI, iface );
-    
-    // Set properties of algorithms and services
-    StatusCode status = StatusCode::SUCCESS;
-    if ( iface && propMgr == iface )    {
-        status = propMgr->setProperty( StringProperty("JobOptionsPath", joboptions_file) );
-    }
-    else  {
-        exit(-1);
-    }
-
-    
-    // Run the application manager and process events
-    if ( appMgr )   {
-        status = appMgr->run();
-    }
-    else  {
-        return 0;
-    }
-    
-    // All done - exit
-    return 0;
-    
+//------------------------------------------------------------------------
+//! ctor
+test_CalDigi::test_CalDigi(const std::string& name, ISvcLocator* pSvcLocator)
+:Algorithm(name, pSvcLocator)
+,m_count(0)
+{
 }
+
+//------------------------------------------------------------------------
+//! set parameters and attach to various perhaps useful services.
+StatusCode test_CalDigi::initialize(){
+    StatusCode  sc = StatusCode::SUCCESS;
+    MsgStream log(msgSvc(), name());
+    log << MSG::INFO << "initialize" << endreq;
+    
+    return sc;
+}
+
+//------------------------------------------------------------------------
+//! process an event
+StatusCode test_CalDigi::execute()
+{
+    StatusCode  sc = StatusCode::SUCCESS;
+    MsgStream   log( msgSvc(), name() );
+    log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
+
+
+ // First, the collection of CalDigis is retrieved from the TDS
+  SmartDataPtr<Event::CalDigiCol> digiCol(eventSvc(),EventModel::Digi::CalDigiCol );
+
+  if ((digiCol == 0) || (digiCol->size()) == 0) {
+    log << MSG::DEBUG << "no/incorrect number calorimeter digis found" << endreq;
+    sc = StatusCode::FAILURE;
+    return sc;
+  }
+
+
+    return sc;
+}
+
+//------------------------------------------------------------------------
+//! clean up, summarize
+StatusCode test_CalDigi::finalize(){
+    StatusCode  sc = StatusCode::SUCCESS;
+    MsgStream log(msgSvc(), name());
+    log << MSG::INFO << "finalize after " << m_count << " calls." << endreq;
+    
+    return sc;
+}
+
+
+
