@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Wed Sep 22 14:09:44 PDT 2004
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+re-enable noise in un-hit channels
+    *
+------------------------------------------------------------
 User: richard  Tue Sep 21 18:13:45 PDT 2004
 CalDigi/doc
 
