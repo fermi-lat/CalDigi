@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Mon Sep 23 09:30:39 PDT 2002
+CalDigi/src/test
+
+Modified Files:
+	test_CalDigi.cxx 
+Log Message:
+set log error message to FATAL to hopefully flag test as failed
+    *
+------------------------------------------------------------
 User: richard  Mon Sep 23 09:29:36 PDT 2002
 CalDigi/src
 
