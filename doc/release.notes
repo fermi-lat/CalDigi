@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalDigi
+ * v1r3p4     27-Apr-2003 RXD check for GlastDetSvc rc; add author to reqs
  * v1r3p3     25-Mar-2003 AC  required RootIo version set to v*
  * v1r3p2      7-Jan-2003 RXD clean up DEBUG message using log.isActive
  * v1r2p12    16-Nov-2002 RXD clean up for more use of enums; convert to ADC converter Tool
