@@ -76,11 +76,11 @@ public:
         /// total number of towers
         int m_nTowers;  
         /// detModel identifier for CAL
-        int m_eTowerCAL;  
+        int m_eTowerCal;  
         /// detModel identifier for LAT Towers
-        int m_eLATTowers;
+        int m_eLatTowers;
         /// number of layers (ie in z)
-        int m_CALnLayer;  
+        int m_CalNLayer;  
         // number of Xtals per layer
         int m_nCsIPerLayer;  
         int m_eXtal;

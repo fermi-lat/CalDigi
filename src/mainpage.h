@@ -7,7 +7,7 @@
  * @section description Description
  *
  * This package performs the digitization of the calorimeter (CAL)
- * simulated readout.
+ * simulated readout, as laid out in these <a href="http://www-glast.slac.stanford.edu/software/DataStructuresTF/20011220/CalorimeterDigiRequirements.htm"> requirements</a>.
  * 
  * CalDigiAlg takes Hits from McIntegratingHit and performs the following steps:
  * <li>for deposit in a crystal segment, take into account light propagation to 
@@ -18,6 +18,9 @@
  * <li> add noise to 'unhit' crystals.</li>
  * <li> convert to ADC units and pick the appropriate readout range for 
  * hits above threshold.</li>
+ *
+ * Note that the geometry specification allows the artificial segmenting of
+ * the crystals along their length.
  * 
  * <b>Light Taper</b>
  *
@@ -78,6 +81,8 @@
  * crystal end, with two gain ranges each. So, there are 4 possible ranges
  * to choose from per end.
  *
+ * See the CAL PDR report for a fuller <a href="https://www-doc.slac.stanford.edu/CyberDOCS/quickstart.asp?show=COPY:505:&user=glastguest:guest&library=SLAC&noframes">description</a> of the PIN diode readout, especially Section 10.3.
+ *
  * There is overlap in the energy ranges, and a saturation value per range. 
  * The best range is selected by the largest readout value that is below
  * the saturation value of its range.
@@ -90,7 +95,12 @@
  * <hr>
  * @section requirements requirements
  * @verbinclude requirements
- * <hr>
+ * <hr> * https://www-doc.slac.stanford.edu/CyberDOCS/quickstart.asp?show=COPY:505:&user=glastguest:guest&library=SLAC&noframes
+ *
+
+ * @section jobOptions jobOptions
+ * @verbinclude ../src/test/jobOptions.txt 
+* <hr>
  * @todo remove hardwired noise parameter - put in xml
  * @todo add front-end non-linearity
  * @todo add failure modes
