@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Tue Sep 21 18:12:27 PDT 2004
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+fix prev for incorrect parameter access and vector init
+    *
+------------------------------------------------------------
 User: richard  Tue Sep 21 10:52:50 PDT 2004
 CalDigi/doc
 
