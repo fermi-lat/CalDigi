@@ -68,15 +68,10 @@ private:
     // number of Xtals per layer
     int m_nCsIPerLayer;  
 
-    /// electrons per MeV for diodes
-    string m_doFluctuations;
-    /// string flag for applying electron statistics fluctuations per channel
-    bool m_doFluctuationsBool;
-    /// map to contain true energy deposits by XtaIdID
-
     /// map to contain the McIntegratingHit vs XtaliD relational table
     typedef map< idents::CalXtalId,  vector< const Event::McIntegratingHit*> > PreDigiMap;
 
+    /// map to contain the McIntegratingHit vs XtaliD relational table
     PreDigiMap m_idMcIntPreDigi;   
 
     /// map to contain the McIntegratingHit vs XtaliD relational table
