@@ -117,8 +117,8 @@ StatusCode CalDigiAlg::initialize() {
     
     
     // scale max energies and thresholds from GeV to MeV
-    for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
-    m_thresh *= 1000.;
+    //for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
+    //m_thresh *= 1000.;
 
     // Read in the parameters from the XML file
     xml::IFile m_ifile(m_xmlFile.c_str());
