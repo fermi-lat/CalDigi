@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sun Aug 18 10:17:52 PDT 2002
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+set linear+exp as default taper model
+    *
+------------------------------------------------------------
 User: richard  Sun Aug 18 10:14:41 PDT 2002
 CalDigi/src
 
