@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Fri Sep  6 16:18:15 PDT 2002
+CalDigi/src
+
+Modified Files:
+	OnePlusExpTaper.cxx LinearTaper.cxx 
+Log Message:
+suppress unused function arg warning
+    *
+------------------------------------------------------------
 User: richard  Fri Sep  6 15:21:37 PDT 2002
 CalDigi/src
 
