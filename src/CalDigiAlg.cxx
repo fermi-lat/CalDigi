@@ -391,7 +391,7 @@ StatusCode CalDigiAlg::execute() {
  
                 // convert energy to ADC units here
                 
-                unsigned short adc = (short unsigned int)(resp/m_maxEnergy[br])*(m_maxAdc-m_pedestal)+m_pedestal;
+                unsigned short adc = (short unsigned int)((resp/m_maxEnergy[br])*(m_maxAdc-m_pedestal)+m_pedestal);
 
                 // assign the plus/minus readouts
                 
