@@ -1,5 +1,16 @@
 ------------------------------------------------------------
 User: fewtrell  Tue Mar  1 23:17:46 PST 2005
+CalDigi/xml
+
+Removed Files:
+      Tag: v1r6p2
+	CalDigi.xml 
+Log Message:
+removed large amount of obsolete code & comments.
+most has been taken over by CalXtalResponse
+    *
+------------------------------------------------------------
+User: fewtrell  Tue Mar  1 23:17:46 PST 2005
 CalDigi/src/test
 
 Modified Files:
