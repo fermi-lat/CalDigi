@@ -7,81 +7,106 @@
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include <vector>
 
-/*! \class CalDigiAlg
-\brief Algorithm to convert from McIntegratingHit objects into 
-CalDigi objects and store them in the TDS. Combines contributions from
-Xtal segments and accounts for light taper along the length of the Xtals.
-Energies are converted to adc values after pedestal subtraction, and the 
-appropriate gain range is identified.
-
-  Author:  A.Chekhtman
-  
+/** @class CalDigiAlg
+ * @brief Algorithm to convert from McIntegratingHit objects into 
+ * CalDigi objects and store them in the TDS. Combines contributions from
+ * Xtal segments and accounts for light taper along the length of the Xtals.
+ * Energies are converted to adc values after pedestal subtraction, and the 
+ * appropriate gain range is identified.
+ *
+ * Author:  A.Chekhtman
+ *
 */
 
 class CalDigiAlg : public Algorithm {
     
 public:
     
-    //! Constructor of this form must be provided
     CalDigiAlg(const std::string& name, ISvcLocator* pSvcLocator); 
     
-    //! mandatory
     StatusCode initialize();
-    //! mandatory
     StatusCode execute();
-    //! mandatory
     StatusCode finalize();
     
     //! pair of signals per Xtal. For SignalMap.
     class XtalSignal {
     public:
         XtalSignal();
+        /// constructor given signal from both ends of xtal
         XtalSignal(double s1, double s2);
         ~XtalSignal() {};
-        //!  return signal from selected diode
+        ///  return signal from selected diode by specifying the face
         double getSignal(int face) {return m_signal[face];};
-        //!  add to existing diode signals
+        ///  add to existing diode signals
         void addSignal(double s1, double s2);
-		double getDiodeEnergy(int diode) const { return m_Diodes_Energy[diode];}
-		void addDiodeEnergy(double ene, int diode) { m_Diodes_Energy[diode]+=ene;}
-		void setDiodeEnergy(double ene, int diode) { m_Diodes_Energy[diode]=ene;}
-    
-	private:
-        double m_signal[2];  // signal for both xtal faces (POS, NEG)
-		std::vector<double> m_Diodes_Energy; // direct energy depositions in 4 diodes of one xtal
+        /// fetch diode energy, given the diode number
+        double getDiodeEnergy(int diode) const { return m_Diodes_Energy[diode];}
+        /// add energy to the selected (already existing) diode
+        void addDiodeEnergy(double ene, int diode) { m_Diodes_Energy[diode]+=ene;}
+        /// set the (initial) energy for a diode
+        void setDiodeEnergy(double ene, int diode) { m_Diodes_Energy[diode]=ene;}
+        
+    private:
+        /// signal for both xtal faces (POS, NEG)
+        double m_signal[2];  
+        /// direct energy depositions in 4 diodes of one xtal; vector contains all 4 diodes
+        std::vector<double> m_Diodes_Energy; 
     };
     
     
     private:
         
+        /// names for identifier fields
         enum {fLATObjects, fTowerY, fTowerX, fTowerObjects, fLayer,
             fMeasure, fCALXtal,fCellCmp, fSegment};
         
         
-        /// constants defined in xml files
-        int m_xNum;  // x tower number
-        int m_yNum;  // y tower number
-        int m_nTowers;  // total number of towers
+        /// local cache for constants defined in xml files
+        /// x tower number
+        int m_xNum;  
+        /// y tower number
+        int m_yNum;  
+        /// total number of towers
+        int m_nTowers;  
+        /// detModel identifier for CAL
         int m_eTowerCAL;  
+        /// detModel identifier for LAT Towers
         int m_eLATTowers;
-        int m_CALnLayer;  // number of CAL layers
-        int m_nCsIPerLayer;  // number of Xtals per layer
+        /// number of layers (ie in z)
+        int m_CALnLayer;  
+        // number of Xtals per layer
+        int m_nCsIPerLayer;  
         int m_eXtal;
-        int m_nCsISeg;  // number of geometric segments per Xtal
+        /// number of geometric segments per Xtal
+        int m_nCsISeg;  
+        /// detModel identifier for small minus-side diode
         int m_eDiodeMSmall;   
+        /// detModel identifier for small plus-side diode
         int m_eDiodePSmall;
+        /// detModel identifier for large minus-side diode
         int m_eDiodeMLarge;
+        /// detModel identifier for large plus-side diode
         int m_eDiodePLarge;
+        /// detModel identifier for xtal measuring 'x'
         int m_eMeasureX;
+        /// detModel identifier for xtal measuring 'y'
         int m_eMeasureY;
-        int m_ePerMeV[2];  // gain - electrons/MeV 1=Small, 0=Large
-        int m_noise[2];  // noise for diodes 1=Small, 0=Large units=electrons
-        int m_pedestal;  // single pedestal
-        int m_maxAdc;  // max value for ADC
-        double m_thresh;  // zero suppression threshold
-        double m_maxEnergy[4];  // highest energy for each energy range
-        double m_lightAtt;  // light attenuation factor
-        double m_CsILength;  // Xtal length
+        /// gain - electrons/MeV 1=Small, 0=Large
+        int m_ePerMeV[2];  
+        /// noise for diodes 1=Small, 0=Large units=electrons
+        int m_noise[2];  
+        /// single pedestal
+        int m_pedestal;  
+        /// max value for ADC
+        int m_maxAdc;  
+        /// zero suppression threshold
+        double m_thresh;  
+        /// highest valid energy for each energy range
+        double m_maxEnergy[4];  
+        /// light attenuation factor
+        double m_lightAtt;  
+        /// Xtal length
+        double m_CsILength;  
         
 };
 
