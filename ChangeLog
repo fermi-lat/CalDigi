@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Mon Aug 26 11:49:04 PDT 2002
+CalDigi/src/test
+
+Modified Files:
+	DigiHitsTestAlg.cxx 
+Log Message:
+for compilation on Windows. std:: stuff
+    *
+------------------------------------------------------------
 User: richard  Mon Aug 26 11:48:26 PDT 2002
 CalDigi/src
 
