@@ -205,9 +205,8 @@ StatusCode CalDigiAlg::execute() {
     //  for deposit in a crystal segment, take into account light propagation to the two ends and 
     // apply light taper based on position along the length.
     //  keep track of direct deposit in the diode.
-    // Then combine diode (with appropriate scale factor) and crystal deposits and add noise.
-    // Then, add noise to 'unhit' crystals.
-    //  Finally, convert to ADC units and pick the range for hits above threshold.
+    // Then combine diode (with appropriate scale factor) and crystal deposits and add noise, except for pedestals
+    //  Finally,  add noise, convert to ADC units and pick the range for hits above threshold. This is done by one cal to CalUtil
     // Inputs: McIntegratingHit
     
     
