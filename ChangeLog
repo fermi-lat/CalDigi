@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sun Apr 27 18:05:05 PDT 2003
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+check for GlastDetSvc rc
+    *
+------------------------------------------------------------
 User: kyoung  Thu Apr 24 14:43:05 PDT 2003
 CalDigi/src
 
