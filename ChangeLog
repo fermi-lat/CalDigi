@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Tue Mar  1 23:58:22 PST 2005
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+builds on linux w/ out warning
+
+    *
+------------------------------------------------------------
 User: fewtrell  Tue Mar  1 23:57:07 PST 2005
 CalDigi/src
 
