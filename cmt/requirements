@@ -3,42 +3,32 @@ package CalDigi
 version v1r5p6
 author Richard Dubois <richard@slac.stanford.edu>
 author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
-# $Id$
+# $Id: requirements,v 1.18 2005/01/18 03:36:38 burnett Exp $
 branches src mgr doc
 
-use GlastSvc v*
-use CalibSvc v*
-use Event v*
-use CalUtil v1r*	
-
-use facilities
-
-use xmlBase v5r*
+use GlastPolicy
+use GaudiInterface * IExternal
+use CalXtalResponse
+use xmlBase
+use GlastSvc
 
 apply_pattern packageShr
 
-
-### hide the packages used only for test program
 #=============================================================
 private
-use RootIo v*
 
+#used only by test app
+use RootIo
+use CalibSvc        v*
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
 #apply_pattern package_include
 macro_prepend includes "-I $(CALDIGIROOT) " WIN32 "/I $(CALDIGIROOT) "
 
-#apply_pattern package_include
-
-
 apply_pattern package_headers
 
 library CalDigi *.cxx Dll/*.cxx ${CalDigi_headers}
 
-
 apply_pattern package_Cshlibflags 
-set JOBOPTIONS ${CALDIGIROOT}/src/test/jobOptions.txt
 
-# build this for testing, console only. Load all objects directly. 
-
-application test_CalDigi ${GlastMain} test/*.cxx  
+apply_pattern package_test
