@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Tue Jun 11 08:16:56 PDT 2002
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h 
+Log Message:
+more doc + change for loop scope in cxx
+    *
+------------------------------------------------------------
 User: richard  Fri Jun  7 09:06:37 PDT 2002
 CalDigi/src
 
