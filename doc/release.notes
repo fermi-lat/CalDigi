@@ -1,6 +1,8 @@
 /** @file release.notes
  * Package CalDigi
  *
+ * v1r2p3     11-sep-2002 LSR fix a unix fix
+ * v1r2p2     06-sep-2002 RXD Mostly unix fixes
  * v1r2p1     30-Aug-2002 RXD remove INFO messages from taper tools
  *
  * v1r2       27-Aug-2002 RXD include DigiHitsTestAlg in test jobOptions file
