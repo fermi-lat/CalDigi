@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: berrie  Tue Aug 10 00:10:12 PDT 2004
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+
+
+Fixed CalibSvc dependency
+    *
+------------------------------------------------------------
 User: berrie  Fri Aug  6 02:43:51 PDT 2004
 CalDigi/src
 
