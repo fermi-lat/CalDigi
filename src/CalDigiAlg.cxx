@@ -264,7 +264,7 @@ StatusCode CalDigiAlg::createDigis() {
                     }
 
                     Event::CalDigi::CalXtalReadout read = Event::CalDigi::CalXtalReadout(inputRangeP, 
-                        adcP[iLim], inputRangeN, adcN[iLim], status);
+                        adcP[inputRangeP], inputRangeN, adcN[inputRangeN], status);
 
                     curDigi->addReadout(read);
                 }
