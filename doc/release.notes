@@ -1,6 +1,9 @@
 /** @file release.notes
  * Package CalDigi
  *
+ * v1r2       23-Aug-2002 RXD change OnePlusExp taper - replace linear term with exponential.
+ *                            update parameters in xml.
+ *
  * v1r2       15-August-2002 RXD change test-app to Algorithm. Add xml file for parameters. Remove
  *                               hardwired parameter in CalDigiAlg. Add Gaudi Tools for light taper
  *                               functions, selectable from jobOptions. Clean up doc. Added relational
