@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalDigi
+ * v1r4p1     20-Apr-2004 PAC add CalibData objects for reading pedestal and gain values, pedestal noise is now added in CalUtil 
  * v1r3p7     07-Feb-2004 RXD set failsvc ptr to zero if not found
  * v1r3p6     28-Jan-2004 RXD replace muon test file
  * v1r3p4     27-Apr-2003 RXD check for GlastDetSvc rc; add author to reqs
