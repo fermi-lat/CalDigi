@@ -11,8 +11,6 @@
 #include "Event/TopLevel/EventModel.h"
 #include "GaudiKernel/ObjectVector.h"
 
-// MC classes
-#include "Event/MonteCarlo/McIntegratingHit.h"
 
 // Relational Table
 #include "Event/RelTable/Relation.h"
@@ -30,7 +28,6 @@
 
 // std stuff
 #include <utility>
-#include <map>
 #include <string>
 
 // Define the factory for this algorithm
@@ -153,14 +150,6 @@ StatusCode CalDigiAlg::execute() {
     StatusCode  sc = StatusCode::SUCCESS;
     MsgStream   log( msgSvc(), name() );
     
-    // get McIntegratingHit collection. Abort if empty.
-    
-    SmartDataPtr<Event::McIntegratingHitVector> McCalHits(eventSvc(),EventModel::MC::McIntegratingHitCol ); //"/Event/MC/IntegratingHitsCol");
-    
-    if (McCalHits == 0) {
-        log << MSG::DEBUG << "no calorimeter hits found" << endreq;
-        return sc;
-    }
     
     //Take care of insuring that data area has been created
     DataObject* pNode = 0;
@@ -179,164 +168,22 @@ StatusCode CalDigiAlg::execute() {
     //  clear signal array: map relating xtal signal to id. Map holds diode and crystal responses
     //  separately during accumulation.
     
-    typedef std::map<idents::CalXtalId,XtalSignal> SignalMap;
-    SignalMap signalMap;
+    m_signalMap.clear();
+    m_idMcInt.clear();
 
-    // multimap used to associate mcIntegratingHit to id. There can be multiple
-    // hits for the same id.  
- 
-    std::multimap< idents::CalXtalId, Event::McIntegratingHit* > idMcInt;   
-    
-    // loop over hits - pick out CAL hits
+    sc = fillSignalEnergies();
+    if (sc != StatusCode::SUCCESS) return sc;
 
-    for (Event::McIntegratingHitVector::const_iterator it = McCalHits->begin(); it != McCalHits->end(); it++) {
-        
-        
-        //   extracting hit parameters - get energy and first moment
-        
-        idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*it)->volumeID());
-        double ene = (*it)->totalEnergy();
-        HepPoint3D mom1 = (*it)->moment1();
+    sc = addNoiseToSignals();
+    if (sc != StatusCode::SUCCESS) return sc;
 
-	//	log << MSG::DEBUG <<  "McIntegratingHits info \n"  
-	//  << " ID " << volId.name()
-	//  <<  " energy " << ene
-	//  <<  " moments " << mom1.x()
-	//  << endreq;
-
-
-        //   extracting parameters from volume Id identifying as in CAL
-        
-        if ((int)volId[fLATObjects] == m_eLatTowers &&
-            (int)volId[fTowerObjects] == m_eTowerCal){ 
-            
-            int col = volId[fCALXtal];
-            int layer = volId[fLayer];
-            int towy = volId[fTowerY];
-            int towx = volId[fTowerX];
-            int tower = m_xNum*towy+towx; 
-            int segm = volId[fSegment];
-             
-            idents::CalXtalId mapId(tower,layer,col);
-
-            log << MSG::DEBUG <<  "Identifier decomposition \n"  
-                << " col " << col
-                << " layer " << layer
-                << " towy " << towy
-                << " towx " << towx
-                << " segm " << segm
-                << endreq;
-            
-            XtalSignal& xtalSignalRef = signalMap[mapId];
-            
-            // Insertion of the id - McIntegratingHit pair
-
-            idMcInt.insert(std::make_pair(mapId,*it));
-            
-            if((int)volId[fCellCmp] == m_eDiodeMLarge)
-                xtalSignalRef.addDiodeEnergy(ene,0);
-            
-            else if((int)volId[fCellCmp] == m_eDiodePLarge)
-                xtalSignalRef.addDiodeEnergy(ene,1);
-            
-            else if((int)volId[fCellCmp] == m_eDiodeMSmall )
-                xtalSignalRef.addDiodeEnergy(ene,2);
-            
-            else if((int)volId[fCellCmp] == 	m_eDiodePSmall ) 
-                xtalSignalRef.addDiodeEnergy(ene,3);
-            
-            else if((int)volId[fCellCmp] ==  m_eXtal ){
-                
-               
-                // let's define the position of the segment along the crystal
-                
-                double relpos = (segm+0.5)/m_nCsISeg;
-                
-                
-                // in local reference system x is always oriented along the crystal
-                double dpos =  mom1.x(); 
-                
-                relpos += dpos/m_CsILength;
-                
-                
-                
-                // take into account light tapering
-                                
-                std::pair<double,double> signals;
-                signals = m_taper->calculateSignals(mapId,relpos,ene);
-
-                // set up a XtalMap to act as key for the map - if there is no entry, add
-                // add one, otherwise add signal to existing map element.
-                
-                
-                xtalSignalRef.addSignal(signals.first,signals.second);
-                
-                
-                
-            }
-        }
-    }
-    
+    sc = addNewNoiseHits();
+    if (sc != StatusCode::SUCCESS) return sc;
        
-    // add electronic noise to the diode response and add to the crystal 
-    // response. The diodeEnergy becomes the readout source.
     
-    for(SignalMap::iterator mit=signalMap.begin(); mit!=signalMap.end();mit++){
-        XtalSignal* xtal_signal = &(*mit).second;
-        
-        for ( int idiode =0; idiode < 4; idiode++){
-            int diode_type = idiode/2;
-            int face  = idiode%2;
-            double signal = xtal_signal->getSignal(face);
-            
-            double diode_ene = xtal_signal->getDiodeEnergy(idiode);
-            
-            
-            // convert energy deposition in a diode to
-            // the equivalent energy in a crystal 
-            diode_ene *= m_ePerMeVinDiode/m_ePerMeV[diode_type];
-            
-            // add crystal signal - now diode energy contains
-            // the signal at given diode in energy units
-            // (equivalent energy deposition at the crystal center)
-            diode_ene += signal;
-            
-            // add poissonic fluctuations in the number of electrons in a diode
-            if (m_doFluctuationsBool) diode_ene += sqrt(diode_ene/m_ePerMeV[diode_type])
-                                                   *RandGauss::shoot();
-            
-            // add electronic noise
-            diode_ene += RandGauss::shoot()*m_noise[diode_type]/m_ePerMeV[diode_type];
-            
-            //store modified diode signal in the signal map
-            xtal_signal->setDiodeEnergy(diode_ene,idiode);
-            
-        }
-    }
-    
-    //  adding electronic noise to the channels without signal,
-    // 	storing it in the signal map if  one of crystal faces
-    //	has the noise above the threshold 	
-    
-    double noise_MeV = double(m_noise[0])/double(m_ePerMeV[0]); // noise in MeV for the large diode
-    for (int tower = 0; tower < m_xNum*m_yNum; tower++){
-        for (int layer = 0; layer < m_CalNLayer; layer++){
-            for (int col = 0; col < m_nCsIPerLayer; col++){
-                double eneM = noise_MeV*RandGauss::shoot();
-                double eneP = noise_MeV*RandGauss::shoot();
-                idents::CalXtalId mapId(tower,layer,col);
-                if((eneM > m_thresh || eneP > m_thresh) &&
-                    signalMap.find(mapId) == signalMap.end()){
-                    XtalSignal& xtalSignalRef = signalMap[mapId];
-                    xtalSignalRef.addDiodeEnergy(eneM,0);
-                    xtalSignalRef.addDiodeEnergy(eneP,1);
-                }
-            }
-        }
-    }
     	
-    log << MSG::DEBUG << signalMap.size() << "calorimeter hits in signalMap" << endreq;
-    for( SignalMap::iterator jit=signalMap.begin(); jit!=signalMap.end();jit++){
+    log << MSG::DEBUG << m_signalMap.size() << "calorimeter hits in m_signalMap" << endreq;
+    for( SignalMap::iterator jit=m_signalMap.begin(); jit!=m_signalMap.end();jit++){
     log << MSG::DEBUG << " id " << (*jit).first
     << " s0=" << (*jit).second.getSignal(0)
     << " s1=" << (*jit).second.getSignal(1)
@@ -347,7 +194,22 @@ StatusCode CalDigiAlg::execute() {
     << endreq;
     }
     	
+   sc = createDigis();
+    if (sc != StatusCode::SUCCESS) return sc;    
     
+    return sc;
+}
+
+StatusCode CalDigiAlg::finalize() {
+    
+    MsgStream log(msgSvc(), name());
+    log << MSG::INFO << "finalize" << endreq;
+    
+    return StatusCode::SUCCESS;
+}
+
+StatusCode CalDigiAlg::createDigis() {
+
     Event::CalDigiCol* digiCol = new Event::CalDigiCol;
     
     Event::RelTable<Event::CalDigi, Event::McIntegratingHit> digiHit;
@@ -357,7 +219,7 @@ StatusCode CalDigiAlg::execute() {
     // if either side is above threshold, then select the appropriate ADC range and
     // create a readout
     
-    for(SignalMap::iterator nit=signalMap.begin(); nit!=signalMap.end();nit++){
+    for(SignalMap::iterator nit=m_signalMap.begin(); nit!=m_signalMap.end();nit++){
         XtalSignal* signal = &(*nit).second;
         
         if(signal->getDiodeEnergy(0) > m_thresh 
@@ -408,7 +270,7 @@ StatusCode CalDigiAlg::execute() {
             curDigi->addReadout(read);
             
             typedef std::multimap< idents::CalXtalId, Event::McIntegratingHit* >::const_iterator ItHit;
-            std::pair<ItHit,ItHit> itpair = idMcInt.equal_range(xtalId);
+            std::pair<ItHit,ItHit> itpair = m_idMcInt.equal_range(xtalId);
             
             for (ItHit mcit = itpair.first; mcit!=itpair.second; mcit++)
             {
@@ -421,21 +283,195 @@ StatusCode CalDigiAlg::execute() {
         }
     }
     
-    sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol);
+    StatusCode sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol);
     
     if (!(sc == StatusCode::FAILURE))
       sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
-    
     return sc;
 }
 
-StatusCode CalDigiAlg::finalize() {
+StatusCode CalDigiAlg::fillSignalEnergies() {
+    // Purpose and Method: collect deposited energies from McIntegratingHits and store
+    // in map sorted by XtalID. 
+    // multimap used to associate mcIntegratingHit to id. There can be multiple
+    // hits for the same id.  
+ 
+    // get McIntegratingHit collection. Abort if empty.
     
+    StatusCode  sc = StatusCode::SUCCESS;
     MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "finalize" << endreq;
+    SmartDataPtr<Event::McIntegratingHitVector> McCalHits(eventSvc(),EventModel::MC::McIntegratingHitCol ); //"/Event/MC/IntegratingHitsCol");
     
+    if (McCalHits == 0) {
+        log << MSG::DEBUG << "no calorimeter hits found" << endreq;
+        return sc;
+    }
+    
+    // loop over hits - pick out CAL hits
+
+    for (Event::McIntegratingHitVector::const_iterator it = McCalHits->begin(); it != McCalHits->end(); it++) {
+        
+        
+        //   extracting hit parameters - get energy and first moment
+        
+        idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*it)->volumeID());
+
+
+        //   extracting parameters from volume Id identifying as in CAL
+        
+        if ((int)volId[fLATObjects] == m_eLatTowers &&
+            (int)volId[fTowerObjects] == m_eTowerCal){ 
+            
+            double ene = (*it)->totalEnergy();
+            HepPoint3D mom1 = (*it)->moment1();
+
+	//	log << MSG::DEBUG <<  "McIntegratingHits info \n"  
+	//  << " ID " << volId.name()
+	//  <<  " energy " << ene
+	//  <<  " moments " << mom1.x()
+	//  << endreq;
+
+            int col = volId[fCALXtal];
+            int layer = volId[fLayer];
+            int towy = volId[fTowerY];
+            int towx = volId[fTowerX];
+            int tower = m_xNum*towy+towx; 
+            int segm = volId[fSegment];
+             
+            idents::CalXtalId mapId(tower,layer,col);
+
+            log << MSG::DEBUG <<  "Identifier decomposition \n"  
+                << " col " << col
+                << " layer " << layer
+                << " towy " << towy
+                << " towx " << towx
+                << " segm " << segm
+                << endreq;
+            
+            XtalSignal& xtalSignalRef = m_signalMap[mapId];
+            
+            // Insertion of the id - McIntegratingHit pair
+
+            m_idMcInt.insert(std::make_pair(mapId,*it));
+            
+            if((int)volId[fCellCmp] == m_eDiodeMLarge)
+                xtalSignalRef.addDiodeEnergy(ene,0);
+            
+            else if((int)volId[fCellCmp] == m_eDiodePLarge)
+                xtalSignalRef.addDiodeEnergy(ene,1);
+            
+            else if((int)volId[fCellCmp] == m_eDiodeMSmall )
+                xtalSignalRef.addDiodeEnergy(ene,2);
+            
+            else if((int)volId[fCellCmp] == 	m_eDiodePSmall ) 
+                xtalSignalRef.addDiodeEnergy(ene,3);
+            
+            else if((int)volId[fCellCmp] ==  m_eXtal ){
+                
+               
+                // let's define the position of the segment along the crystal
+                
+                double relpos = (segm+0.5)/m_nCsISeg;
+                
+                
+                // in local reference system x is always oriented along the crystal
+                double dpos =  mom1.x(); 
+                
+                relpos += dpos/m_CsILength;
+                
+                
+                
+                // take into account light tapering
+                                
+                std::pair<double,double> signals;
+                signals = m_taper->calculateSignals(mapId,relpos,ene);
+
+                // set up a XtalMap to act as key for the map - if there is no entry, add
+                // add one, otherwise add signal to existing map element.
+                
+                
+                xtalSignalRef.addSignal(signals.first,signals.second);
+                
+                
+                
+            }
+        }
+    }   
+    return sc;
+}
+
+StatusCode CalDigiAlg::addNoiseToSignals() {
+    // Purpose and Method: 
+    // add electronic noise to the diode response and add to the crystal 
+    // response. The diodeEnergy becomes the readout source.
+    
+    for(SignalMap::iterator mit=m_signalMap.begin(); mit!=m_signalMap.end();mit++){
+        XtalSignal* xtal_signal = &(*mit).second;
+        
+        for ( int idiode =0; idiode < 4; idiode++){
+            int diode_type = idiode/2;
+            int face  = idiode%2;
+            double signal = xtal_signal->getSignal(face);
+            
+            double diode_ene = xtal_signal->getDiodeEnergy(idiode);
+            
+            
+            // convert energy deposition in a diode to
+            // the equivalent energy in a crystal 
+            diode_ene *= m_ePerMeVinDiode/m_ePerMeV[diode_type];
+            
+            // add crystal signal - now diode energy contains
+            // the signal at given diode in energy units
+            // (equivalent energy deposition at the crystal center)
+            diode_ene += signal;
+            
+            // add poissonic fluctuations in the number of electrons in a diode
+            if (m_doFluctuationsBool) {
+                float numberElectrons = diode_ene * m_ePerMeV[diode_type];
+
+                // approximate Poisson distribution by gaussian for numberElectrons >> 1
+                float electronFluctuation = sqrt(numberElectrons) * RandGauss::shoot();
+ 
+                diode_ene += electronFluctuation /m_ePerMeV[diode_type];
+            }
+            
+            // add electronic noise
+            diode_ene += RandGauss::shoot()*m_noise[diode_type]/m_ePerMeV[diode_type];
+            
+            //store modified diode signal in the signal map
+            xtal_signal->setDiodeEnergy(diode_ene,idiode);
+            
+        }
+    }
     return StatusCode::SUCCESS;
 }
+
+
+StatusCode CalDigiAlg::addNewNoiseHits() {
+    // Purpose and Method: 
+    //  adding electronic noise to the channels without signal,
+    // 	storing it in the signal map if  one of crystal faces
+    //	has the noise above the threshold 	
+    
+    double noise_MeV = double(m_noise[0])/double(m_ePerMeV[0]); // noise in MeV for the large diode
+    for (int tower = 0; tower < m_xNum*m_yNum; tower++){
+        for (int layer = 0; layer < m_CalNLayer; layer++){
+            for (int col = 0; col < m_nCsIPerLayer; col++){
+                double eneM = noise_MeV*RandGauss::shoot();
+                double eneP = noise_MeV*RandGauss::shoot();
+                idents::CalXtalId mapId(tower,layer,col);
+                if((eneM > m_thresh || eneP > m_thresh) &&
+                    m_signalMap.find(mapId) == m_signalMap.end()){
+                    XtalSignal& xtalSignalRef = m_signalMap[mapId];
+                    xtalSignalRef.addDiodeEnergy(eneM,0);
+                    xtalSignalRef.addDiodeEnergy(eneP,1);
+                }
+            }
+        }
+    }
+    return StatusCode::SUCCESS;;
+}
+
 CalDigiAlg::XtalSignal::XtalSignal() {
     // Purpose and Method: default constructor setting signals to zero
     m_signal[0] = 0;

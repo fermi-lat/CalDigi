@@ -90,16 +90,19 @@
  * The best range is selected by the largest readout value that is below
  * the saturation value of its range.
  *
+ * @section Tests Tests
  * A test program, under src/test, exercises everything. It is set up as a Gaudi algorithm
  * and runs CalDigiAlg with an MC root file as input for on-axis muons. The algorithm checks
  * that there are output digis in the TDS.
  *
- * <b> jobOptions parameters</b>
+ * @section jobOptions jobOptions
  *
- * <it>CalDigiAlg.taperToolName </it>
- * <it>CalDigiAlg.doFluctuations </it>
+ * @param CalDigiAlg.taperToolName
+ *  Select the tool to perform the light attenuation
+ *  Available choices are "OnePlusExpTaper" and "LinearTaper"
+ * @param CalDigiAlg.doFluctuations
+ *  Flag to enable electron counting statistics fluctuations
  *
- * Available choices are "OnePlusExpTaper" and "LinearTaper"
  *
  * <hr>
  * @section notes release.notes
@@ -108,7 +111,6 @@
  * @section requirements requirements
  * @verbinclude requirements
 * <hr>
- * @todo remove hardwired noise parameter - put in xml
  * @todo add front-end non-linearity
  * @todo add failure modes
  * @todo add realistic light taper

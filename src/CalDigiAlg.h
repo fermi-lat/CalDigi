@@ -7,6 +7,9 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include <vector>
+#include <map>
+// MC classes
+#include "Event/MonteCarlo/McIntegratingHit.h"
 
 /** @class CalDigiAlg
  * @brief Algorithm to convert from McIntegratingHit objects into 
@@ -53,7 +56,7 @@ public:
         void addDiodeEnergy(double ene, int diode) { m_Diodes_Energy[diode]+=ene;}
         /// set the (initial) energy for a diode
         void setDiodeEnergy(double ene, int diode) { m_Diodes_Energy[diode]=ene;}
-        
+            
     private:
         /// signal for both xtal faces (POS, NEG)
         double m_signal[2];  
@@ -61,6 +64,11 @@ public:
         std::vector<double> m_Diodes_Energy; 
     };
     
+    protected:
+        StatusCode fillSignalEnergies();
+        StatusCode addNoiseToSignals();
+        StatusCode addNewNoiseHits();
+        StatusCode createDigis();
     
     private:
         
@@ -127,6 +135,14 @@ public:
         std::string m_doFluctuations;
         /// string flag for applying electron statistics fluctuations per channel
         bool m_doFluctuationsBool;
+        /// map to contain true energy deposits by XtaIdID
+            
+        typedef std::map<idents::CalXtalId,XtalSignal> SignalMap;
+        SignalMap m_signalMap;
+       /// map to contain the McIntegratingHit vs XtaliD relational table
+        std::multimap< idents::CalXtalId, Event::McIntegratingHit* > m_idMcInt;   
+
+
 };
 
 
