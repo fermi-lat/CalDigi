@@ -19,7 +19,7 @@ apply_pattern packageShr
 #=============================================================
 private
 use RootPolicy *
-use RootIo v6*
+use RootIo v*
 
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
