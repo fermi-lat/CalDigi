@@ -100,9 +100,9 @@
  *
  * @section jobOptions jobOptions
  *
- * @param CalDigiAlg.taperToolName
- *  Select the tool to perform the light attenuation
- *  Available choices are "OnePlusExpTaper" and "LinearTaper"
+ * @param CalDigiAlg.RangeType
+ *  Select the readout range
+ *  Available choices are "BEST" and "ALL"
  * @param CalDigiAlg.convertAdcToolName
  *  Select the tool to perform the conversion from energy to ADC units
  *  Available choice is "LinearConvertAdc
