@@ -1,0 +1,27 @@
+------------------------------------------------------------
+User: chehtman  Wed May 15 15:31:39 PDT 2002
+CalDigi
+
+Log Message:
+CalDigi package created from cal part of GlastDigi
+
+Status:
+
+Vendor Tag:	GLAST
+Release Tags:	v1r0
+		
+N CalDigi/.cvsignore
+N CalDigi/cmt/cleanup.bat
+N CalDigi/cmt/NMake
+N CalDigi/cmt/requirements
+N CalDigi/cmt/setup.bat
+N CalDigi/doc/.cvsignore
+N CalDigi/doc/release.notes
+N CalDigi/src/CalDigiAlg.cxx
+N CalDigi/src/CalDigiAlg.h
+N CalDigi/src/Dll/GlastDigi_dll.cxx
+N CalDigi/src/Dll/GlastDigi_load.cxx
+
+No conflicts created by this import
+
+    *
