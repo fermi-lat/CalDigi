@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalDigi
+ * v1r2p5     12-Sep-2002 RXD swap signs on ends for taper tools; make LinearTaper default again (for now)
  *
  * v1r2p3     11-sep-2002 LSR fix a unix fix
  * v1r2p2     06-sep-2002 RXD Mostly unix fixes
