@@ -32,10 +32,16 @@ private:
     double m_lightAtt;
     /// full length of crystal
     double m_CsILength;
+    /// light attenuation parameter - constant offset
+    double m_offset;
     /// light attenuation parameter - scale factor on the exponential
     double m_scaleExponential;
     /// light attenuation parameter - scale factor on the exponent - effective length scale
     double m_scaleExponent;
+    /// light attenuation parameter - scale factor on the turnover exponential
+    double m_scaleTurnoverExponential;
+    /// light attenuation parameter - scale factor on the turnover exponent
+    double m_scaleTurnoverExponent;
     /// input XML file containing parameters for Digitization
     std::string	m_xmlFile;
 };

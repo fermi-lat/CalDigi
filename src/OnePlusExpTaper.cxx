@@ -1,6 +1,5 @@
 #include "OnePlusExpTaper.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "GaudiKernel/MsgStream.h"
 
 // to access an XML containing Digi parameters file
@@ -31,30 +30,15 @@ StatusCode OnePlusExpTaper::initialize() {
     log << MSG::INFO << "initialize" << endreq;
     StatusCode sc;
     
-    IGlastDetSvc* detSvc;
-
-    if( serviceLocator() ) {
-      StatusCode sc = serviceLocator()->service( "GlastDetSvc", detSvc, true );
-    }
-    if(sc.isFailure())
-    {
-      log << MSG::ERROR << "Could not find eventSvc" << endreq;
-      return sc;
-    }
-
-    if(!detSvc->getNumericConstByName("cal.lightAtt",&m_lightAtt)) {
-            log << MSG::ERROR << " constant " << " cal.lightAtt not defined" << endreq;
-            return StatusCode::FAILURE;
-        } 
-    if(!detSvc->getNumericConstByName("CsILength",&m_CsILength)) {
-            log << MSG::ERROR << " constant " << " CsILength not defined" << endreq;
-            return StatusCode::FAILURE;
-        } 
 
    // Read in the parameters from the XML file
     xml::IFile m_ifile(m_xmlFile.c_str());
+    m_offset = m_ifile.getDouble("onePlusExpDigi", "offset");
     m_scaleExponential = m_ifile.getDouble("onePlusExpDigi", "scaleExponential");
     m_scaleExponent = m_ifile.getDouble("onePlusExpDigi", "scaleExponent");
+    m_scaleTurnoverExponential = m_ifile.getDouble("onePlusExpDigi",
+        "scaleTurnoverExponential");
+    m_scaleTurnoverExponent = m_ifile.getDouble("onePlusExpDigi", "scaleTurnoverExponent");
  
 
      return StatusCode::SUCCESS;
@@ -74,13 +58,12 @@ std::pair<double, double> OnePlusExpTaper::calculateSignals(idents::CalXtalId id
     log << MSG::INFO << "execute" << endreq;
 
     
-    double norm = 0.5+0.5*m_lightAtt; // light tapering in the center of crystal (relpos=0.5)
 
-    double s1 = depositedEnergy*(1-relativePosition*(1-m_lightAtt) -
-                 m_scaleExponential*exp(-m_scaleExponent*m_CsILength*relativePosition) )/norm;
+    double s1 = depositedEnergy*(m_offset+m_scaleExponential*exp(-relativePosition*m_scaleExponent) -
+                 m_scaleTurnoverExponential*exp(m_scaleTurnoverExponent*relativePosition));
     
-    double s2 = depositedEnergy*(1-(1-relativePosition)*(1-m_lightAtt) -
-                 m_scaleExponential*exp(-m_scaleExponent*m_CsILength*(1.-relativePosition)) )/norm;
+    double s2 = depositedEnergy*(m_offset+m_scaleExponential*exp(-(1-relativePosition)*m_scaleExponent) -
+                 m_scaleTurnoverExponential*exp(m_scaleTurnoverExponent*(1-relativePosition)));
 
     return std::pair<double,double>(s1,s2);
     
