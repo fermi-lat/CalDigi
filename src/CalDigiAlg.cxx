@@ -86,6 +86,10 @@ StatusCode CalDigiAlg::initialize() {
    
     IGlastDetSvc* detSvc;
     StatusCode sc = service("GlastDetSvc", detSvc);
+    if (sc.isFailure() ) {
+        log << MSG::ERROR << "  Unable to get GlastDetSvc " << endreq;
+        return sc;
+    }
     
     for(PARAMAP::iterator it=param.begin(); it!=param.end();it++){
         if(!detSvc->getNumericConstByName((*it).second, &value)) {
