@@ -21,8 +21,8 @@
 #include "CLHEP/Random/RandGauss.h"
 /// for min and floor functions
 #include <algorithm>
-#include <math.h>
-#include <iostream.h>
+#include <cmath>
+#include <iostream>
 
 // to access an XML containing Digi parameters file
 #include "xml/IFile.h"
