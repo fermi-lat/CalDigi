@@ -15,15 +15,18 @@
         Do not modify and check in this file without permission!
         Note that the text in the item field cannot have direct ampersands of brackets!
   -->
-<calDigi cvs_Header="$Header: /nfs/slac/g/glast/ground/cvs/calDigi/xml/calDigi.xml,v 1.1 2002/05/23 19:05:25 heather Exp $"
+<calDigi cvs_Header="$Header: /nfs/slac/g/glast/ground/cvs/CalDigi/xml/CalDigi.xml,v 1.1 2002/08/18 15:52:59 richard Exp $"
          cvs_Revision="$Revision: 1.1 $">
 
     <section name="cal">  CAL properties
 	<item name="ePerMeVinDiode"     value="2.77e5"> MeV 1e6/3.6</item>
     </section>
     <section name="onePlusExpDigi">  digi properties
-	<item name="scaleExponential"     value="0.075"> scale factor on exponential</item>
-	<item name="scaleExponent"     value="0.1"> scale factor on exponent</item>
+	<item name="offset"     value="0.88"> constant offset</item>
+	<item name="scaleExponential"     value="0.30"> scale factor on exponential</item>
+	<item name="scaleExponent"     value="1.818"> scale factor on exponent</item>
+	<item name="scaleTurnoverExponential"     value="0.05"> scale factor Turnover on exponential</item>
+	<item name="scaleTurnoverExponent"     value="-32.6"> scale factor Turnover on exponent</item>
     </section>
 
 </calDigi>
