@@ -34,7 +34,7 @@
  *
  * The crystals are segmented in the geometry (default is 12 segments). The
  * energy contributions from each segment are subjected to the taper correction
- * and then added to form the total signal.
+ * and then added to form the total signal. For a linear model of attenuation:
  *
  *  Normalization N = 0.5+0.5*lightAtt
  *
@@ -52,9 +52,12 @@
  *
  * s1 - s2 = energy/N * (1-2*relPos)*(1-lightAtt) so that
  *
- *  (s1-s2)/(s1+s2) = (1-2*relPos)*(1-lightAtt)/(1+lightAtt)
+ *  (s1-s2)/(s1+s2) = (1-2*relPos)*(1-lightAtt)/2
  *
  *  which is a measure of the relative position.
+ *
+ *  this light taper is modeled via user selectable functions. These are implemented as
+ *  Gaudi tools. See below for the options.
  *
  * <b>Thresholds and Energy Deposit</b>
  *
@@ -87,7 +90,15 @@
  * The best range is selected by the largest readout value that is below
  * the saturation value of its range.
  *
- * A test program, under src/test, exercises everything.
+ * A test program, under src/test, exercises everything. It is set up as a Gaudi algorithm
+ * and runs CalDigiAlg with an MC root file as input for on-axis muons. The algorithm checks
+ * that there are output digis in the TDS.
+ *
+ * <b> jobOptions parameters</b>
+ *
+ * <it>CalDigiAlg.taperToolName </it>
+ *
+ * Available choices are "OnePlusExpTaper" and "LinearTaper"
  *
  * <hr>
  * @section notes release.notes
