@@ -7,7 +7,7 @@ branches src mgr doc
 use GlastSvc v*
 use Event v*
 use GuiSvc                v3*
-use CalUtil v1r0	
+use CalUtil v1r*	
 
 use facilities
 
