@@ -1,6 +1,7 @@
 /** @file release.notes
  * Package CalDigi
  *
+ * v1r1p1     14-June-2002 RXD update for code review. Change for loop scope.
  * v1r0p1     15-May-2002 THB rename DLL filenames
  * v1r0       15-May-2002 AC Package created from Cal part of GlastDigi
  *
