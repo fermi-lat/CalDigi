@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Mar  2 16:24:13 PST 2005
+CalDigi/xml
+
+Removed Files:
+	CalDigi.xml 
+Log Message:
+trying remove unused files from v2 of caldigi
+
+    *
+------------------------------------------------------------
 User: fewtrell  Wed Mar  2 16:24:07 PST 2005
 CalDigi/src
 
