@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Mar  2 16:24:07 PST 2005
+CalDigi/src
+
+Removed Files:
+	CalDigiRandom.cxx ITaper.h LinearTaper.cxx LinearTaper.h 
+	OnePlusExpTaper.cxx OnePlusExpTaper.h 
+Log Message:
+trying remove unused files from v2 of caldigi
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r0p1, operation: add
 Package: CalDigi
