@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sat Feb  7 15:32:11 PST 2004
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+set failsvc ptr to zero if not found
+    *
+------------------------------------------------------------
 User: richard  Wed Jan 28 09:14:49 PST 2004
 CalDigi/doc
 
