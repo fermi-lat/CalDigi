@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: berrie  Fri Aug  6 02:43:51 PDT 2004
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+
+
+Modified CalDigi to reproduce the state of v1r3p7 for RespSvc development
+    *
+------------------------------------------------------------
 User: richard  Mon Jun 21 05:16:48 PDT 2004
 CalDigi/src
 
