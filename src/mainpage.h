@@ -103,9 +103,9 @@
  * @param CalDigiAlg.RangeType
  *  Select the readout range
  *  Available choices are "BEST" and "ALL"
- * @param CalDigiAlg.convertAdcToolName
+ * @param CalDigiAlg.xtalADCToolName
  *  Select the tool to perform the conversion from energy to ADC units
- *  Available choice is "LinearConvertAdc
+ *  Available choice is "XtalADCTool"
  * @param CalDigiAlg.doFluctuations
  *  Flag to enable electron counting statistics fluctuations
  *

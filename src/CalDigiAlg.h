@@ -5,7 +5,7 @@
 // Include files
 #include "ITaper.h"
 #include "CalUtil/ICalFailureModeSvc.h"
-#include "CalUtil/ICalAdcTool.h"
+#include "CalXtalResponse/IXtalADCTool.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include <vector>
@@ -58,8 +58,6 @@ private:
     int m_xNum;  
     /// y tower number
     int m_yNum;  
-    /// total number of towers
-    int m_nTowers;  
     /// detModel identifier for CAL
     int m_eTowerCal;  
     /// detModel identifier for LAT Towers
@@ -93,9 +91,9 @@ private:
     /// type of readout range: BEST or ALL
     std::string m_rangeType;
     /// name of Tool for calculating light taper
-    std::string m_convertAdcToolName;
+    std::string m_xtalADCToolName;
     /// pointer to actual tool for converting energy to ADC
-    ICalAdcTool* m_convertAdc;
+    IXtalADCTool* m_xtalADCTool;
 };
 
 
