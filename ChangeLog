@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Tue Jan  4 14:44:30 PST 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx OnePlusExpTaper.cxx 
+Log Message:
+OnePlusExpTaper.cxx: Use new xmlBase package rather than xml
+CalDigiAlg.cxx:      Eliminate unused, unnecessary #include of IFile.h
+
+    *
+------------------------------------------------------------
 User: jrb  Tue Jan  4 14:43:47 PST 2005
 CalDigi/cmt
 
