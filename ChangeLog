@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: lsrea  Wed Sep 11 18:10:44 PDT 2002
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+fix use for GlastSvc
+    *
+------------------------------------------------------------
 User: richard  Tue Sep 10 22:03:25 PDT 2002
 CalDigi/cmt
 
