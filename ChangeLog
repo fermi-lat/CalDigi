@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Thu Sep 12 12:34:32 PDT 2002
+CalDigi/src
+
+Modified Files:
+	LinearTaper.cxx OnePlusExpTaper.cxx CalDigiAlg.cxx 
+Log Message:
+ends sign swap in taper tools. Reset default tool to Linear
+    *
+------------------------------------------------------------
 User: lsrea  Wed Sep 11 21:44:15 PDT 2002
 CalDigi/src
 
