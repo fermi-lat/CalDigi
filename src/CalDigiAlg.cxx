@@ -46,7 +46,7 @@ Algorithm(name, pSvcLocator) {
     // Declare the properties that may be set in the job options file
     declareProperty ("xmlFile", m_xmlFile="$(CALDIGIROOT)/xml/CalDigi.xml");
     declareProperty ("taperToolName", m_taperToolName="OnePlusExpTaper");
-
+    declareProperty ("doFluctuations", m_doFluctuations="yes");
 }
 
 
@@ -131,6 +131,8 @@ StatusCode CalDigiAlg::initialize() {
         log << MSG::ERROR << "  Unable to create " << m_taperToolName << endreq;
         return sc;
     }
+
+    m_doFluctuationsBool = (m_doFluctuations == "yes") ? 1 : 0;
 
     return StatusCode::SUCCESS;
 }
@@ -299,7 +301,8 @@ StatusCode CalDigiAlg::execute() {
             diode_ene += signal;
             
             // add poissonic fluctuations in the number of electrons in a diode
-            diode_ene += sqrt(diode_ene/m_ePerMeV[diode_type])*RandGauss::shoot();
+            if (m_doFluctuationsBool) diode_ene += sqrt(diode_ene/m_ePerMeV[diode_type])
+                                                   *RandGauss::shoot();
             
             // add electronic noise
             diode_ene += RandGauss::shoot()*m_noise[diode_type]/m_ePerMeV[diode_type];
