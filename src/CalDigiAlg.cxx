@@ -9,6 +9,7 @@
 
 /// Glast specific includes
 #include "Event/TopLevel/EventModel.h"
+#include "Event/TopLevel/DigiEvent.h"
 #include "GaudiKernel/ObjectVector.h"
 
 // Relational Table
@@ -171,7 +172,7 @@ StatusCode CalDigiAlg::execute() {
     sc = eventSvc()->retrieveObject( EventModel::Digi::Event /*"/Event/Digi"*/, pNode);
     
     if (sc.isFailure()) {
-        sc = eventSvc()->registerObject(EventModel::Digi::Event /*"/Event/Digi"*/,new DataObject);
+        sc = eventSvc()->registerObject(EventModel::Digi::Event /*"/Event/Digi"*/,new Event::DigiEvent);
         if( sc.isFailure() ) {
             log << MSG::ERROR << "could not register " << EventModel::Digi::Event /*<< /Event/Digi "*/ << endreq;
             return sc;
