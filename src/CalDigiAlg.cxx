@@ -1,5 +1,6 @@
 #include "CalDigiAlg.h"
 #include "CalUtil/ICalFailureModeSvc.h"
+#include "CalUtil/CalDefs.h"
 /// Gaudi specific include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -217,6 +218,17 @@ StatusCode CalDigiAlg::createDigis() {
                                       peggedN
                                       );
         // set status to ok for POS and NEG if no other bits set.
+
+        if (!((CalDefs::RngNum)rangeP).isValid() || !((CalDefs::RngNum)rangeN).isValid() ) {
+            msglog << MSG::ERROR; 
+            if (msglog.isActive()){ 
+                msglog.stream() <<"Range exceeded!!! id=" << mapId 
+                    << " rangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP[rangeP] << " lacP=" << lacP
+                    << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN;
+            } 
+            msglog << endreq;
+            return StatusCode::FAILURE;
+        }
 
 
         unsigned short status = 0;
