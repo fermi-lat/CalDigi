@@ -3,7 +3,6 @@
 
 
 // Include files
-#include "ITaper.h"
 #include "CalUtil/ICalFailureModeSvc.h"
 #include "CalXtalResponse/IXtalADCTool.h"
 #include "GaudiKernel/Algorithm.h"
@@ -24,11 +23,13 @@
 *
 */
 
+using namespace std;
+
 class CalDigiAlg : public Algorithm {
 
 public:
 
-    CalDigiAlg(const std::string& name, ISvcLocator* pSvcLocator); 
+    CalDigiAlg(const string& name, ISvcLocator* pSvcLocator); 
 
     StatusCode initialize();
     StatusCode execute();
@@ -66,32 +67,28 @@ private:
     int m_CalNLayer;  
     // number of Xtals per layer
     int m_nCsIPerLayer;  
-    /// number of geometric segments per Xtal
-    int m_nCsISeg;  
 
-    /// input XML file containing parameters for Digitization
-    std::string	m_xmlFile;
     /// electrons per MeV for diodes
-    std::string m_doFluctuations;
+    string m_doFluctuations;
     /// string flag for applying electron statistics fluctuations per channel
     bool m_doFluctuationsBool;
     /// map to contain true energy deposits by XtaIdID
 
     /// map to contain the McIntegratingHit vs XtaliD relational table
-    typedef std::map< idents::CalXtalId,  std::vector< const Event::McIntegratingHit*> > PreDigiMap;
+    typedef map< idents::CalXtalId,  vector< const Event::McIntegratingHit*> > PreDigiMap;
 
     PreDigiMap m_idMcIntPreDigi;   
 
     /// map to contain the McIntegratingHit vs XtaliD relational table
-    std::multimap< idents::CalXtalId, Event::McIntegratingHit* > m_idMcInt;   
+    multimap< idents::CalXtalId, Event::McIntegratingHit* > m_idMcInt;   
 
     /// pointer to failure mode service
     ICalFailureModeSvc* m_FailSvc;
 
     /// type of readout range: BEST or ALL
-    std::string m_rangeType;
+    string m_rangeType;
     /// name of Tool for calculating light taper
-    std::string m_xtalADCToolName;
+    string m_xtalADCToolName;
     /// pointer to actual tool for converting energy to ADC
     IXtalADCTool* m_xtalADCTool;
 };

@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.28 2005/02/08 00:46:13 fewtrell Exp $
+$Id: release.notes,v 1.29 2005/02/24 02:57:59 fewtrell Exp $
 @verbatim
  * Package CalDigi
+ * v2         02-Mar-2005 ZF basically deleted a large amount of obsolete code & comments, most has been moved to CalXtalResponse
  * v1r6p2     23-Feb-2005 ZF reduced msgstream constructors to fix slowness, richard put in an adc range check
  * v1r6p1     05-Feb-2005 ZF updated .cvsignore file
  * v1r6       05-Feb-2005 ZF Now uses CalXtalResponse package
