@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalDigi
+ * v1r3p7     07-Feb-2004 RXD set failsvc ptr to zero if not found
  * v1r3p6     28-Jan-2004 RXD replace muon test file
  * v1r3p4     27-Apr-2003 RXD check for GlastDetSvc rc; add author to reqs
  * v1r3p3     25-Mar-2003 AC  required RootIo version set to v*
