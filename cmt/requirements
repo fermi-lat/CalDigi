@@ -43,4 +43,4 @@ apply_pattern package_Cshlibflags
 
 #macro WinJobOptions  ""  VisualC   "test/jobOptions.txt"
 
-application test_CalDigi ${GuiMain} test/*.cxx ${JOBOPTIONS} ${Win32Resource}
+application test_CalDigi ${GuiMain} test/*.cxx  ${Win32Resource}
