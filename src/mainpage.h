@@ -96,7 +96,8 @@
  * @section Tests Tests
  * A test program, under src/test, exercises everything. It is set up as a Gaudi algorithm
  * and runs CalDigiAlg with an MC root file as input for on-axis muons. The algorithm checks
- * that there are output digis in the TDS.
+ * that there are output digis in the TDS. The input file is 2 GeV vertical muons 
+ * at x=y=40 mm, z=800mm
  *
  * @section jobOptions jobOptions
  *
