@@ -394,7 +394,7 @@ StatusCode CalDigiAlg::execute() {
     sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol);
     
     if (!(sc == StatusCode::FAILURE))
-      sc = sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
+      sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
     
     return sc;
 }
