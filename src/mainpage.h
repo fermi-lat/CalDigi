@@ -13,11 +13,10 @@
  * <li>for deposit in a crystal segment, take into account light propagation to 
  * the two ends and apply light taper based on position along the length.</li>
  * <li>keep track of direct deposit in the diode.</li>
- * <li> add noise to the diode</li>
+ * <li> add poissonic fluctuations to the diode</li>
  * <li> combine (with appropriate scale factor) with crystal deposits </li>
- * <li> add noise to 'unhit' crystals.</li>
- * <li> convert to ADC units and pick the appropriate readout range for 
- * hits above threshold.</li>
+ * <li> add noise, convert to ADC units and pick the appropriate readout range 
+ * for hits above threshold. This is all done in CalUtil</li>
  *
  * Note that the geometry specification allows the artificial segmenting of
  * the crystals along their length.
@@ -75,7 +74,7 @@
  * <li> Poisson fluctuation of observed electrons at the diode</li>
  * <li> Gaussian electronic noise. In practice, the threshold is at
  *  about 5 sigma of noise, so new hits attributed to noise are
- * negligible. </li>
+ * negligible. This last noise is simulated in CalUtil</li>
  *
  * <b> Digitization</b>
  *
@@ -121,5 +120,6 @@
  * @todo add front-end non-linearity
  * @todo add failure modes
  * @todo add realistic light taper
+ * @todo add calibration objects for light taper and front-end non-linearity
  *
  */
