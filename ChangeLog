@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sat Nov 16 14:34:46 PST 2002
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+wildcard on CalUtil use
+    *
+------------------------------------------------------------
 User: richard  Sat Nov 16 14:33:55 PST 2002
 CalDigi/src
 
