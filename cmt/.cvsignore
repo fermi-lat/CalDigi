@@ -1,2 +1,4 @@
-"setup.*" 
-"cleanup.*" 
+setup.*
+cleanup.*
+Makefile
+*.make

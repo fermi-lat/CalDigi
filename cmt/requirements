@@ -13,7 +13,7 @@ use CalUtil v1r*
 
 use facilities
 
-use xml
+use xmlBase v5r*
 
 apply_pattern packageShr
 
