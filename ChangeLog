@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Tue Aug 20 12:51:01 PDT 2002
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+add flag to condition fluctuation of observed electrons
+    *
+------------------------------------------------------------
 User: richard  Sun Aug 18 10:17:52 PDT 2002
 CalDigi/src
 
