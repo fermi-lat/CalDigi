@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Fri Sep  6 15:21:37 PDT 2002
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx ITaper.h LinearTaper.cxx 
+Log Message:
+cleanup unix warnings
+    *
+------------------------------------------------------------
 User: richard  Fri Aug 30 17:34:01 PDT 2002
 CalDigi/doc
 
