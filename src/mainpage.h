@@ -1,6 +1,6 @@
 // Mainpage for doxygen
 
-/** @mainpage package CalDigiAlg
+/** @mainpage package CalDigi
  *
  * @authors A.Chekhtman and R.Dubois
  *
@@ -48,7 +48,7 @@
  *
  *  s2 = energy*(1-(1-relPos)*(1-lightAtt))/N
  *
- * Note that s1 + s2 = energy/N * (1 + lightAtt) and
+ * Note that s1 + s2 = 2*energy and
  *
  * s1 - s2 = energy/N * (1-2*relPos)*(1-lightAtt) so that
  *
@@ -95,11 +95,6 @@
  * <hr>
  * @section requirements requirements
  * @verbinclude requirements
- * <hr> * https://www-doc.slac.stanford.edu/CyberDOCS/quickstart.asp?show=COPY:505:&user=glastguest:guest&library=SLAC&noframes
- *
-
- * @section jobOptions jobOptions
- * @verbinclude ../src/test/jobOptions.txt 
 * <hr>
  * @todo remove hardwired noise parameter - put in xml
  * @todo add front-end non-linearity
@@ -107,5 +102,3 @@
  * @todo add realistic light taper
  *
  */
-
-
