@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Tue Jun 11 11:39:31 PDT 2002
+CalDigi/src/test
+
+Added Files:
+	jobOptions.txt test_CalDigi.cxx muon_mc.root 
+Log Message:
+new test app
+    *
+------------------------------------------------------------
 User: richard  Tue Jun 11 11:37:40 PDT 2002
 CalDigi/src/test
 
