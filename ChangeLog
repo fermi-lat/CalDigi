@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sun Jan 30 17:13:22 PST 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+fix indexing for gain range > 0!
+    *
+------------------------------------------------------------
 TAG
 Tag name: v1r5p6, operation: add
 Package: CalDigi
