@@ -1,14 +1,4 @@
 ------------------------------------------------------------
-User: fewtrell  Tue Mar  1 23:17:45 PST 2005
-CalDigi/cmt
-
-Modified Files:
-	requirements 
-Log Message:
-removed large amount of obsolete code & comments.
-most has been taken over by CalXtalResponse
-    *
-------------------------------------------------------------
 TAG
 Tag name: v1r6p2, operation: add
 Package: CalDigi
