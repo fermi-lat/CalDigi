@@ -1,9 +1,8 @@
 package CalDigi
 
-version v1r5p6
 author Richard Dubois <richard@slac.stanford.edu>
 author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
-# $Id: requirements,v 1.18 2005/01/18 03:36:38 burnett Exp $
+# $Id: requirements,v 1.19 2005/02/05 10:00:38 fewtrell Exp $
 branches src mgr doc
 
 use GlastPolicy
