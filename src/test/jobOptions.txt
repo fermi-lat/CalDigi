@@ -1,0 +1,49 @@
+//##############################################################
+//
+//  Job options file for CalRecon test 
+
+// primary DLLs
+
+ApplicationMgr.DLLs+= {"RootIo","CalDigi"};
+
+// ----------------------------
+// setup basic event loop stuff
+//
+ApplicationMgr.ExtSvc = { 
+    "GlastEventSelector/EventSelector" , 
+    "EventCnvSvc"
+    };
+EventPersistencySvc.CnvServices = {"EventCnvSvc"};
+EventSelector.Input = "NONE";
+
+
+// ----------------------------
+//  topalg
+//
+ApplicationMgr.TopAlg = {
+	"mcRootReaderAlg",      
+    	"CalDigiAlg" 
+    };
+
+
+// ----------------------------
+//  Geometry definition
+//
+ApplicationMgr.DLLs += {"GlastSvc"};
+ApplicationMgr.ExtSvc += { "GlastDetSvc"};
+GlastDetSvc.topVolume="LAT"; 
+
+GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.visitorMode="recon";
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 2;
+ApplicationMgr.EvtMax = 5;
+mcRootReaderAlg.mcRootFile="$(CALDIGIROOT)/src/test/muon_mc.root";
+
+//==============================================================
+//
+// End of job options file
+//
+//##############################################################
+
