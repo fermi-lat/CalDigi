@@ -144,6 +144,7 @@ StatusCode CalDigiAlg::initialize() {
     sc = service("CalFailureModeSvc", m_FailSvc);
     if (sc.isFailure() ) {
         log << MSG::INFO << "  Did not find CalFailureMode service" << endreq;
+	m_FailSvc = 0;
     }
    
    
