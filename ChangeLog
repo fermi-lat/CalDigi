@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Mon Sep 23 09:29:36 PDT 2002
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+remove x1000 scale factors on xml energy inputs
+    *
+------------------------------------------------------------
 User: richard  Thu Sep 12 12:53:59 PDT 2002
 CalDigi/doc
 
