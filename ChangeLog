@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Tue Jan  4 14:43:47 PST 2005
+CalDigi/cmt
+
+Modified Files:
+	.cvsignore requirements 
+Log Message:
+Use new xmlBase package rather than xml
+
+    *
+------------------------------------------------------------
 User: richard  Thu Sep 30 14:57:23 PDT 2004
 CalDigi/doc
 
