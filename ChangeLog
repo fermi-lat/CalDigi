@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sat Aug 24 20:45:04 PDT 2002
+CalDigi/src
+
+Modified Files:
+	OnePlusExpTaper.cxx OnePlusExpTaper.h 
+Log Message:
+revised version of exponential taper
+    *
+------------------------------------------------------------
 User: richard  Wed Aug 21 17:04:49 PDT 2002
 CalDigi/src
 
