@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Feb 23 18:57:59 PST 2005
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+fixed performance by minimizing MsgStream constructors, richard put in an extra check for adc range val in CalDigiAlg
+
+    *
+------------------------------------------------------------
 User: richard  Mon Feb 21 16:10:28 PST 2005
 CalDigi/src
 
