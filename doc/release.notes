@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalDigi
+ * v1r2p12    16-Nov-2002 RXD clean up for more use of enums; convert to ADC converter Tool
  * v1r2p9     24-Oct-2002 RXD break up CalDigiAl::execute. Repairs to mainpage.h.
  * v1r2p6     24-Sep-2002 RXD remove x1000 scales on xml parameters
  * v1r2p5     12-Sep-2002 RXD swap signs on ends for taper tools; make LinearTaper default again (for now)
