@@ -21,9 +21,6 @@
 #include <algorithm>
 #include <cmath>
 
-// to access an XML containing Digi parameters file
-#include "xml/IFile.h"
-
 // std stuff
 #include <utility>
 #include <string>

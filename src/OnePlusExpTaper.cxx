@@ -3,7 +3,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 // to access an XML containing Digi parameters file
-#include "xml/IFile.h"
+#include "xmlBase/IFile.h"
 
 #include "math.h"
 
@@ -31,7 +31,7 @@ StatusCode OnePlusExpTaper::initialize() {
     
 
    // Read in the parameters from the XML file
-    xml::IFile m_ifile(m_xmlFile.c_str());
+    xmlBase::IFile m_ifile(m_xmlFile.c_str());
     if (m_ifile.contains("onePlusExpDigi", "offset")) 
             m_offset = m_ifile.getDouble("onePlusExpDigi", "offset");
     else return StatusCode::FAILURE;
