@@ -1,5 +1,16 @@
 ------------------------------------------------------------
 User: berrie  Fri Aug  6 02:43:51 PDT 2004
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h 
+Log Message:
+
+
+Modified CalDigi to reproduce the state of v1r3p7 for RespSvc development
+    *
+------------------------------------------------------------
+User: berrie  Fri Aug  6 02:43:51 PDT 2004
 CalDigi/doc
 
 Modified Files:
