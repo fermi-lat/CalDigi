@@ -5,6 +5,7 @@
 // Include files
 #include "ITaper.h"
 #include "CalUtil/ICalFailureModeSvc.h"
+#include "CalUtil/IConvertAdc.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include <vector>
@@ -146,7 +147,13 @@ public:
        /// pointer to failure mode service
         ICalFailureModeSvc* m_FailSvc;
 
+        /// name of Tool for calculating light taper
+        std::string m_convertAdcToolName;
+        /// pointer to actual tool for converting energy to ADC
+        IConvertAdc* m_convertAdc;
 };
 
 
+
 #endif // _GlastDigi_CalDigiAlg_H
+
