@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: fewtrell  Sat Feb  5 02:00:38 PST 2005
+CalDigi/src/test
+
+Modified Files:
+	jobOptions.txt 
+Log Message:
+updated to work with new CalXtalResponse package
+    *
+------------------------------------------------------------
+User: fewtrell  Sat Feb  5 02:00:38 PST 2005
 CalDigi/src
 
 Modified Files:
