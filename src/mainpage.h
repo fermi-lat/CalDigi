@@ -97,6 +97,7 @@
  * <b> jobOptions parameters</b>
  *
  * <it>CalDigiAlg.taperToolName </it>
+ * <it>CalDigiAlg.doFluctuations </it>
  *
  * Available choices are "OnePlusExpTaper" and "LinearTaper"
  *
