@@ -41,18 +41,15 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
 
 
   // Declare the properties that may be set in the job options file
-  declareProperty ("xtalADCToolName", m_xtalADCToolName="XtalADCTool");
-  declareProperty ("doFluctuations", m_doFluctuations="yes");
-  declareProperty ("RangeType", m_rangeType="BEST");
+  declareProperty ("xtalADCToolName", m_xtalADCToolName = "XtalADCTool");
+  declareProperty ("RangeType",       m_rangeType       = "BEST");
 }
 
+/// initialize the algorithm. Set up parameters from detModel
 StatusCode CalDigiAlg::initialize() {
-  // Purpose and Method: initialize the algorithm. Set up parameters from detModel
-  // Inputs: detModel parameters
-
-  MsgStream msglog(msgSvc(), name());
   StatusCode sc;
   
+  MsgStream msglog(msgSvc(), name());
   msglog << MSG::INFO << "initialize" << endreq;
 
   // Get properties from the JobOptionsSvc
@@ -84,7 +81,8 @@ StatusCode CalDigiAlg::initialize() {
 
   for(PARAMAP::iterator it=param.begin(); it!=param.end();it++){
     if(!detSvc->getNumericConstByName((*it).second, &value)) {
-      msglog << MSG::ERROR << " constant " <<(*it).second <<" not defined" << endreq;
+      msglog << MSG::ERROR << " constant " <<(*it).second 
+             <<" not defined" << endreq;
       return StatusCode::FAILURE;
     } else *((*it).first)=(int)value;
   }
@@ -94,48 +92,41 @@ StatusCode CalDigiAlg::initialize() {
     msglog << MSG::ERROR << "  Unable to create " << m_xtalADCToolName << endreq;
     return sc;
   }
-
-  m_doFluctuationsBool = (m_doFluctuations == "yes") ? 1 : 0;
-
+  
   sc = service("CalFailureModeSvc", m_FailSvc);
   if (sc.isFailure() ) {
     msglog << MSG::INFO << "  Did not find CalFailureMode service" << endreq;
     m_FailSvc = 0;
   }
 
-
   return StatusCode::SUCCESS;
 }
 
 
+/// \brief take Hits from McIntegratingHits, create & register CalDigis
 StatusCode CalDigiAlg::execute() {
-
-  // Purpose and Method: take Hits from McIntegratingHit and perform the following steps:
-  //  for deposit in a crystal segment, take into account light propagation to the two ends and 
-  // apply light taper based on position along the length.
-  //  keep track of direct deposit in the diode.
-  // Then combine diode (with appropriate scale factor) and crystal deposits and add noise.
-  // Then, add noise to 'unhit' crystals.
-  //  Finally, convert to ADC units and pick the range for hits above threshold.
-  // Inputs: McIntegratingHit
-
   StatusCode  sc = StatusCode::SUCCESS;
   
   //Take care of insuring that data area has been created
   DataObject* pNode = 0;
-  sc = eventSvc()->retrieveObject( EventModel::Digi::Event /*"/Event/Digi"*/, pNode);
+  sc = eventSvc()->retrieveObject( EventModel::Digi::Event /*"/Event/Digi"*/, 
+                                   pNode);
 
   if (sc.isFailure()) {
-    sc = eventSvc()->registerObject(EventModel::Digi::Event /*"/Event/Digi"*/,new Event::DigiEvent);
+    sc = eventSvc()->registerObject(EventModel::Digi::Event /*"/Event/Digi"*/,
+                                    new Event::DigiEvent);
     if( sc.isFailure() ) {
-      MsgStream   msglog( msgSvc(), name() );
-      msglog << MSG::ERROR << "could not register " << EventModel::Digi::Event /*<< /Event/Digi "*/ << endreq;
+      // create msglog only when needed for performance
+      MsgStream msglog( msgSvc(), name() );
+      msglog << MSG::ERROR << "could not register " << 
+        EventModel::Digi::Event /*<< /Event/Digi "*/ << endreq;
       return sc;
     }
   }
 
-  //  clear signal array: map relating xtal signal to id. Map holds diode and crystal responses
-  //  separately during accumulation.
+  // clear signal array: map relating xtal signal to id. 
+  // Map holds diode and crystal responses
+  // separately during accumulation.
 
   m_idMcInt.clear();
   m_idMcIntPreDigi.clear();
@@ -150,7 +141,6 @@ StatusCode CalDigiAlg::execute() {
 }
 
 StatusCode CalDigiAlg::finalize() {
-
   MsgStream msglog(msgSvc(), name());
   msglog << MSG::INFO << "finalize" << endreq;
 
@@ -200,25 +190,32 @@ StatusCode CalDigiAlg::createDigis() {
         bool peggedP, peggedN;
 
         sc = m_xtalADCTool->calculate(mapId,
-                                      *hitList, // list of all mc hits for this xtal & it's diodes.
+                                      *hitList, // all mc hits for xtal & diodes.
                                       lacP,     // plus end above threshold
                                       lacN,     // neg end above threshold
-                                      rangeP, // output - best range
-                                      rangeN,  // output - best range
-                                      adcP,              // output - ADC's for all ranges 0-3
-                                      adcN,              // output - ADC's for all ranges 0-3
+                                      rangeP,   // output - best range
+                                      rangeN,   // output - best range
+                                      adcP,     // output - ADC's for all ranges 0-3
+                                      adcN,     // output - ADC's for all ranges 0-3
                                       peggedP,
                                       peggedN
                                       );
         // set status to ok for POS and NEG if no other bits set.
         
-        if (!((CalDefs::RngNum)rangeP).isValid() || !((CalDefs::RngNum)rangeN).isValid() ) {
+        if (!((CalDefs::RngNum)rangeP).isValid() || 
+            !((CalDefs::RngNum)rangeN).isValid() ) {
+          // create msglog only when needed for performance
           MsgStream msglog(msgSvc(), name());
           msglog << MSG::ERROR;
           if (msglog.isActive()){
+            // use stream() support setw() manipulator
             msglog.stream() <<"Range exceeded!!! id=" << mapId
-                            << " rangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP[rangeP] << " lacP=" << lacP
-                            << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN;
+                            << " rangeP=" << int(rangeP) 
+                            << " adcP=" << setw(4) << adcP[rangeP] 
+                            << " lacP=" << lacP
+                            << " rangeN=" << int(rangeN) 
+                            << " adcN=" << setw(4) << adcN[rangeN] 
+                            << " lacN=" << lacN;
           }
           msglog << endreq;
           return StatusCode::FAILURE;
@@ -227,13 +224,18 @@ StatusCode CalDigiAlg::createDigis() {
         unsigned short status = 0;
         if (!lacP && !lacN) continue;  // nothing more to see here. Move along.
 
-        // only create MsgStream() class if we have to since it's a costly operation to
-        // do repeatedly
         if (msgSvc()->outputLevel(name()) <= MSG::DEBUG) {
+          // create msglog only when needed for speed
           MsgStream msglog(msgSvc(), name());
-          msglog.stream() << " id=" << mapId
-                          << " rangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP[rangeP] << " lacP=" << lacP
-                          << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN;
+          msglog << MSG::DEBUG;
+          // use stream() support setw() manipulator
+          msglog.stream() << "id=" << mapId 
+                          << "\trangeP=" << int(rangeP) 
+                          << " adcP=" << setw(4) << adcP[rangeP] 
+                          << " lacP=" << lacP
+                          << "\trangeN=" << int(rangeN) 
+                          << " adcN=" << setw(4) 
+                          << adcN[rangeN] << " lacN=" << lacN;
           msglog << endreq;
         } 
         // check for failure mode. If killed, set to zero and set DEAD bit
@@ -257,30 +259,27 @@ StatusCode CalDigiAlg::createDigis() {
                                       (status | Event::CalDigi::CalXtalReadout::OK_N);
 
         idents::CalXtalId::CalTrigMode rangeMode;
-        int readoutLimit = 1;
+        int roLimit = 1;
         if (m_rangeType == "BEST") rangeMode = idents::CalXtalId::BESTRANGE;
         else  {
           rangeMode = idents::CalXtalId::ALLRANGE;
-          readoutLimit = 4;
+          roLimit = 4;
         }
 
         Event::CalDigi* curDigi = new Event::CalDigi(rangeMode, mapId);
 
         // set up the digi
-
-        for (int iLim=0; iLim<readoutLimit; iLim++) {
-          int inputRangeP = rangeP;
-          int inputRangeN = rangeN;
-
-          if(m_rangeType == "ALL") {
-            inputRangeP = iLim;
-            inputRangeN = iLim;
-          }
-
-          Event::CalDigi::CalXtalReadout read = Event::CalDigi::CalXtalReadout(inputRangeP, 
-                                                                               adcP[inputRangeP], inputRangeN, adcN[inputRangeN], status);
-
-          curDigi->addReadout(read);
+        for (int nRo=0; nRo < roLimit; nRo++) {
+          // represents ranges used for current readout in loop
+          short roRangeP = (rangeP + nRo)%CalDefs::RngNum::N_VALS; 
+          short roRangeN = (rangeN + nRo)%CalDefs::RngNum::N_VALS; 
+          
+          Event::CalDigi::CalXtalReadout ro = Event::CalDigi::CalXtalReadout(roRangeP, 
+                                                                             adcP[roRangeP], 
+                                                                             roRangeN, 
+                                                                             adcN[roRangeN], 
+                                                                             status);
+          curDigi->addReadout(ro);
         }
 
         // set up the relational table between McIntegratingHit and digis
@@ -309,64 +308,63 @@ StatusCode CalDigiAlg::createDigis() {
   return sc;
 }
 
+/// collect deposited energies from McIntegratingHits and 
+/// store in map sorted by XtalID. 
+///
+/// multimap used to associate mcIntegratingHit to id. There can be multiple
+/// hits for the same id.  
 StatusCode CalDigiAlg::fillSignalEnergies() {
-  // Purpose and Method: collect deposited energies from McIntegratingHits and store
-  // in map sorted by XtalID. 
-  // multimap used to associate mcIntegratingHit to id. There can be multiple
-  // hits for the same id.  
+  StatusCode  sc = StatusCode::SUCCESS;
 
   // get McIntegratingHit collection. Abort if empty.
-
-  StatusCode  sc = StatusCode::SUCCESS;
-  SmartDataPtr<Event::McIntegratingHitVector> McCalHits(eventSvc(),EventModel::MC::McIntegratingHitCol ); //"/Event/MC/IntegratingHitsCol");
+  SmartDataPtr<Event::McIntegratingHitVector> 
+    McCalHits(eventSvc(), EventModel::MC::McIntegratingHitCol );
 
   if (McCalHits == 0) {
+    // create msglog only when needed for speed.
     MsgStream msglog(msgSvc(), name());
-    msglog << MSG::DEBUG; if (msglog.isActive()){ msglog.stream() << "no calorimeter hits found" ;} msglog << endreq;
+    msglog << MSG::DEBUG; 
+    if (msglog.isActive()){ 
+      msglog.stream() << "no cal hits found" ;} 
+    msglog << endreq;
     return sc;
   }
 
   // loop over hits - pick out CAL hits
-
   MsgStream msglog(msgSvc(), name());
   for (Event::McIntegratingHitVector::const_iterator it = McCalHits->begin(); it != McCalHits->end(); it++) {
 
-
     //   extracting hit parameters - get energy and first moment
-
-    idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*it)->volumeID());
-
+    idents::VolumeIdentifier volId = 
+      ((idents::VolumeIdentifier)(*it)->volumeID());
 
     //   extracting parameters from volume Id identifying as in CAL
-
     if ((int)volId[fLATObjects] == m_eLatTowers &&
         (int)volId[fTowerObjects] == m_eTowerCal){ 
 
-      msglog << MSG::DEBUG <<  "McIntegratingHits info \n"  
-             << " ID " << volId.name()
-             << endreq;
-
-      int col = volId[fCALXtal];
+      int col   = volId[fCALXtal];
       int layer = volId[fLayer];
-      int towy = volId[fTowerY];
-      int towx = volId[fTowerX];
+      int towy  = volId[fTowerY];
+      int towx  = volId[fTowerX];
       int tower = m_xNum*towy+towx; 
+
+      if (msgSvc()->outputLevel(name()) <= MSG::VERBOSE) {
+        msglog << MSG::VERBOSE << "McIntegratingHits info \n"  
+               << " ID " << volId.name() << endreq;
+        msglog << MSG::VERBOSE <<  "MC Hit "  
+               << " col " << col
+               << " layer " << layer
+               << " towy " << towy
+               << " towx " << towx
+               << endreq;
+      }
 
       idents::CalXtalId mapId(tower,layer,col);
 
-      msglog << MSG::DEBUG; if (msglog.isActive()){ msglog.stream() <<  "Identifier decomposition \n"  
-             << " col " << col
-             << " layer " << layer
-             << " towy " << towy
-             << " towx " << towx
-                                                      ;} msglog << endreq;
-
-
       // Insertion of the id - McIntegratingHit pair
-
       m_idMcInt.insert(make_pair(mapId,*it));
-
-      m_idMcIntPreDigi[mapId].push_back((const_cast<Event::McIntegratingHit*>(*it)));
+      m_idMcIntPreDigi[mapId].push_back((const_cast<Event::McIntegratingHit*> 
+                                         (*it)));
     }
   }
 
