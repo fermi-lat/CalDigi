@@ -1,4 +1,16 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Mar 16 21:04:30 PST 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h 
+Log Message:
+        moved CalDigi.doFluctuations jobOption to XtalADCTool.NotRandomNoise
+        fixed bug in 4-range CalDig creation in CalDigiAlg
+
+
+    *
+------------------------------------------------------------
 User: fewtrell  Wed Mar  2 16:24:13 PST 2005
 CalDigi/xml
 
