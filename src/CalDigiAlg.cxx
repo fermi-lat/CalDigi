@@ -314,14 +314,13 @@ StatusCode CalDigiAlg::execute() {
     // if either side is above threshold, then select the appropriate ADC range and
     // create a readout
     
-    for(mit=signalMap.begin(); mit!=signalMap.end();mit++){
-        XtalSignal* signal = &(*mit).second;
+    for(SignalMap::iterator nit=signalMap.begin(); nit!=signalMap.end();nit++){
+        XtalSignal* signal = &(*nit).second;
         
         if(signal->getDiodeEnergy(0) > m_thresh 
             || signal->getDiodeEnergy(1) > m_thresh) {
             
-            idents::CalXtalId xtalId = (*mit).first;
-            //            idents::CalXtalId XtalId(mId.getTower(),mId.getLayer(),mId.getColumn());
+            idents::CalXtalId xtalId = (*nit).first;
             
             char rangeP,rangeM;
             unsigned short adcP,adcM;
@@ -368,7 +367,7 @@ StatusCode CalDigiAlg::execute() {
         }
     }
     
-    sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol /*"/Event/Digi/CalDigis"*/, digiCol);
+    sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol);
     
     
     return sc;
@@ -382,6 +381,7 @@ StatusCode CalDigiAlg::finalize() {
     return StatusCode::SUCCESS;
 }
 CalDigiAlg::XtalSignal::XtalSignal() {
+    // Purpose and Method: default constructor setting signals to zero
     m_signal[0] = 0;
     m_signal[1] = 0;
     
@@ -390,6 +390,7 @@ CalDigiAlg::XtalSignal::XtalSignal() {
 }
 
 CalDigiAlg::XtalSignal::XtalSignal(double s1, double s2) {
+    // Purpose and Method: constructor setting signals to those input
     m_signal[0] = s1;
     m_signal[1] = s2;
     
@@ -397,6 +398,7 @@ CalDigiAlg::XtalSignal::XtalSignal(double s1, double s2) {
     
 }
 void CalDigiAlg::XtalSignal::addSignal(double s1, double s2) {
+    // Purpose and Method: add signals s1, s2 to already existing signals.
     m_signal[0] += s1;
     m_signal[1] += s2;
     return;
