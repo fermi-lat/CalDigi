@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: richard  Sun Aug 18 08:57:18 PDT 2002
+CalDigi/src
+
+Added Files:
+	LinearTaper.cxx LinearTaper.h OnePlusExpTaper.cxx 
+	OnePlusExpTaper.h ITaper.h 
+Log Message:
+light taper models
+    *
+------------------------------------------------------------
 User: richard  Sun Aug 18 08:52:59 PDT 2002
 CalDigi/xml
 
