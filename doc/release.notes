@@ -1,10 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.31 2005/03/02 07:58:22 fewtrell Exp $
+$Id: release.notes,v 1.32 2005/03/17 07:10:32 fewtrell Exp $
 @verbatim
  * Package CalDigi
- * v2r0p1     16-Mar-2005 ZF moved CalDigi.doFluctuations jobOption to XtalADCTool.NotRandomNoise, fixed bug in 4-range CalDig creation in CalDigiAlg
+ * v2r0p2     16-Mar-2005 ZF moved CalDigi.doFluctuations jobOption to XtalADCTool.NotRandomNoise, fixed bug in 4-range CalDig creation in CalDigiAlg
  * v2r0p0     02-Mar-2005 ZF builds on linux w/out warning
  * v2         02-Mar-2005 ZF basically deleted a large amount of obsolete code & comments, most has been moved to CalXtalResponse
  * v1r6p2     23-Feb-2005 ZF reduced msgstream constructors to fix slowness, richard put in an adc range check
