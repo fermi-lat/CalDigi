@@ -1,0 +1,25 @@
+package CalDigi
+
+version v1r0
+
+branches src mgr doc
+
+use GlastSvc v8*
+use Event v8*
+
+use facilities
+
+use xml
+
+apply_pattern packageShr
+
+
+apply_pattern package_headers
+
+library CalDigi *.cxx Dll/*.cxx ${CalDigi_headers}
+
+#=============================================================
+private
+
+apply_pattern package_Cshlibflags 
+
