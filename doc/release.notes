@@ -1,5 +1,6 @@
 /** @file release.notes
  * Package CalDigi
+ * v1r5p3     21-Sept-2004 RXD fix parameter access and vector init. Still differs from old CalDigi in detail.
  * v1r5p2     21-Sept-2004 RXD convert to new CAL Response; allow all range readout
  * v1r5p1     10-Aug-2004 BG  fixed CalibSvc dependency
  * v1r5       06-Aug-2004 BG  Set all back as it was in v1r3p7 for RespSvc
