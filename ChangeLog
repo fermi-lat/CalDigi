@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: frailis  Wed Aug  7 04:08:10 PDT 2002
+CalDigi/src/test
+
+Added Files:
+	DigiHitsTestAlg.cxx 
+Log Message:
+Added the file DigiHitsTestAlg.cxx with a use case for relational tables
+    *
+------------------------------------------------------------
+User: frailis  Wed Aug  7 04:08:10 PDT 2002
 CalDigi/src
 
 Modified Files:
