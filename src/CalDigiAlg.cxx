@@ -233,8 +233,8 @@ StatusCode CalDigiAlg::createDigis() {
           MsgStream msglog(msgSvc(), name());
           msglog.stream() << " id=" << mapId
                           << " rangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP[rangeP] << " lacP=" << lacP
-                          << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN
-                          << endreq;
+                          << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN;
+          msglog << endreq;
         } 
         // check for failure mode. If killed, set to zero and set DEAD bit
 
