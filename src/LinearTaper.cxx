@@ -47,7 +47,7 @@ StatusCode LinearTaper::initialize() {
 
 }
 
-std::pair<double, double> LinearTaper::calculateSignals(idents::CalXtalId id,
+std::pair<double, double> LinearTaper::calculateSignals(idents::CalXtalId,
                                                         double relativePosition, 
                                                         double depositedEnergy) {
 

@@ -28,7 +28,6 @@ StatusCode OnePlusExpTaper::initialize() {
 
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
-    StatusCode sc;
     
 
    // Read in the parameters from the XML file
@@ -62,7 +61,7 @@ StatusCode OnePlusExpTaper::initialize() {
 
 }
 
-std::pair<double, double> OnePlusExpTaper::calculateSignals(idents::CalXtalId id,
+std::pair<double, double> OnePlusExpTaper::calculateSignals(idents::CalXtalId,
                                                             double relativePosition, 
                                                         double depositedEnergy) {
 
