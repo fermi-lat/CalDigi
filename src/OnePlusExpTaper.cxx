@@ -70,10 +70,6 @@ std::pair<double, double> OnePlusExpTaper::calculateSignals(idents::CalXtalId id
     // Inputs: crystal id, deposited energy and relative position in the crystal
     // Outputs: energy seen at the two crystal ends
 
-
-    MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "execute" << endreq;
-
     
 
     double s1 = depositedEnergy*(m_offset+m_scaleExponential*exp(-relativePosition*m_scaleExponent) -
