@@ -30,7 +30,7 @@
  * The signal is scaled such that each end makes a measurement of the full
  * particle energy.
  *
- * <img src="../images/taper.jpg">
+ * @image html taper.jpg
  *
  * The crystals are segmented in the geometry (default is 12 segments). The
  * energy contributions from each segment are subjected to the taper correction
@@ -66,7 +66,7 @@
  * the plot from vertical muons at x=y=40 mm, so one sees two peaks
  * (at around 300 and 400 ADC counts) representing the light taper to the two ends.
  *
- * <img src="../images/muonEnergy.jpg">
+ * @image html muonEnergy.jpg
  * 
  * <b>Noise Effects</b>
  *
