@@ -58,8 +58,8 @@ std::pair<double, double> LinearTaper::calculateSignals(idents::CalXtalId,
 
     double norm = 0.5+0.5*m_lightAtt; // light tapering in the center of crystal (relpos=0.5)
 
-    double s1 = depositedEnergy*(1-relativePosition*(1-m_lightAtt))/norm;
-    double s2 = depositedEnergy*(1-(1-relativePosition)*(1-m_lightAtt))/norm;
+    double s2 = depositedEnergy*(1-relativePosition*(1-m_lightAtt))/norm;
+    double s1 = depositedEnergy*(1-(1-relativePosition)*(1-m_lightAtt))/norm;
 
     return std::pair<double,double>(s1,s2);
     
