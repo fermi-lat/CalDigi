@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sun Aug 18 09:16:18 PDT 2002
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h 
+Log Message:
+use taper Tools. Fix sign error in Y-xtals. Use xml input file
+    *
+------------------------------------------------------------
 User: richard  Sun Aug 18 09:09:53 PDT 2002
 CalDigi/src/Dll
 
