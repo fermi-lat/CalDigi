@@ -52,9 +52,9 @@ StatusCode CalDigiAlg::initialize() {
     PARAMAP param;
     param[&m_xNum]=        std::string("xNum");
     param[&m_yNum]=        std::string("yNum");
-    param[&m_eTowerCAL]=   std::string("eTowerCAL");
-    param[&m_eLATTowers]=  std::string("eLATTowers");
-    param[&m_CALnLayer]=   std::string("CALnLayer");
+    param[&m_eTowerCal]=   std::string("eTowerCAL");
+    param[&m_eLatTowers]=  std::string("eLATTowers");
+    param[&m_CalNLayer]=   std::string("CALnLayer");
     param[&m_nCsIPerLayer]=std::string("nCsIPerLayer");
     param[&m_nCsISeg]= std::string("nCsISeg");
     param[&m_eXtal]=       std::string("eXtal");
@@ -171,8 +171,8 @@ StatusCode CalDigiAlg::execute() {
         
         //   extracting parameters from volume Id identifying as in CAL
         
-        if (volId[fLATObjects] == m_eLATTowers &&
-            volId[fTowerObjects] == m_eTowerCAL){ 
+        if (volId[fLATObjects] == m_eLatTowers &&
+            volId[fTowerObjects] == m_eTowerCal){ 
             
             int col = volId[fCALXtal];
             int layer = volId[fLayer];
@@ -280,7 +280,7 @@ StatusCode CalDigiAlg::execute() {
     
     double noise_MeV = double(m_noise[0])/double(m_ePerMeV[0]); // noise in MeV for the large diode
     for (int tower = 0; tower < m_xNum*m_yNum; tower++){
-        for (int layer = 0; layer < m_CALnLayer; layer++){
+        for (int layer = 0; layer < m_CalNLayer; layer++){
             for (int col = 0; col < m_nCsIPerLayer; col++){
                 double eneM = noise_MeV*RandGauss::shoot();
                 double eneP = noise_MeV*RandGauss::shoot();
