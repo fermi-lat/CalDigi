@@ -4,6 +4,7 @@
 
 // Include files
 #include "ITaper.h"
+#include "CalUtil/ICalFailureModeSvc.h"
 #include "GaudiKernel/Algorithm.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include <vector>
@@ -142,6 +143,8 @@ public:
        /// map to contain the McIntegratingHit vs XtaliD relational table
         std::multimap< idents::CalXtalId, Event::McIntegratingHit* > m_idMcInt;   
 
+       /// pointer to failure mode service
+        ICalFailureModeSvc* m_FailSvc;
 
 };
 

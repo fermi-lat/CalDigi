@@ -1,5 +1,5 @@
 #include "CalDigiAlg.h"
-
+#include "CalUtil/CalFailureModeSvc.h"
 /// Gaudi specific include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -50,7 +50,7 @@ Algorithm(name, pSvcLocator) {
 StatusCode CalDigiAlg::initialize() {
     // Purpose and Method: initialize the algorithm. Set up parameters from detModel
     // Inputs: detModel parameters
-     
+    
     MsgStream log(msgSvc(), name());
     log << MSG::INFO << "initialize" << endreq;
     
@@ -87,12 +87,12 @@ StatusCode CalDigiAlg::initialize() {
     
     for(PARAMAP::iterator it=param.begin(); it!=param.end();it++){
         if(!detSvc->getNumericConstByName((*it).second, &value)) {
-             log << MSG::ERROR << " constant " <<(*it).second <<" not defined" << endreq;
+            log << MSG::ERROR << " constant " <<(*it).second <<" not defined" << endreq;
             return StatusCode::FAILURE;
         } else *((*it).first)=(int)value;
     }
     
-
+    
     // extracting double constants from detModel. Store into local cache - member variables.
     
     typedef std::map<double*,std::string> DPARAMAP;
@@ -116,22 +116,28 @@ StatusCode CalDigiAlg::initialize() {
     // scale max energies and thresholds from GeV to MeV
     //for (int r=0; r<4;r++) m_maxEnergy[r] *= 1000.; 
     //m_thresh *= 1000.;
-
+    
     // Read in the parameters from the XML file
     xml::IFile m_ifile(m_xmlFile.c_str());
-     if (m_ifile.contains("cal","ePerMeVinDiode")) 
+    if (m_ifile.contains("cal","ePerMeVinDiode")) 
         m_ePerMeVinDiode = m_ifile.getDouble("cal", "ePerMeVinDiode");
-     else return StatusCode::FAILURE;
+    else return StatusCode::FAILURE;
     
-
+    
     sc = toolSvc()->retrieveTool(m_taperToolName,m_taper);
     if (sc.isFailure() ) {
         log << MSG::ERROR << "  Unable to create " << m_taperToolName << endreq;
         return sc;
     }
-
+    
     m_doFluctuationsBool = (m_doFluctuations == "yes") ? 1 : 0;
-
+    
+    sc = service("CalFailureModeSvc", m_FailSvc);
+    if (sc.isFailure() ) {
+        log << MSG::INFO << "  Did not find CalFailureMode service" << endreq;
+    }
+    
+    
     return StatusCode::SUCCESS;
 }
 
@@ -170,31 +176,31 @@ StatusCode CalDigiAlg::execute() {
     
     m_signalMap.clear();
     m_idMcInt.clear();
-
+    
     sc = fillSignalEnergies();
     if (sc != StatusCode::SUCCESS) return sc;
-
+    
     sc = addNoiseToSignals();
     if (sc != StatusCode::SUCCESS) return sc;
-
+    
     sc = addNewNoiseHits();
     if (sc != StatusCode::SUCCESS) return sc;
-       
     
-    	
+    
+    
     log << MSG::DEBUG << m_signalMap.size() << "calorimeter hits in m_signalMap" << endreq;
     for( SignalMap::iterator jit=m_signalMap.begin(); jit!=m_signalMap.end();jit++){
-    log << MSG::DEBUG << " id " << (*jit).first
-    << " s0=" << (*jit).second.getSignal(0)
-    << " s1=" << (*jit).second.getSignal(1)
-    << " d0=" << (*jit).second.getDiodeEnergy(0)
-    << " d1=" << (*jit).second.getDiodeEnergy(1)
-    << " d2=" << (*jit).second.getDiodeEnergy(2)
-    << " d3=" << (*jit).second.getDiodeEnergy(3)
-    << endreq;
+        log << MSG::DEBUG << " id " << (*jit).first
+            << " s0=" << (*jit).second.getSignal(0)
+            << " s1=" << (*jit).second.getSignal(1)
+            << " d0=" << (*jit).second.getDiodeEnergy(0)
+            << " d1=" << (*jit).second.getDiodeEnergy(1)
+            << " d2=" << (*jit).second.getDiodeEnergy(2)
+            << " d3=" << (*jit).second.getDiodeEnergy(3)
+            << endreq;
     }
-    	
-   sc = createDigis();
+    
+    sc = createDigis();
     if (sc != StatusCode::SUCCESS) return sc;    
     
     return sc;
@@ -209,7 +215,9 @@ StatusCode CalDigiAlg::finalize() {
 }
 
 StatusCode CalDigiAlg::createDigis() {
-
+    // Purpose and Method: 
+    // create digis on the TDS from the deposited energies
+    
     Event::CalDigiCol* digiCol = new Event::CalDigiCol;
     
     Event::RelTable<Event::CalDigi, Event::McIntegratingHit> digiHit;
@@ -227,15 +235,20 @@ StatusCode CalDigiAlg::createDigis() {
             
             idents::CalXtalId xtalId = (*nit).first;
             
+            // check for failure mode
+            if (m_FailSvc != 0) {
+                if (m_FailSvc->matchChannel(xtalId)) continue;
+            }
+            
             char rangeP,rangeM;
             unsigned short adcP,adcM;
-
+            
             // loop over the plus and minus faces of the crystal 
             
             for (int face=0; face<2; face++){
                 double resp;
                 int br;
-
+                
                 // loop over the diodes and fetch the response
                 for (int r = 0;r<4;r++){
                     int diode_type = r/2;
@@ -246,15 +259,15 @@ StatusCode CalDigiAlg::createDigis() {
                     br=r;
                     if( resp < m_maxEnergy[r]) break;														
                 }
-
+                
                 // set readout to rail if saturated
                 
                 if(resp > m_maxEnergy[br])resp = m_maxEnergy[br];
- 
+                
                 // convert energy to ADC units here
                 
                 unsigned short adc = (short unsigned int)((resp/m_maxEnergy[br])*(m_maxAdc-m_pedestal)+m_pedestal);
-
+                
                 // assign the plus/minus readouts
                 
                 if(face == idents::CalXtalId::POS){ adcP=adc; rangeP=br;}
@@ -274,11 +287,11 @@ StatusCode CalDigiAlg::createDigis() {
             
             for (ItHit mcit = itpair.first; mcit!=itpair.second; mcit++)
             {
-              Event::Relation<Event::CalDigi,Event::McIntegratingHit> *rel =
-                new Event::Relation<Event::CalDigi,Event::McIntegratingHit>(curDigi,mcit->second);
-              digiHit.addRelation(rel);
+                Event::Relation<Event::CalDigi,Event::McIntegratingHit> *rel =
+                    new Event::Relation<Event::CalDigi,Event::McIntegratingHit>(curDigi,mcit->second);
+                digiHit.addRelation(rel);
             }
-             
+            
             digiCol->push_back(curDigi);
         }
     }
@@ -286,7 +299,7 @@ StatusCode CalDigiAlg::createDigis() {
     StatusCode sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol);
     
     if (!(sc == StatusCode::FAILURE))
-      sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
+        sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
     return sc;
 }
 
@@ -295,7 +308,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
     // in map sorted by XtalID. 
     // multimap used to associate mcIntegratingHit to id. There can be multiple
     // hits for the same id.  
- 
+    
     // get McIntegratingHit collection. Abort if empty.
     
     StatusCode  sc = StatusCode::SUCCESS;
@@ -308,15 +321,15 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
     }
     
     // loop over hits - pick out CAL hits
-
+    
     for (Event::McIntegratingHitVector::const_iterator it = McCalHits->begin(); it != McCalHits->end(); it++) {
         
         
         //   extracting hit parameters - get energy and first moment
         
         idents::VolumeIdentifier volId = ((idents::VolumeIdentifier)(*it)->volumeID());
-
-
+        
+        
         //   extracting parameters from volume Id identifying as in CAL
         
         if ((int)volId[fLATObjects] == m_eLatTowers &&
@@ -324,22 +337,22 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
             
             double ene = (*it)->totalEnergy();
             HepPoint3D mom1 = (*it)->moment1();
-
-	//	log << MSG::DEBUG <<  "McIntegratingHits info \n"  
-	//  << " ID " << volId.name()
-	//  <<  " energy " << ene
-	//  <<  " moments " << mom1.x()
-	//  << endreq;
-
+            
+            //	log << MSG::DEBUG <<  "McIntegratingHits info \n"  
+            //  << " ID " << volId.name()
+            //  <<  " energy " << ene
+            //  <<  " moments " << mom1.x()
+            //  << endreq;
+            
             int col = volId[fCALXtal];
             int layer = volId[fLayer];
             int towy = volId[fTowerY];
             int towx = volId[fTowerX];
             int tower = m_xNum*towy+towx; 
             int segm = volId[fSegment];
-             
+            
             idents::CalXtalId mapId(tower,layer,col);
-
+            
             log << MSG::DEBUG <<  "Identifier decomposition \n"  
                 << " col " << col
                 << " layer " << layer
@@ -351,7 +364,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
             XtalSignal& xtalSignalRef = m_signalMap[mapId];
             
             // Insertion of the id - McIntegratingHit pair
-
+            
             m_idMcInt.insert(std::make_pair(mapId,*it));
             
             if((int)volId[fCellCmp] == m_eDiodeMLarge)
@@ -368,7 +381,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
             
             else if((int)volId[fCellCmp] ==  m_eXtal ){
                 
-               
+                
                 // let's define the position of the segment along the crystal
                 
                 double relpos = (segm+0.5)/m_nCsISeg;
@@ -382,10 +395,10 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
                 
                 
                 // take into account light tapering
-                                
+                
                 std::pair<double,double> signals;
                 signals = m_taper->calculateSignals(mapId,relpos,ene);
-
+                
                 // set up a XtalMap to act as key for the map - if there is no entry, add
                 // add one, otherwise add signal to existing map element.
                 
@@ -428,10 +441,10 @@ StatusCode CalDigiAlg::addNoiseToSignals() {
             // add poissonic fluctuations in the number of electrons in a diode
             if (m_doFluctuationsBool) {
                 float numberElectrons = diode_ene * m_ePerMeV[diode_type];
-
+                
                 // approximate Poisson distribution by gaussian for numberElectrons >> 1
                 float electronFluctuation = sqrt(numberElectrons) * RandGauss::shoot();
- 
+                
                 diode_ene += electronFluctuation /m_ePerMeV[diode_type];
             }
             
