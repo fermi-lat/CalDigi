@@ -1,5 +1,16 @@
 ------------------------------------------------------------
 User: davezac  Mon Mar 15 00:04:43 PST 2004
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h 
+Log Message:
+Added CalibData objects to CalDigiAlg. it may now use calibrated values for gains and pedestals. Pedestal noise is 
+calculated in CalUtil/ConvertAdc rather than in add(New)NoiseToSignals. addNewNoiseHits is not needed any more.
+
+    *
+------------------------------------------------------------
+User: davezac  Mon Mar 15 00:04:43 PST 2004
 CalDigi/cmt
 
 Modified Files:
