@@ -13,6 +13,10 @@
 // MC classes
 #include "Event/MonteCarlo/McIntegratingHit.h"
 
+// Relational Table
+#include "Event/RelTable/Relation.h"
+#include "Event/RelTable/RelTable.h"
+
 #include "Event/Digi/CalDigi.h"
 #include "CLHEP/Random/RandGauss.h"
 
@@ -21,6 +25,7 @@
 #include <math.h>
 
 // std stuff
+#include <utility>
 #include <map>
 #include <string>
 
@@ -75,7 +80,6 @@ StatusCode CalDigiAlg::initialize() {
     
     IGlastDetSvc* detSvc;
     StatusCode sc = service("GlastDetSvc", detSvc);
-    
     
     for(PARAMAP::iterator it=param.begin(); it!=param.end();it++){
         if(!detSvc->getNumericConstByName((*it).second, &value)) {
@@ -156,7 +160,11 @@ StatusCode CalDigiAlg::execute() {
     
     typedef std::map<idents::CalXtalId,XtalSignal> SignalMap;
     SignalMap signalMap;
-    
+
+    // multimap used to associate mcIntegratingHit to id. There can be multiple
+    // hits for the same id.  
+ 
+    std::multimap< idents::CalXtalId, Event::McIntegratingHit* > idMcInt;   
     
     // loop over hits - pick out CAL hits
 
@@ -183,7 +191,9 @@ StatusCode CalDigiAlg::execute() {
             idents::CalXtalId mapId(tower,layer,col);
             XtalSignal& xtalSignalRef = signalMap[mapId];
             
-            
+            // Insertion of the id - McIntegratingHit pair
+
+            idMcInt.insert(std::make_pair(mapId,*it));
             
             if(volId[fCellCmp] == m_eDiodeMLarge)
                 xtalSignalRef.addDiodeEnergy(ene,0);
@@ -310,6 +320,9 @@ StatusCode CalDigiAlg::execute() {
     
     Event::CalDigiCol* digiCol = new Event::CalDigiCol;
     
+    Event::RelTable<Event::CalDigi, Event::McIntegratingHit> digiHit;
+    digiHit.init();
+    
     // iterate through the SignalMap to look at only those Xtals that had energy deposited.
     // if either side is above threshold, then select the appropriate ADC range and
     // create a readout
@@ -363,12 +376,25 @@ StatusCode CalDigiAlg::execute() {
             Event::CalDigi::CalXtalReadout read = Event::CalDigi::CalXtalReadout(rangeP, adcP, rangeM, adcM);
             Event::CalDigi* curDigi = new Event::CalDigi(idents::CalXtalId::BESTRANGE, xtalId);
             curDigi->addReadout(read);
+            
+            typedef std::multimap< idents::CalXtalId, Event::McIntegratingHit* >::const_iterator ItHit;
+            std::pair<ItHit,ItHit> itpair = idMcInt.equal_range(xtalId);
+            
+            for (ItHit mcit = itpair.first; mcit!=itpair.second; mcit++)
+            {
+              Event::Relation<Event::CalDigi,Event::McIntegratingHit> *rel =
+                new Event::Relation<Event::CalDigi,Event::McIntegratingHit>(curDigi,mcit->second);
+              digiHit.addRelation(rel);
+            }
+             
             digiCol->push_back(curDigi);
         }
     }
     
     sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol);
     
+    if (!(sc == StatusCode::FAILURE))
+      sc = sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
     
     return sc;
 }
