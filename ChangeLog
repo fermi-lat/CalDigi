@@ -1,4 +1,20 @@
 ------------------------------------------------------------
+User: als  Thu Jan  9 16:53:30 PST 2003
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+sandbox merge
+
+version v1r3
+use statement version updates
+remove GuiSvc
+use RootPolicy
+move jobOptions to private
+
+    *
+------------------------------------------------------------
 User: richard  Sat Nov 16 14:35:35 PST 2002
 CalDigi/doc
 
