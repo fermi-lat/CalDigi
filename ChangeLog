@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Wed Oct 30 16:37:21 PST 2002
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h 
+Log Message:
+activate failure mode checking
+    *
+------------------------------------------------------------
 User: richard  Thu Oct 24 10:05:28 PDT 2002
 CalDigi/doc
 
