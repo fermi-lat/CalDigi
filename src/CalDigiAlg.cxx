@@ -1,5 +1,6 @@
 // LOCAL include files
 #include "CalDigiAlg.h"
+
 // Gaudi specific include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -18,28 +19,28 @@
 #include "Event/RelTable/Relation.h"
 #include "Event/RelTable/RelTable.h"
 #include "Event/Digi/CalDigi.h"
-#include "CLHEP/Random/RandGauss.h"
-/// for min and floor functions
-#include <algorithm>
-#include <cmath>
 
 // std stuff
 #include <utility>
 #include <string>
+#include <iomanip>
+#include <algorithm>
+#include <cmath>
 
 // Define the factory for this algorithm
 static const AlgFactory<CalDigiAlg>  Factory;
 const IAlgFactory& CalDigiAlgFactory = Factory;
 
+using namespace std;
+
 // Algorithm parameters which can be set at run time must be declared.
 // This should be done in the constructor.
 
-CalDigiAlg::CalDigiAlg(const std::string& name, ISvcLocator* pSvcLocator) :
+CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator) {
 
 
   // Declare the properties that may be set in the job options file
-  declareProperty ("xmlFile", m_xmlFile="$(CALDIGIROOT)/xml/CalDigi.xml");
   declareProperty ("xtalADCToolName", m_xtalADCToolName="XtalADCTool");
   declareProperty ("doFluctuations", m_doFluctuations="yes");
   declareProperty ("RangeType", m_rangeType="BEST");
@@ -62,16 +63,15 @@ StatusCode CalDigiAlg::initialize() {
   }
 
   double value;
-  typedef std::map<int*,std::string> PARAMAP;
+  typedef map<int*,string> PARAMAP;
 
   PARAMAP param;
-  param[&m_xNum]=        std::string("xNum");
-  param[&m_yNum]=        std::string("yNum");
-  param[&m_eTowerCal]=   std::string("eTowerCAL");
-  param[&m_eLatTowers]=  std::string("eLATTowers");
-  param[&m_CalNLayer]=   std::string("CALnLayer");
-  param[&m_nCsIPerLayer]=std::string("nCsIPerLayer");
-  param[&m_nCsISeg]= std::string("nCsISeg");
+  param[&m_xNum]=        string("xNum");
+  param[&m_yNum]=        string("yNum");
+  param[&m_eTowerCal]=   string("eTowerCAL");
+  param[&m_eLatTowers]=  string("eLATTowers");
+  param[&m_CalNLayer]=   string("CALnLayer");
+  param[&m_nCsIPerLayer]=string("nCsIPerLayer");
 
   // now try to find the GlastDevSvc service
 
@@ -178,8 +178,8 @@ StatusCode CalDigiAlg::createDigis() {
 
         const idents::CalXtalId mapId(tower,layer,col);
 
-        std::vector<const Event::McIntegratingHit*> nullList;
-        std::vector<const Event::McIntegratingHit*>* hitList;
+        vector<const Event::McIntegratingHit*> nullList;
+        vector<const Event::McIntegratingHit*>* hitList;
 
         // find this crystal in the existing list of McIntegratingHit vs Id map. If not found
         // use a null vector to see if a noise hit needs to be added.
@@ -193,8 +193,8 @@ StatusCode CalDigiAlg::createDigis() {
 
         idents::CalXtalId::AdcRange rangeP; // output - best range
         idents::CalXtalId::AdcRange rangeN;  // output - best range
-        std::vector<int> adcP(4,0);              // output - ADC's for all ranges 0-3
-        std::vector<int> adcN(4,0);              // output - ADC's for all ranges 0-3
+        vector<int> adcP(4,0);              // output - ADC's for all ranges 0-3
+        vector<int> adcN(4,0);              // output - ADC's for all ranges 0-3
 
         bool lacP, lacN;
         bool peggedP, peggedN;
@@ -227,15 +227,15 @@ StatusCode CalDigiAlg::createDigis() {
         unsigned short status = 0;
         if (!lacP && !lacN) continue;  // nothing more to see here. Move along.
 
-        MsgStream msglog(msgSvc(), name());
-        msglog << MSG::DEBUG; 
-        if (msglog.isActive()){ 
-          msglog.stream() <<" id=" << mapId 
+        // only create MsgStream() class if we have to since it's a costly operation to
+        // do repeatedly
+        if (msgSvc()->outputLevel(name()) <= MSG::DEBUG) {
+          MsgStream msglog(msgSvc(), name());
+          msglog.stream() << " id=" << mapId
                           << " rangeP=" << int(rangeP) << " adcP=" << setw(4) << adcP[rangeP] << " lacP=" << lacP
-                          << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN;
+                          << " rangeN=" << int(rangeN) << " adcN=" << setw(4) << adcN[rangeN] << " lacN=" << lacN
+                          << endreq;
         } 
-        msglog << endreq;
-        
         // check for failure mode. If killed, set to zero and set DEAD bit
 
         if (m_FailSvc != 0) {   
@@ -284,8 +284,8 @@ StatusCode CalDigiAlg::createDigis() {
         }
 
         // set up the relational table between McIntegratingHit and digis
-        typedef std::multimap< idents::CalXtalId, Event::McIntegratingHit* >::const_iterator ItHit;
-        std::pair<ItHit,ItHit> itpair = m_idMcInt.equal_range(mapId);
+        typedef multimap< idents::CalXtalId, Event::McIntegratingHit* >::const_iterator ItHit;
+        pair<ItHit,ItHit> itpair = m_idMcInt.equal_range(mapId);
 
         for (ItHit mcit = itpair.first; mcit!=itpair.second; mcit++)
           {
@@ -318,16 +318,17 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
   // get McIntegratingHit collection. Abort if empty.
 
   StatusCode  sc = StatusCode::SUCCESS;
-  MsgStream msglog(msgSvc(), name());
   SmartDataPtr<Event::McIntegratingHitVector> McCalHits(eventSvc(),EventModel::MC::McIntegratingHitCol ); //"/Event/MC/IntegratingHitsCol");
 
   if (McCalHits == 0) {
+    MsgStream msglog(msgSvc(), name());
     msglog << MSG::DEBUG; if (msglog.isActive()){ msglog.stream() << "no calorimeter hits found" ;} msglog << endreq;
     return sc;
   }
 
   // loop over hits - pick out CAL hits
 
+  MsgStream msglog(msgSvc(), name());
   for (Event::McIntegratingHitVector::const_iterator it = McCalHits->begin(); it != McCalHits->end(); it++) {
 
 
@@ -363,7 +364,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
 
       // Insertion of the id - McIntegratingHit pair
 
-      m_idMcInt.insert(std::make_pair(mapId,*it));
+      m_idMcInt.insert(make_pair(mapId,*it));
 
       m_idMcIntPreDigi[mapId].push_back((const_cast<Event::McIntegratingHit*>(*it)));
     }
