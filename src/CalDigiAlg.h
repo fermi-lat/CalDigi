@@ -29,6 +29,13 @@ public:
     StatusCode finalize();
     
     //! pair of signals per Xtal. For SignalMap.
+/** @class XtalSignal
+ * @brief nested class of CalDigiAlg to separately hold the energy deposits in the crystal
+ * and the diodes.Vector of diodes holds all 4 per crystal.
+ *
+ * Author:  A.Chekhtman
+ *
+*/
     class XtalSignal {
     public:
         XtalSignal();
