@@ -6,6 +6,7 @@ branches src mgr doc
 
 use GlastSvc v8*
 use Event v8*
+use GuiSvc                v3*
 
 use facilities
 
@@ -13,10 +14,14 @@ use xml
 
 apply_pattern packageShr
 
+set JOBOPTIONS ${CALDIGIROOT}/src/test/jobOptions.txt
+
+
 ### hide the packages used only for test program
 private
 
 use RootIo v4*
+
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
 #apply_pattern package_include
@@ -36,6 +41,6 @@ apply_pattern package_Cshlibflags
 
 # build this for testing, console only. Load all objects directly. 
 
-macro WinJobOptions  ""  VisualC   "test/jobOptions.txt"
+#macro WinJobOptions  ""  VisualC   "test/jobOptions.txt"
 
-application test_CalDigi test/*.cxx ${WinJobOptions}
+application test_CalDigi ${GuiMain} test/*.cxx ${JOBOPTIONS} ${Win32Resource}
