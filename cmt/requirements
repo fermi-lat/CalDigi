@@ -1,12 +1,11 @@
 package CalDigi
 
-version v1r2p11
+version v1r3
 
 branches src mgr doc
 
 use GlastSvc v*
 use Event v*
-use GuiSvc                v3*
 use CalUtil v1r*	
 
 use facilities
@@ -15,13 +14,12 @@ use xml
 
 apply_pattern packageShr
 
-set JOBOPTIONS ${CALDIGIROOT}/src/test/jobOptions.txt
-
 
 ### hide the packages used only for test program
+#=============================================================
 private
-
-use RootIo v4*
+use RootPolicy *
+use RootIo v6*
 
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
@@ -35,13 +33,10 @@ apply_pattern package_headers
 
 library CalDigi *.cxx Dll/*.cxx ${CalDigi_headers}
 
-#=============================================================
-private
 
 apply_pattern package_Cshlibflags 
+set JOBOPTIONS ${CALDIGIROOT}/src/test/jobOptions.txt
 
 # build this for testing, console only. Load all objects directly. 
 
-#macro WinJobOptions  ""  VisualC   "test/jobOptions.txt"
-
-application test_CalDigi ${GuiMain} test/*.cxx  ${Win32Resource}
+application test_CalDigi ${GlastMain} test/*.cxx  
