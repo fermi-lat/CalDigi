@@ -1,2 +1,9 @@
+Linux-i686
+i386_linux*
+rh*
+sun4x_*
+msdev
 Win32*
 Visual
+VC7*
+VC8*

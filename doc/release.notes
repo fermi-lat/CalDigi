@@ -1,9 +1,11 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.26 2005/01/18 03:36:39 burnett Exp $
+$Id: release.notes,v 1.27 2005/01/31 01:29:31 richard Exp $
 @verbatim
  * Package CalDigi
+ * v1r6p1     05-Feb-2005 ZF updated .cvsignore file
+ * v1r6       05-Feb-2005 ZF Now uses CalXtalResponse package
  * v1r5p8     30-Jan-2005 RXD fix setting of status for dead channels
  * v1r5p7     30-Jan-2005 RXD fix indexing for gain range > 0
  * v1r5p6     17-Jan-2005 THB remove obsolete RootPolicy
