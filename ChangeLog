@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: kyoung  Tue Oct  8 15:13:15 PDT 2002
+CalDigi/src/Dll
+
+Modified Files:
+	CalDigi_load.cxx 
+Log Message:
+Add CalDigiRandom tool
+    *
+------------------------------------------------------------
+User: kyoung  Tue Oct  8 15:13:15 PDT 2002
 CalDigi/src
 
 Added Files:
