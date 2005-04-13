@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Apr 13 12:03:30 PDT 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+bug w/ uninitialized vals in xtal loop.
+now continue gracefully if XtalADCTool fails for xingle xtal.
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r0p2, operation: add
 Package: CalDigi
