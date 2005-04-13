@@ -32,6 +32,7 @@ static const AlgFactory<CalDigiAlg>  Factory;
 const IAlgFactory& CalDigiAlgFactory = Factory;
 
 using namespace std;
+using idents::CalXtalId;
 
 // Algorithm parameters which can be set at run time must be declared.
 // This should be done in the constructor.
@@ -158,21 +159,22 @@ StatusCode CalDigiAlg::createDigis() {
   Event::RelTable<Event::CalDigi, Event::McIntegratingHit> digiHit;
   digiHit.init();
 
-  // Loop through all towers and crystals; collect up the McIntegratingHits by xtal Id and 
-  // send them off to xtalADCTool to be digitized. Unhit crystals can have noise added,
-  // so a null vector is sent in in that case.
+  /* Loop through all towers and crystals; collect up the McIntegratingHits by 
+     xtal Id and send them off to xtalADCTool to be digitized. Unhit crystals 
+     can have noise added, so a null vector is sent in in that case.
+  */
 
   for (int tower = 0; tower < m_xNum*m_yNum; tower++){
     for (int layer = 0; layer < m_CalNLayer; layer++){
       for (int col = 0; col < m_nCsIPerLayer; col++){
 
-        const idents::CalXtalId mapId(tower,layer,col);
+        const CalXtalId mapId(tower,layer,col);
 
         vector<const Event::McIntegratingHit*> nullList;
         vector<const Event::McIntegratingHit*>* hitList;
 
-        // find this crystal in the existing list of McIntegratingHit vs Id map. If not found
-        // use a null vector to see if a noise hit needs to be added.
+        // find this crystal in the existing list of McIntegratingHit vs Id map. 
+        // If not found use null vector to see if a noise hit needs to be added.
 
         PreDigiMap::iterator hitListIt=m_idMcIntPreDigi.find(mapId);
 
@@ -181,25 +183,26 @@ StatusCode CalDigiAlg::createDigis() {
         }
         else hitList = &(m_idMcIntPreDigi[mapId]);
 
-        idents::CalXtalId::AdcRange rangeP; // output - best range
-        idents::CalXtalId::AdcRange rangeN;  // output - best range
-        vector<int> adcP(4,0);              // output - ADC's for all ranges 0-3
-        vector<int> adcN(4,0);              // output - ADC's for all ranges 0-3
-
-        bool lacP, lacN;
-        bool peggedP, peggedN;
-
+        // note - important to reinitialize to 0 for each iteration
+        CalXtalId::AdcRange rangeP = (CalXtalId::AdcRange)0;
+        CalXtalId::AdcRange rangeN = (CalXtalId::AdcRange)0;
+        vector<int> adcP(4,0);         
+        vector<int> adcN(4,0);         
+        bool lacP    = false, lacN = false;
+        bool peggedP = false, peggedN = false;
+       
         sc = m_xtalADCTool->calculate(mapId,
-                                      *hitList, // all mc hits for xtal & diodes.
-                                      lacP,     // plus end above threshold
-                                      lacN,     // neg end above threshold
-                                      rangeP,   // output - best range
-                                      rangeN,   // output - best range
-                                      adcP,     // output - ADC's for all ranges 0-3
-                                      adcN,     // output - ADC's for all ranges 0-3
-                                      peggedP,
-                                      peggedN
+                                      *hitList,//in- all mchits on xtal & diodes
+                                      lacP,    //out - pos face above thold
+                                      lacN,    //out - neg face above thold
+                                      rangeP,  //out - best range
+                                      rangeN,  //out - best range
+                                      adcP,    //out - ADC's for all ranges 0-3
+                                      adcN,    //out - ADC's for all ranges 0-3
+                                      peggedP, //out - HEX1 saturated Pface
+                                      peggedN  //out - HEX1 saturated Nface
                                       );
+        if (sc.isFailure()) continue; // bad event
         // set status to ok for POS and NEG if no other bits set.
         
         if (!((CalDefs::RngNum)rangeP).isValid() || 
@@ -242,12 +245,12 @@ StatusCode CalDigiAlg::createDigis() {
 
         if (m_FailSvc != 0) {   
           if (m_FailSvc->matchChannel(mapId,
-                                      (idents::CalXtalId::POS))) {
+                                      (CalXtalId::POS))) {
 
             if (lacP) (status = status | Event::CalDigi::CalXtalReadout::DEAD_P);
           }
           if (m_FailSvc->matchChannel(mapId,
-                                      (idents::CalXtalId::NEG))) {
+                                      (CalXtalId::NEG))) {
             if (lacN) (status = status | Event::CalDigi::CalXtalReadout::DEAD_N);
 
           }
@@ -258,11 +261,11 @@ StatusCode CalDigiAlg::createDigis() {
         if ((status & 0xFF00) == 0) status = 
                                       (status | Event::CalDigi::CalXtalReadout::OK_N);
 
-        idents::CalXtalId::CalTrigMode rangeMode;
+        CalXtalId::CalTrigMode rangeMode;
         int roLimit = 1;
-        if (m_rangeType == "BEST") rangeMode = idents::CalXtalId::BESTRANGE;
+        if (m_rangeType == "BEST") rangeMode = CalXtalId::BESTRANGE;
         else  {
-          rangeMode = idents::CalXtalId::ALLRANGE;
+          rangeMode = CalXtalId::ALLRANGE;
           roLimit = 4;
         }
 
@@ -283,7 +286,7 @@ StatusCode CalDigiAlg::createDigis() {
         }
 
         // set up the relational table between McIntegratingHit and digis
-        typedef multimap< idents::CalXtalId, Event::McIntegratingHit* >::const_iterator ItHit;
+        typedef multimap< CalXtalId, Event::McIntegratingHit* >::const_iterator ItHit;
         pair<ItHit,ItHit> itpair = m_idMcInt.equal_range(mapId);
 
         for (ItHit mcit = itpair.first; mcit!=itpair.second; mcit++)
@@ -308,11 +311,11 @@ StatusCode CalDigiAlg::createDigis() {
   return sc;
 }
 
-/// collect deposited energies from McIntegratingHits and 
-/// store in map sorted by XtalID. 
-///
-/// multimap used to associate mcIntegratingHit to id. There can be multiple
-/// hits for the same id.  
+/** \brief collect deposited energies from McIntegratingHits and store in map sorted by XtalID. 
+
+ multimap used to associate mcIntegratingHit to id. There can be multiple
+ hits for the same id.  
+ */
 StatusCode CalDigiAlg::fillSignalEnergies() {
   StatusCode  sc = StatusCode::SUCCESS;
 
@@ -331,7 +334,6 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
   }
 
   // loop over hits - pick out CAL hits
-  MsgStream msglog(msgSvc(), name());
   for (Event::McIntegratingHitVector::const_iterator it = McCalHits->begin(); it != McCalHits->end(); it++) {
 
     //   extracting hit parameters - get energy and first moment
@@ -349,6 +351,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
       int tower = m_xNum*towy+towx; 
 
       if (msgSvc()->outputLevel(name()) <= MSG::VERBOSE) {
+        MsgStream msglog(msgSvc(), name());
         msglog << MSG::VERBOSE << "McIntegratingHits info \n"  
                << " ID " << volId.name() << endreq;
         msglog << MSG::VERBOSE <<  "MC Hit "  
@@ -359,7 +362,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
                << endreq;
       }
 
-      idents::CalXtalId mapId(tower,layer,col);
+      CalXtalId mapId(tower,layer,col);
 
       // Insertion of the id - McIntegratingHit pair
       m_idMcInt.insert(make_pair(mapId,*it));
