@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Sun Apr 17 10:05:37 PDT 2005
+CalDigi/src/test
+
+Modified Files:
+	muon_mc.root 
+Log Message:
+updated for changed mcRootData
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r1, operation: add
 Package: CalDigi
