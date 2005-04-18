@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: richard  Mon Apr 18 08:42:41 PDT 2005
+CalDigi/src/test
+
+Modified Files:
+	muon_mc.root 
+Log Message:
+back out new version for backed out RootIo
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r1p1, operation: add
 Package: CalDigi
