@@ -1,4 +1,30 @@
 ------------------------------------------------------------
+TAG
+Tag name: v2r1p2, operation: add
+Package: CalDigi
+User: richard  Mon Apr 18 08:44:26 2005
+Files:
+  CalDigi/.cvsignore  1.2
+  CalDigi/ChangeLog  1.161
+  CalDigi/cmt/.cvsignore  1.2
+  CalDigi/cmt/requirements  1.22
+  CalDigi/doc/.cvsignore  1.1.1.1
+  CalDigi/doc/release.notes  1.36
+  CalDigi/doc/images/muonEnergy.jpg  1.1
+  CalDigi/doc/images/taper.jpg  1.1
+  CalDigi/src/CalDigiAlg.cxx  1.40
+  CalDigi/src/mainpage.h  1.13
+  CalDigi/src/CalDigiAlg.h  1.16
+  CalDigi/src/Dll/CalDigi_load.cxx  1.4
+  CalDigi/src/Dll/CalDigi_dll.cxx  1.1
+  CalDigi/src/test/DigiHitsTestAlg.cxx  1.2
+  CalDigi/src/test/test_CalDigi_load.cxx  1.1
+  CalDigi/src/test/muon_mc.root  1.5
+  CalDigi/src/test/jobOptions.txt  1.8
+  CalDigi/src/test/test_CalDigi.cxx  1.3
+
+    *
+------------------------------------------------------------
 User: richard  Mon Apr 18 08:44:19 PDT 2005
 CalDigi/doc
 
