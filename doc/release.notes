@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.34 2005/04/13 22:21:22 fewtrell Exp $
+$Id: release.notes,v 1.35 2005/04/17 17:08:22 richard Exp $
 @verbatim
  * Package CalDigi
+ * v2r1p2     18-Apr-2005 RXD back out muon test file; RootIo changes backed out.
  * v2r1p1     17-Apr-2005 RXD remake test muon file for changed mcRootData
  * v2r1       13-Apr-2005 ZF skip bad xtals, don't die. works with multi towers.  some unitialized vars in loops causing trouble
  * v2r0p2     16-Mar-2005 ZF moved CalDigi.doFluctuations jobOption to XtalADCTool.NotRandomNoise, fixed bug in 4-range CalDig creation in CalDigiAlg
