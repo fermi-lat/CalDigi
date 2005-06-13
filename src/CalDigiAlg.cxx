@@ -33,16 +33,14 @@ const IAlgFactory& CalDigiAlgFactory = Factory;
 
 using namespace std;
 using idents::CalXtalId;
+using namespace CalDefs;
 
-// Algorithm parameters which can be set at run time must be declared.
-// This should be done in the constructor.
-
+/// construct object & delcare jobOptions
 CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator) {
 
-
   // Declare the properties that may be set in the job options file
-  declareProperty ("xtalADCToolName", m_xtalADCToolName = "XtalADCTool");
+  declareProperty ("xtalDigiToolName", m_xtalDigiToolName = "XtalDigiTool");
   declareProperty ("RangeType",       m_rangeType       = "BEST");
 }
 
@@ -53,26 +51,36 @@ StatusCode CalDigiAlg::initialize() {
   MsgStream msglog(msgSvc(), name());
   msglog << MSG::INFO << "initialize" << endreq;
 
-  // Get properties from the JobOptionsSvc
+  /////////////////////
+  //-- JOB OPTIONS --//
+  /////////////////////
+
   sc = setProperties();
   if ( !sc.isSuccess() ) {
     msglog << MSG::ERROR << "Could not set jobOptions properties" << endreq;
     return sc;
   }
 
+  /////////////////////////////
+  //-- RETRIEVE CONSTANTS  --//
+  /////////////////////////////
+  
   double value;
   typedef map<int*,string> PARAMAP;
 
   PARAMAP param;
   param[&m_xNum]=        string("xNum");
   param[&m_yNum]=        string("yNum");
-  param[&m_eTowerCal]=   string("eTowerCAL");
-  param[&m_eLatTowers]=  string("eLATTowers");
-  param[&m_CalNLayer]=   string("CALnLayer");
-  param[&m_nCsIPerLayer]=string("nCsIPerLayer");
+  
+  param[&m_eTowerCAL]=     string("eTowerCAL");
+  param[&m_eLATTowers]=    string("eLATTowers");
+  param[&m_eMeasureX]=     string("eMeasureX");
+  param[&m_eXtal]=         string("eXtal");
+  
+  param[&m_CalNLayer]=     string("CALnLayer");
+  param[&m_nCsIPerLayer]=  string("nCsIPerLayer");
 
   // now try to find the GlastDevSvc service
-
   IGlastDetSvc* detSvc;
   sc = service("GlastDetSvc", detSvc);
   if (sc.isFailure() ) {
@@ -88,9 +96,13 @@ StatusCode CalDigiAlg::initialize() {
     } else *((*it).first)=(int)value;
   }
 
-  sc = toolSvc()->retrieveTool(m_xtalADCToolName,m_xtalADCTool);
+  ///////////////////////////////////////
+  //-- RETRIEVE HELPER TOOLS & SVCS  --//
+  ///////////////////////////////////////
+
+  sc = toolSvc()->retrieveTool(m_xtalDigiToolName,m_xtalDigiTool);
   if (sc.isFailure() ) {
-    msglog << MSG::ERROR << "  Unable to create " << m_xtalADCToolName << endreq;
+    msglog << MSG::ERROR << "  Unable to create " << m_xtalDigiToolName << endreq;
     return sc;
   }
   
@@ -98,6 +110,38 @@ StatusCode CalDigiAlg::initialize() {
   if (sc.isFailure() ) {
     msglog << MSG::INFO << "  Did not find CalFailureMode service" << endreq;
     m_FailSvc = 0;
+  }
+
+  ////////////////////////////
+  //-- FIND ACTIVE TOWERS --//
+  ////////////////////////////
+
+  // clear old list just to be safe
+  m_twrList.clear();
+
+  for (TwrNum testTwr; testTwr.isValid(); testTwr++) {
+    // create geometry ID for 1st xtal in each tower
+    idents::VolumeIdentifier volId;
+
+    // volId info snagged from 
+    // http://www.slac.stanford.edu/exp/glast/ground/software/geometry/docs/identifiers/geoId-RitzId.shtml
+    volId.append(m_eLATTowers);
+    volId.append(testTwr.getRow());
+    volId.append(testTwr.getCol());
+    volId.append(m_eTowerCAL);
+    volId.append(0);
+    volId.append(m_eMeasureX);
+    volId.append(0);
+    volId.append(m_eXtal);
+    volId.append(0);
+
+    // test to see if the volume ID is valid.
+    string tmpStr; vector<double> tmpVec;
+    sc = detSvc->getShapeByID(volId, &tmpStr, &tmpVec);
+	if (!sc.isFailure()) {
+		msglog << MSG::VERBOSE << "Cal unit detected twr_bay=" << testTwr << endreq;
+		m_twrList.push_back(testTwr);
+	}
   }
 
   return StatusCode::SUCCESS;
@@ -148,6 +192,12 @@ StatusCode CalDigiAlg::finalize() {
   return StatusCode::SUCCESS;
 }
 
+/// Template function fills any STL type container with zero values
+template <class T> static void fill_zero(T &container) {
+   fill(container.begin(), container.end(), 0);
+}
+
+/// Loop through each existing xtal & generate digis.
 StatusCode CalDigiAlg::createDigis() {
   // Purpose and Method: 
   // create digis on the TDS from the deposited energies
@@ -160,49 +210,57 @@ StatusCode CalDigiAlg::createDigis() {
   digiHit.init();
 
   /* Loop through all towers and crystals; collect up the McIntegratingHits by 
-     xtal Id and send them off to xtalADCTool to be digitized. Unhit crystals 
+     xtal Id and send them off to xtalDigiTool to be digitized. Unhit crystals 
      can have noise added, so a null vector is sent in in that case.
   */
+  
+  vector<const Event::McIntegratingHit*> nullList;      
+  // variables used in loop
+  vector<int> adcP(RngNum::N_VALS);         
+  vector<int> adcN(RngNum::N_VALS);         
+  
+  // loop through existing towers.
+  for (unsigned twrSeq = 0; twrSeq < m_twrList.size(); twrSeq++) {
+    // get bay id of nth live tower
+    TwrNum twr = m_twrList[twrSeq];
+    for (LyrNum lyr; lyr.isValid(); lyr++) {
+      for (ColNum col; col.isValid(); col++) {
 
-  for (int tower = 0; tower < m_xNum*m_yNum; tower++){
-    for (int layer = 0; layer < m_CalNLayer; layer++){
-      for (int col = 0; col < m_nCsIPerLayer; col++){
+        // assemble current calXtalId
+		const CalXtalId mapId(twr,lyr,col);
 
-        const CalXtalId mapId(tower,layer,col);
-
-        vector<const Event::McIntegratingHit*> nullList;
         vector<const Event::McIntegratingHit*>* hitList;
 
         // find this crystal in the existing list of McIntegratingHit vs Id map. 
         // If not found use null vector to see if a noise hit needs to be added.
-
         PreDigiMap::iterator hitListIt=m_idMcIntPreDigi.find(mapId);
 
-        if (hitListIt == m_idMcIntPreDigi.end()){ 
+        // we still process empty xtals (noise simulation may cause hits)
+		if (hitListIt == m_idMcIntPreDigi.end())
           hitList = &nullList;
-        }
+
         else hitList = &(m_idMcIntPreDigi[mapId]);
 
         // note - important to reinitialize to 0 for each iteration
         CalXtalId::AdcRange rangeP = (CalXtalId::AdcRange)0;
         CalXtalId::AdcRange rangeN = (CalXtalId::AdcRange)0;
-        vector<int> adcP(4,0);         
-        vector<int> adcN(4,0);         
-        bool lacP    = false, lacN = false;
-        bool peggedP = false, peggedN = false;
+        bool lacP = false;
+		bool lacN = false;
+		fill_zero(adcP);
+		fill_zero(adcN);
        
-        sc = m_xtalADCTool->calculate(mapId,
-                                      *hitList,//in- all mchits on xtal & diodes
-                                      lacP,    //out - pos face above thold
-                                      lacN,    //out - neg face above thold
-                                      rangeP,  //out - best range
-                                      rangeN,  //out - best range
-                                      adcP,    //out - ADC's for all ranges 0-3
-                                      adcN,    //out - ADC's for all ranges 0-3
-                                      peggedP, //out - HEX1 saturated Pface
-                                      peggedN  //out - HEX1 saturated Nface
-                                      );
+        sc = m_xtalDigiTool->calculate(mapId,
+                                       *hitList,//in- all mchits on xtal & diodes
+                                       lacP,    //out - pos face above thold
+                                       lacN,    //out - neg face above thold
+                                       rangeP,  //out - best range
+                                       rangeN,  //out - best range
+                                       adcP,    //out - ADC's for all ranges 0-3
+                                       adcN     //out - ADC's for all ranges 0-3
+                                       );
         if (sc.isFailure()) continue; // bad event
+        
+
         // set status to ok for POS and NEG if no other bits set.
         
         if (!((CalDefs::RngNum)rangeP).isValid() || 
@@ -313,9 +371,9 @@ StatusCode CalDigiAlg::createDigis() {
 
 /** \brief collect deposited energies from McIntegratingHits and store in map sorted by XtalID. 
 
- multimap used to associate mcIntegratingHit to id. There can be multiple
- hits for the same id.  
- */
+multimap used to associate mcIntegratingHit to id. There can be multiple
+hits for the same id.  
+*/
 StatusCode CalDigiAlg::fillSignalEnergies() {
   StatusCode  sc = StatusCode::SUCCESS;
 
@@ -341,28 +399,28 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
       ((idents::VolumeIdentifier)(*it)->volumeID());
 
     //   extracting parameters from volume Id identifying as in CAL
-    if ((int)volId[fLATObjects] == m_eLatTowers &&
-        (int)volId[fTowerObjects] == m_eTowerCal){ 
+    if ((int)volId[fLATObjects]   == m_eLATTowers &&
+        (int)volId[fTowerObjects] == m_eTowerCAL){ 
 
       int col   = volId[fCALXtal];
-      int layer = volId[fLayer];
+      int lyr   = volId[fLayer];
       int towy  = volId[fTowerY];
       int towx  = volId[fTowerX];
-      int tower = m_xNum*towy+towx; 
+      int twr   = m_xNum*towy+towx; 
 
       if (msgSvc()->outputLevel(name()) <= MSG::VERBOSE) {
         MsgStream msglog(msgSvc(), name());
         msglog << MSG::VERBOSE << "McIntegratingHits info \n"  
                << " ID " << volId.name() << endreq;
         msglog << MSG::VERBOSE <<  "MC Hit "  
-               << " col " << col
-               << " layer " << layer
-               << " towy " << towy
-               << " towx " << towx
+               << " col "   << col
+               << " layer " << lyr
+               << " towy "  << towy
+               << " towx "  << towx
                << endreq;
       }
 
-      CalXtalId mapId(tower,layer,col);
+      CalXtalId mapId(twr,lyr,col);
 
       // Insertion of the id - McIntegratingHit pair
       m_idMcInt.insert(make_pair(mapId,*it));

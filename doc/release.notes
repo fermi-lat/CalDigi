@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.35 2005/04/17 17:08:22 richard Exp $
+$Id: release.notes,v 1.36 2005/04/18 15:44:19 richard Exp $
 @verbatim
  * Package CalDigi
+ * v2r2       13-Jun-2005 ZF  Now only processes existing towers.
  * v2r1p2     18-Apr-2005 RXD back out muon test file; RootIo changes backed out.
  * v2r1p1     17-Apr-2005 RXD remake test muon file for changed mcRootData
  * v2r1       13-Apr-2005 ZF skip bad xtals, don't die. works with multi towers.  some unitialized vars in loops causing trouble
