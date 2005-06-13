@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: fewtrell  Mon Jun 13 15:30:48 PDT 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h mainpage.h 
+Log Message:
+CalDigiAlg now queries for existing towers upon init & only processes those towers during ::execute() phase.
+
+this works better w/ partially populated I&T LAT.
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r1p2, operation: add
 Package: CalDigi
