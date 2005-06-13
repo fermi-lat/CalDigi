@@ -1,94 +1,91 @@
 #ifndef _GlastDigi_CalDigiAlg_H
 #define _GlastDigi_CalDigiAlg_H 1
+// LOCAL INCLUDES
 
-
-// Include files
+// GLAST INCLUDES
 #include "CalUtil/ICalFailureModeSvc.h"
-#include "CalXtalResponse/IXtalADCTool.h"
-#include "GaudiKernel/Algorithm.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include <vector>
-#include <map>
-// MC classes
+#include "CalUtil/CalDefs.h"
+#include "CalXtalResponse/IXtalDigiTool.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
 
+// EXTLIB INCLUDES
+#include "GaudiKernel/Algorithm.h"
+#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+
+// STD INCLUDES
+#include <vector>
+#include <map>
+
 /** @class CalDigiAlg
-* @brief Algorithm to convert from McIntegratingHit objects into 
-* CalDigi objects and store them in the TDS. Combines contributions from
-* Xtal segments and accounts for light taper along the length of the Xtals.
-* Energies are converted to adc values after pedestal subtraction, and the 
-* appropriate gain range is identified.
-*
-* Author:  A.Chekhtman
-*
-*/
+ * @brief Algorithm to convert from McIntegratingHit objects into 
+ * CalDigi objects and store them in the TDS. Groups hits by xtal & calls
+ & CalXtalResponse/XtalDigiTool for each xtal.
+ *
+ * Author:  A.Chekhtman
+ *
+ */
 
 using namespace std;
+using namespace CalDefs;
 
 class CalDigiAlg : public Algorithm {
 
-public:
+ public:
 
-    CalDigiAlg(const string& name, ISvcLocator* pSvcLocator); 
+  CalDigiAlg(const string& name, ISvcLocator* pSvcLocator); 
 
-    StatusCode initialize();
-    StatusCode execute();
-    StatusCode finalize();
+  StatusCode initialize();
+  StatusCode execute();
+  StatusCode finalize();
+ 
+ protected:
+  StatusCode fillSignalEnergies();
+  StatusCode createDigis();
 
-    //! pair of signals per Xtal. For SignalMap.
-    /** @class XtalSignal
-    * @brief nested class of CalDigiAlg to separately hold the energy deposits in the crystal
-    * and the diodes.Vector of diodes holds all 4 per crystal.
-    *
-    * Author:  A.Chekhtman
-    *
-    */
+ private:
 
-protected:
-    StatusCode fillSignalEnergies();
-    StatusCode createDigis();
+  /// list of active tower bays, populated at run time
+  vector<TwrNum> m_twrList;
 
-private:
+  //-- CONSTANTS --//
+  /// x tower count
+  int m_xNum;  
+  /// y tower count
+  int m_yNum;  
+    
+  /// volume ID enumeration
+  int m_eTowerCAL;  
+  /// volume ID enumeration
+  int m_eLATTowers;
+  /// volume ID enumeration
+  int m_eMeasureX;
+  /// volume ID enumeration
+  int m_eXtal;
+  
+  /// number of layers (ie in z)
+  int m_CalNLayer;  
+  // number of Xtals per layer
+  int m_nCsIPerLayer;  
 
-    /// names for identifier fields
-    enum {fLATObjects, fTowerY, fTowerX, fTowerObjects, fLayer,
-        fMeasure, fCALXtal,fCellCmp, fSegment};
+  /// map to contain the McIntegratingHit vs XtaliD relational table
+  typedef map< idents::CalXtalId,  vector< const Event::McIntegratingHit*> > PreDigiMap;
 
-    /// local cache for constants defined in xml files
-    /// x tower number
-    int m_xNum;  
-    /// y tower number
-    int m_yNum;  
-    /// detModel identifier for CAL
-    int m_eTowerCal;  
-    /// detModel identifier for LAT Towers
-    int m_eLatTowers;
-    /// number of layers (ie in z)
-    int m_CalNLayer;  
-    // number of Xtals per layer
-    int m_nCsIPerLayer;  
+  /// map to contain the McIntegratingHit vs XtaliD relational table
+  PreDigiMap m_idMcIntPreDigi;   
 
-    /// map to contain the McIntegratingHit vs XtaliD relational table
-    typedef map< idents::CalXtalId,  vector< const Event::McIntegratingHit*> > PreDigiMap;
+  /// map to contain the McIntegratingHit vs XtaliD relational table
+  multimap< idents::CalXtalId, Event::McIntegratingHit* > m_idMcInt;   
 
-    /// map to contain the McIntegratingHit vs XtaliD relational table
-    PreDigiMap m_idMcIntPreDigi;   
+  /// pointer to failure mode service
+  ICalFailureModeSvc* m_FailSvc;
 
-    /// map to contain the McIntegratingHit vs XtaliD relational table
-    multimap< idents::CalXtalId, Event::McIntegratingHit* > m_idMcInt;   
-
-    /// pointer to failure mode service
-    ICalFailureModeSvc* m_FailSvc;
-
-    /// type of readout range: BEST or ALL
-    string m_rangeType;
-    /// name of Tool for calculating light taper
-    string m_xtalADCToolName;
-    /// pointer to actual tool for converting energy to ADC
-    IXtalADCTool* m_xtalADCTool;
+  /// type of readout range: BEST or ALL
+  string m_rangeType;
+  /// name of Tool for calculating light taper
+  string m_xtalDigiToolName;
+  /// pointer to actual tool for converting energy to ADC
+  IXtalDigiTool* m_xtalDigiTool;
 };
-
-
 
 #endif // _GlastDigi_CalDigiAlg_H
 
