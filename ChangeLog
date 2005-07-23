@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: fewtrell  Fri Jul 22 20:30:13 PDT 2005
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+save FLE & FHE trigger info to TDS...
+(doesn't quite work yet)
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r2, operation: add
 Package: CalDigi
