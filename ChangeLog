@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: burnett  Sat Jul 23 07:54:16 PDT 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+fix TDS path and bug in cal trigger bit code
+    *
+------------------------------------------------------------
 User: fewtrell  Fri Jul 22 20:30:14 PDT 2005
 CalDigi/src
 
