@@ -1,3 +1,9 @@
+/**
+* @file CalDigiAlg.cxx
+* @brief implementation  of the algorithm CalDigiAlg.
+*
+*  $Header$
+*/
 // LOCAL include files
 #include "CalDigiAlg.h"
 
@@ -219,7 +225,7 @@ StatusCode CalDigiAlg::createDigis() {
   }
 
   // search for GltDigi in TDS
-  static const string gltPath("Event/Digi/GltDigi");
+  static const string gltPath( EventModel::Digi::Event+"/GltDigi");
   Event::GltDigi* glt=0;  // this will point to glt data one way or another
   DataObject* pnode = 0;
   sc = eventSvc()->findObject(gltPath, pnode);
@@ -228,7 +234,6 @@ StatusCode CalDigiAlg::createDigis() {
   // if the required entry doens't exit - create it
   if (sc.isFailure()) {
     glt = new Event::GltDigi();
-    cout << "glt=" << glt << endl;
     // always register glt data, even if there is no caldigi data.
     // sometimes we can trigger w/ no LACs.
     sc = eventSvc()->registerObject(gltPath, glt);
@@ -319,7 +324,7 @@ StatusCode CalDigiAlg::createDigis() {
 
   //-- populate GltDigi trigger data --//
   glt->setCAL_LO(fle_trigs);
-  glt->setCAL_HI(fle_trigs);
+  glt->setCAL_HI(fhe_trigs);
 
   sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol);
   if (sc.isFailure()) {
