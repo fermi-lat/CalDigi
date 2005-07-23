@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: fewtrell  Fri Jul 22 20:30:14 PDT 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h mainpage.h 
+Log Message:
+save FLE & FHE trigger info to TDS...
+(doesn't quite work yet)
+
+    *
+------------------------------------------------------------
 User: fewtrell  Fri Jul 22 20:30:13 PDT 2005
 CalDigi/doc
 
