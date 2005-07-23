@@ -10,6 +10,9 @@
  * simulated readout, as laid out in these <a href="http://www-glast.slac.stanford.edu/software/DataStructuresTF/20011220/CalorimeterDigiRequirements.htm"> requirements</a>.
  * 
  * CalDigiAlg takes Hits from McIntegratingHit and performs the following steps:
+ * - group McIntegratingHit by cal crystal
+ * - call CalXtalResponse/IXtalDigiTool to calculate adc output for each crystal
+ * - save CalDigi & GltDigi cal_trigger information to TDS
  *
  * <b>Thresholds and Energy Deposit</b>
  *
