@@ -3,7 +3,6 @@
 // LOCAL INCLUDES
 
 // GLAST INCLUDES
-#include "CalUtil/ICalFailureModeSvc.h"
 #include "CalUtil/CalDefs.h"
 #include "CalXtalResponse/IXtalDigiTool.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
@@ -11,6 +10,7 @@
 // EXTLIB INCLUDES
 #include "GaudiKernel/Algorithm.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
+#include "TTree.h"
 
 // STD INCLUDES
 #include <vector>
@@ -19,7 +19,8 @@
 /** @class CalDigiAlg
  * @brief Algorithm to convert from McIntegratingHit objects into 
  * CalDigi objects and store them in the TDS. Groups hits by xtal & calls
- & CalXtalResponse/XtalDigiTool for each xtal.
+ * CalXtalResponse/XtalDigiTool for each xtal.  Also calcuates CALLO & CALHI triggers
+ * & writes them to GltDigi class in TDS.
  *
  * Author:  A.Chekhtman
  *
@@ -76,13 +77,12 @@ class CalDigiAlg : public Algorithm {
   /// map to contain the McIntegratingHit vs XtaliD relational table
   multimap< idents::CalXtalId, Event::McIntegratingHit* > m_idMcInt;   
 
-  /// pointer to failure mode service
-  ICalFailureModeSvc* m_FailSvc;
-
   /// type of readout range: BEST or ALL
-  string m_rangeType;
+  StringProperty m_rangeTypeStr;
+  CalXtalId::CalTrigMode m_rangeMode;
+
   /// name of Tool for calculating light taper
-  string m_xtalDigiToolName;
+  StringProperty m_xtalDigiToolName;
   /// pointer to actual tool for converting energy to ADC
   IXtalDigiTool* m_xtalDigiTool;
 };
