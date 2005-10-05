@@ -2,7 +2,7 @@
 * @file CalDigiAlg.cxx
 * @brief implementation  of the algorithm CalDigiAlg.
 *
-*  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.44 2005/10/05 00:18:19 fewtrell Exp $
+*  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.45 2005/10/05 19:29:52 fewtrell Exp $
 */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -43,7 +43,7 @@ using namespace std;
 using idents::CalXtalId;
 using namespace CalDefs;
 
-/// construct object & delcare jobOptions
+/// construct object & declare jobOptions
 CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator),
   m_rangeMode(CalXtalId::BESTRANGE)
