@@ -2,7 +2,7 @@
 * @file CalDigiAlg.cxx
 * @brief implementation  of the algorithm CalDigiAlg.
 *
-*  $Header$
+*  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.43 2005/07/23 14:54:15 burnett Exp $
 */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -248,8 +248,8 @@ StatusCode CalDigiAlg::createDigis() {
   
 
   // create new blank vector of triggers (1 LE & HE per tower)
-  vector<bool> fle_trigs(TwrNum::N_VALS,false);
-  vector<bool> fhe_trigs(TwrNum::N_VALS,false);
+  Event::GltDigi::CalTriggerMap fle_trigs;
+  Event::GltDigi::CalTriggerMap fhe_trigs;
   
   /* Loop through (installed) towers and crystals; collect up the McIntegratingHits by 
      xtal Id and send them off to xtalDigiTool to be digitized. Unhit crystals 
@@ -304,8 +304,10 @@ StatusCode CalDigiAlg::createDigis() {
 
         // set trigger values (before LAC, allows for FHE trig independent of LAC/FLE
         //   (small diode deposit)
-        fle_trigs[twr.getInt()] = fle_trigs[twr.getInt()] || (fleP || fleN);
-        fhe_trigs[twr.getInt()] = fhe_trigs[twr.getInt()] || (fheP || fheN);
+        fle_trigs[CalXtalId(twr,lyr,col,NEG_FACE)] = fleN;
+        fle_trigs[CalXtalId(twr,lyr,col,POS_FACE)] = fleP;
+        fhe_trigs[CalXtalId(twr,lyr,col,NEG_FACE)] = fheN;
+        fhe_trigs[CalXtalId(twr,lyr,col,POS_FACE)] = fheP;
 
         if (!lacP && !lacN) continue;  // nothing more to see here. Move along.
         
