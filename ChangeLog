@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Tue Oct  4 17:18:19 PDT 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+now support per xtal-face Cal trigger info in Event::GltDigi class.
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r3, operation: add
 Package: CalDigi
