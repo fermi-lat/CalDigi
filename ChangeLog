@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Oct  5 12:29:52 PDT 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+using updated interface to GltDigi class.
+
+
+    *
+------------------------------------------------------------
 User: fewtrell  Tue Oct  4 17:18:19 PDT 2005
 CalDigi/src
 
