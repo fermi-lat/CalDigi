@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Oct  5 12:33:47 PDT 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+fix typo in comment
+
+    *
+------------------------------------------------------------
 User: fewtrell  Wed Oct  5 12:31:13 PDT 2005
 CalDigi/doc
 
