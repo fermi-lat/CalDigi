@@ -1,10 +1,11 @@
 #ifndef _GlastDigi_CalDigiAlg_H
-#define _GlastDigi_CalDigiAlg_H 1
+#define _GlastDigi_CalDigiAlg_H
 // LOCAL INCLUDES
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
 #include "CalXtalResponse/IXtalDigiTool.h"
+#include "CalXtalResponse/ICalTrigTool.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
 
 // EXTLIB INCLUDES
@@ -19,15 +20,15 @@
 /** @class CalDigiAlg
  * @brief Algorithm to convert from McIntegratingHit objects into 
  * CalDigi objects and store them in the TDS. Groups hits by xtal & calls
- * CalXtalResponse/XtalDigiTool for each xtal.  Also calcuates CALLO & CALHI triggers
- * & writes them to GltDigi class in TDS.
+ * CalXtalResponse/XtalDigiTool for each xtal.  Also calculates CALLO & 
+ * CALHI triggers & writes them to GltDigi class in TDS.
  *
  * Author:  A.Chekhtman
  *
  */
 
 using namespace std;
-using namespace CalDefs;
+using namespace CalUtil;
 
 class CalDigiAlg : public Algorithm {
 
@@ -69,7 +70,8 @@ class CalDigiAlg : public Algorithm {
   int m_nCsIPerLayer;  
 
   /// map to contain the McIntegratingHit vs XtaliD relational table
-  typedef map< idents::CalXtalId,  vector< const Event::McIntegratingHit*> > PreDigiMap;
+  typedef map< idents::CalXtalId,  vector< const Event::McIntegratingHit*> > 
+    PreDigiMap;
 
   /// map to contain the McIntegratingHit vs XtaliD relational table
   PreDigiMap m_idMcIntPreDigi;   
@@ -81,11 +83,21 @@ class CalDigiAlg : public Algorithm {
   StringProperty m_rangeTypeStr;
   CalXtalId::CalTrigMode m_rangeMode;
 
-  /// name of Tool for calculating light taper
+  /// name of Tool for calculating single xtal digi response.
   StringProperty m_xtalDigiToolName;
-  /// pointer to actual tool for converting energy to ADC
+  /// pointer to xtal digi tool
   IXtalDigiTool* m_xtalDigiTool;
+
+  /// name of Tool for calculating single xtal trigger response.
+  StringProperty m_calTrigToolName;
+  /// pointer to xtal trig tool
+  ICalTrigTool* m_calTrigTool;
+
+  /// optional get EvtHdr info which is used by XtalDigiTool/XtalDigiTuple for RunID & EvtID info
+  /// XtalDigiTuple is off by default, so we'll cut a small amount of code out by making this optional.
+  BooleanProperty m_getEvtHdr;
+
 };
 
-#endif // _GlastDigi_CalDigiAlg_H
+#endif
 
