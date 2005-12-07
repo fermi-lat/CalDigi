@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Dec  7 10:36:30 PST 2005
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+support new CalTrigTool
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r3p1, operation: add
 Package: CalDigi
