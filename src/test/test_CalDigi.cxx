@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi.cxx,v 1.2 2002/08/18 17:01:50 richard Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi.cxx,v 1.3 2002/09/23 16:30:39 richard Exp $
 
 // Include files
 // Gaudi system includes
@@ -17,21 +17,21 @@
 // Define the class here instead of in a header file: not needed anywhere but here!
 //------------------------------------------------------------------------------
 /** 
-A simple algorithm.
+    A simple algorithm.
 
   
 */
 class test_CalDigi : public Algorithm {
 public:
-    test_CalDigi(const std::string& name, ISvcLocator* pSvcLocator);
-    StatusCode initialize();
-    StatusCode execute();
-    StatusCode finalize();
+  test_CalDigi(const std::string& name, ISvcLocator* pSvcLocator);
+  StatusCode initialize();
+  StatusCode execute();
+  StatusCode finalize();
     
 private: 
-    //! number of times called
-    int m_count; 
-    //! the GlastDetSvc used for access to detector info
+  //! number of times called
+  int m_count; 
+  //! the GlastDetSvc used for access to detector info
 };
 //------------------------------------------------------------------------
 
@@ -45,31 +45,32 @@ const IAlgFactory& test_CalDigiFactory = Factory;
 //------------------------------------------------------------------------
 //! ctor
 test_CalDigi::test_CalDigi(const std::string& name, ISvcLocator* pSvcLocator)
-:Algorithm(name, pSvcLocator)
-,m_count(0)
+  :
+  Algorithm(name, pSvcLocator), 
+  m_count(0)
 {
 }
 
 //------------------------------------------------------------------------
 //! set parameters and attach to various perhaps useful services.
 StatusCode test_CalDigi::initialize(){
-    StatusCode  sc = StatusCode::SUCCESS;
-    MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "initialize" << endreq;
+  StatusCode  sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "initialize" << endreq;
     
-    return sc;
+  return sc;
 }
 
 //------------------------------------------------------------------------
 //! process an event
 StatusCode test_CalDigi::execute()
 {
-    StatusCode  sc = StatusCode::SUCCESS;
-    MsgStream   log( msgSvc(), name() );
-    log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
+  StatusCode  sc = StatusCode::SUCCESS;
+  MsgStream   log( msgSvc(), name() );
+  log << MSG::INFO << "executing " << ++m_count << " time" << endreq;
 
 
- // First, the collection of CalDigis is retrieved from the TDS
+  // First, the collection of CalDigis is retrieved from the TDS
   SmartDataPtr<Event::CalDigiCol> digiCol(eventSvc(),EventModel::Digi::CalDigiCol );
 
   if ((digiCol == 0) || (digiCol->size()) == 0) {
@@ -79,17 +80,17 @@ StatusCode test_CalDigi::execute()
   }
 
 
-    return sc;
+  return sc;
 }
 
 //------------------------------------------------------------------------
 //! clean up, summarize
 StatusCode test_CalDigi::finalize(){
-    StatusCode  sc = StatusCode::SUCCESS;
-    MsgStream log(msgSvc(), name());
-    log << MSG::INFO << "finalize after " << m_count << " calls." << endreq;
+  StatusCode  sc = StatusCode::SUCCESS;
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "finalize after " << m_count << " calls." << endreq;
     
-    return sc;
+  return sc;
 }
 
 

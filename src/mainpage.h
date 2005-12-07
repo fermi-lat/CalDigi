@@ -7,7 +7,8 @@
  * @section description Description
  *
  * This package performs the digitization of the calorimeter (CAL)
- * simulated readout, as laid out in these <a href="http://www-glast.slac.stanford.edu/software/DataStructuresTF/20011220/CalorimeterDigiRequirements.htm"> requirements</a>.
+ * simulated readout, as laid out in these 
+ * <a href="http://www-glast.slac.stanford.edu/software/DataStructuresTF/20011220/CalorimeterDigiRequirements.htm"> requirements</a>.
  * 
  * CalDigiAlg takes Hits from McIntegratingHit and performs the following steps:
  * - group McIntegratingHit by cal crystal

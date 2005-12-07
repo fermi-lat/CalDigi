@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/DigiHitsTestAlg.cxx,v 1.1 2002/08/07 11:08:10 frailis Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/DigiHitsTestAlg.cxx,v 1.2 2002/08/26 18:49:04 richard Exp $
 
 // Author:
 //   Marco Frailis
@@ -129,7 +129,7 @@ StatusCode DigiHitsTestAlg::execute() {
   // each primary particle to its total energy
 
   for (itDigis = digiCol->begin(); itDigis != digiCol->end(); itDigis++) {
-      std::vector<DigiHitsRel*> relations = digiHitsTab.getRelByFirst(*itDigis);
+    std::vector<DigiHitsRel*> relations = digiHitsTab.getRelByFirst(*itDigis);
     for (itRels = relations.begin(); itRels != relations.end(); itRels++) {
       EnergyDepositMapId& energyItemId = (*itRels)->getSecond()->itemizedEnergyId();
       for (itEn = energyItemId.begin(); itEn != energyItemId.end(); itEn++) {

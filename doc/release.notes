@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.38 2005/07/23 03:30:13 fewtrell Exp $
+$Id: release.notes,v 1.39 2005/10/05 19:31:13 fewtrell Exp $
 @verbatim
  * Package CalDigi
+ * v2r3       07-Dec-2005 ZF  Update to new CalTrigTool separate from XtalDigiTool
  * v2r3p1     05-Oct-2005 ZF  Save GltDigi Cal trigger info per xtal-face instead of per tower.
  * v2r3       22-Jul-2005 ZF  Save FLE &FHE trigger info to TDS.  Uses CalXtalResponse >= v0r7
  * v2r2       13-Jun-2005 ZF  Now only processes existing towers.

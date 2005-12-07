@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/test_CalDigi/src/test_CalDigi_load.cxx,v 1.3 2001/10/26 17:13:23 burnett Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi_load.cxx,v 1.1 2002/08/18 16:01:56 richard Exp $
 //====================================================================
 //
 //  Description: Implementation of <Package>_load routine.
@@ -19,10 +19,10 @@
 
 //! Load all  services: 
 void test_CalDigi_load() {
-    DLL_DECL_ALGORITHM( test_CalDigi );
+  DLL_DECL_ALGORITHM( test_CalDigi );
 } 
 
 extern "C" void test_CalDigi_loadRef()    {
-    test_CalDigi_load();
+  test_CalDigi_load();
 }
 

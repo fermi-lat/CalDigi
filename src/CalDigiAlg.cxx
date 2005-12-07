@@ -1,9 +1,9 @@
 /**
-* @file CalDigiAlg.cxx
-* @brief implementation  of the algorithm CalDigiAlg.
-*
-*  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.45 2005/10/05 19:29:52 fewtrell Exp $
-*/
+ * @file CalDigiAlg.cxx
+ * @brief implementation  of the algorithm CalDigiAlg.
+ *
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.46 2005/10/05 19:33:46 fewtrell Exp $
+ */
 // LOCAL include files
 #include "CalDigiAlg.h"
 
@@ -41,7 +41,7 @@ const IAlgFactory& CalDigiAlgFactory = Factory;
 
 using namespace std;
 using idents::CalXtalId;
-using namespace CalDefs;
+using namespace CalUtil;
 
 /// construct object & declare jobOptions
 CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
@@ -50,8 +50,10 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
 {
 
   // Declare the properties that may be set in the job options file
-  declareProperty ("XtalDigiToolName", m_xtalDigiToolName = "XtalDigiTool");
-  declareProperty ("RangeType",        m_rangeTypeStr     = "BEST");
+  declareProperty("XtalDigiToolName", m_xtalDigiToolName = "XtalDigiTool");
+  declareProperty("CalTrigToolName",  m_calTrigToolName  = "CalTrigTool");
+  declareProperty("RangeType",        m_rangeTypeStr     = "BEST");
+  declareProperty("GetEvtHdr",        m_getEvtHdr        = false);
 }
 
 /// initialize the algorithm. Set up parameters from detModel
@@ -115,6 +117,14 @@ StatusCode CalDigiAlg::initialize() {
   sc = toolSvc()->retrieveTool(m_xtalDigiToolName, m_xtalDigiTool, this);
   if (sc.isFailure() ) {
     msglog << MSG::ERROR << "  Unable to create " << m_xtalDigiToolName << endreq;
+    return sc;
+  }
+
+  // this tool needs to be shared by CalDigiAlg, XtalDigiTool & TriggerAlg, so I am
+  // giving it global ownership
+  sc = toolSvc()->retrieveTool(m_calTrigToolName, m_calTrigTool);
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  Unable to create " << m_calTrigToolName << endreq;
     return sc;
   }
 
@@ -191,12 +201,6 @@ StatusCode CalDigiAlg::execute() {
   return sc;
 }
 
-
-/// Template function fills any STL type container with zero values
-template <class T> static void fill_zero(T &container) {
-  fill(container.begin(), container.end(), 0);
-}
-
 /** \brief Loop through each existing xtal & generate digis.
 
 per xtal digi simulation is done w/ CalXtalResponse::XtalDigiTool();
@@ -217,42 +221,32 @@ StatusCode CalDigiAlg::createDigis() {
   vector<const Event::McIntegratingHit*> nullList;
 
   // get pointer to EventHeader (has runId, evtId, etc...)
-  SmartDataPtr<Event::EventHeader> evtHdr(eventSvc(), EventModel::EventHeader);
-  if (evtHdr==0) {
-    MsgStream msglog(msgSvc(), name());
-    msglog << MSG::ERROR << "no EventHeader found" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  // search for GltDigi in TDS
-  static const string gltPath( EventModel::Digi::Event+"/GltDigi");
-  Event::GltDigi* glt=0;  // this will point to glt data one way or another
-  DataObject* pnode = 0;
-  sc = eventSvc()->findObject(gltPath, pnode);
-  glt = dynamic_cast<Event::GltDigi*>(pnode);
-
-  // if the required entry doens't exit - create it
-  if (sc.isFailure()) {
-    glt = new Event::GltDigi();
-    // always register glt data, even if there is no caldigi data.
-    // sometimes we can trigger w/ no LACs.
-    sc = eventSvc()->registerObject(gltPath, glt);
-    if (sc.isFailure()) {
-      // if cannot create entry - error msg
-      MsgStream msglog(msgSvc(), name());
-      msglog << MSG::WARNING << " Could not create Event::GltDigi entry" << endreq;
-      if (glt) delete glt;
-      return sc;
+  // EventHeader                                                                                                                                                                                     
+  
+  Event::EventHeader *evtHdr = 0;
+  if (m_getEvtHdr) {
+    evtHdr = SmartDataPtr<Event::EventHeader>(eventSvc(),EventModel::EventHeader) ;
+    if (!evtHdr) {
+      MsgStream msglog( msgSvc(), name() );
+      msglog<<MSG::ERROR<<"Event header not found !"<<endreq ;
     }
   }
-  
+
+  // search for GltDigi in TDS, create if needed
+  Event::GltDigi* glt = m_calTrigTool->setupGltDigi(eventSvc());
+  if (!glt) return StatusCode::FAILURE;
+
+  CalArray<FaceNum, bool> lacBits;
+  CalArray<XtalDiode, bool> trigBits;
+
+
   /* Loop through (installed) towers and crystals; collect up the McIntegratingHits by 
      xtal Id and send them off to xtalDigiTool to be digitized. Unhit crystals 
      can have noise added, so a null vector is sent in in that case.
   */
   for (unsigned twrSeq = 0; twrSeq < m_twrList.size(); twrSeq++) {
     // get bay id of nth live tower
-    TwrNum twr = m_twrList[twrSeq];
+    TwrNum twr(m_twrList[twrSeq]);
     for (LyrNum lyr; lyr.isValid(); lyr++) {
       for (ColNum col; col.isValid(); col++) {
 
@@ -272,38 +266,25 @@ StatusCode CalDigiAlg::createDigis() {
         else hitList = &(m_idMcIntPreDigi[mapId]);
 
         // note - important to reinitialize to 0 for each iteration
-        bool lacP = false;
-        bool lacN = false;
-        bool fleP = false;
-        bool fleN = false;
-        bool fheP = false;
-        bool fheN = false;
+        lacBits.fill(false);
+        trigBits.fill(false);
         
         // new digi for this xtal
         // auto_ptr will automatically delete it if ownership of object
         // is not passed on to TDS data
         auto_ptr<Event::CalDigi> curDigi(new Event::CalDigi(m_rangeMode, mapId));     
         
-        sc = m_xtalDigiTool->calculate(mapId,
-                                       *hitList,
-                                       evtHdr,
+        sc = m_xtalDigiTool->calculate(*hitList,
+                                       (m_getEvtHdr) ? evtHdr : NULL,
                                        *curDigi,
-                                       lacP,    
-                                       lacN,    
-                                       fleP,    
-                                       fleN,    
-                                       fheP,    
-                                       fheN    
+                                       lacBits,
+                                       trigBits,
+                                       glt
                                        );
         if (sc.isFailure()) continue;   // bad hit
 
-        // set trigger values (before LAC, allows for FHE trig independent of LAC/FLE
-        if (fleN) glt->setCALLOtrigger(CalXtalId(twr,lyr,col,NEG_FACE));
-        if (fleP) glt->setCALLOtrigger(CalXtalId(twr,lyr,col,POS_FACE));
-        if (fheN) glt->setCALHItrigger(CalXtalId(twr,lyr,col,NEG_FACE));
-        if (fheP) glt->setCALHItrigger(CalXtalId(twr,lyr,col,POS_FACE));
-
-        if (!lacP && !lacN) continue;  // nothing more to see here. Move along.
+        // move on to next xtal if there is no log-accept.
+        if (lacBits.find(true) == lacBits.end()) continue;
         
         // set up the relational table between McIntegratingHit and digis
         typedef multimap< CalXtalId, Event::McIntegratingHit* >::const_iterator ItHit;
@@ -363,13 +344,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
     if ((int)volId[fLATObjects]   == m_eLATTowers &&
         (int)volId[fTowerObjects] == m_eTowerCAL){ 
 
-      int col   = volId[fCALXtal];
-      int lyr   = volId[fLayer];
-      int towy  = volId[fTowerY];
-      int towx  = volId[fTowerX];
-      int twr   = m_xNum*towy+towx; 
-
-      CalXtalId mapId(twr,lyr,col);
+      CalXtalId mapId(volId);
 
       // Insertion of the id - McIntegratingHit pair
       m_idMcInt.insert(make_pair(mapId,*it));
