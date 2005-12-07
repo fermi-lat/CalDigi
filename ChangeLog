@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: fewtrell  Wed Dec  7 10:36:31 PST 2005
+CalDigi/src/test
+
+Modified Files:
+	DigiHitsTestAlg.cxx test_CalDigi.cxx test_CalDigi_load.cxx 
+Log Message:
+support new CalTrigTool
+    *
+------------------------------------------------------------
+User: fewtrell  Wed Dec  7 10:36:31 PST 2005
 CalDigi/src/Dll
 
 Modified Files:
