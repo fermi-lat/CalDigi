@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: fewtrell  Wed Dec  7 10:36:30 PST 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h mainpage.h 
+Log Message:
+support new CalTrigTool
+    *
+------------------------------------------------------------
+User: fewtrell  Wed Dec  7 10:36:30 PST 2005
 CalDigi/doc
 
 Modified Files:
