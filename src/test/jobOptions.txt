@@ -36,8 +36,6 @@ CalibDataSvc.CalibFlavorList = {"ideal"};
 
 // use default CalResponse config
 #include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
-CalCalibSvc.SuperVerbose = true;
-XtalADCTool.SuperVerbose = true;
 
 // Start up a CalFailureModeSvc
 ApplicationMgr.ExtSvc += {"CalFailureModeSvc"};
