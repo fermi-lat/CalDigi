@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Thu Dec 29 11:14:21 PST 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+minor change to return codes in CalDigiAlg, shouldn't change behavior
+
+    *
+------------------------------------------------------------
 User: fewtrell  Thu Dec 29 11:14:16 PST 2005
 CalDigi/doc
 
