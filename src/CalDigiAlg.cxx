@@ -2,7 +2,7 @@
  * @file CalDigiAlg.cxx
  * @brief implementation  of the algorithm CalDigiAlg.
  *
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.46 2005/10/05 19:33:46 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.47 2005/12/07 18:36:30 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -166,7 +166,7 @@ StatusCode CalDigiAlg::initialize() {
 
 /// \brief take Hits from McIntegratingHits, create & register CalDigis
 StatusCode CalDigiAlg::execute() {
-  StatusCode  sc = StatusCode::SUCCESS;
+  StatusCode  sc;
   
   //Take care of insuring that data area has been created
   DataObject* pNode = 0;
@@ -198,7 +198,7 @@ StatusCode CalDigiAlg::execute() {
   sc = createDigis();
   if (sc.isFailure()) return sc;
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 /** \brief Loop through each existing xtal & generate digis.
@@ -209,7 +209,7 @@ also populate (&generate if needed) GltDigi TDS class w/ CALLO & CALHI tirgge
 also register TDS digi data.
 */
 StatusCode CalDigiAlg::createDigis() { 
-  StatusCode  sc = StatusCode::SUCCESS;
+  StatusCode  sc;
 
   // collection of xtal digis for entire event.
   Event::CalDigiCol* digiCol = new Event::CalDigiCol;
@@ -308,7 +308,7 @@ StatusCode CalDigiAlg::createDigis() {
   sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
   if (sc.isFailure()) return sc;
 
-  return sc;
+  return StatusCode::FAILURE;
 }
 
 /** \brief collect deposited energies from McIntegratingHits and store in map sorted by XtalID. 
@@ -330,7 +330,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
     if (msglog.isActive()){ 
       msglog.stream() << "no cal hits found" ;} 
     msglog << endreq;
-    return sc;
+    return StatusCode::SUCCESS;
   }
 
   // loop over hits - pick out CAL hits
@@ -353,7 +353,7 @@ StatusCode CalDigiAlg::fillSignalEnergies() {
     }
   }
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 StatusCode CalDigiAlg::finalize() {
