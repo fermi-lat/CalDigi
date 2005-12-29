@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Thu Dec 29 11:14:16 PST 2005
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+minor change to return codes in CalDigiAlg, shouldn't change behavior
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r3p3, operation: add
 Package: CalDigi
