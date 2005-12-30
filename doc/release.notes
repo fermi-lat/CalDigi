@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.42 2005/12/29 19:14:16 fewtrell Exp $
+$Id: release.notes,v 1.43 2005/12/29 21:42:31 fewtrell Exp $
 @verbatim
  * Package CalDigi
+ * v2r3p5     29-Dec-2005 ZF  fixed dummy bug in previous tag.
  * v2r3p4     29-Dec-2005 ZF  Minor change to return codes, shouldn't change any behavior.
  * v2r3p2     07-Dec-2005 ZF  Update to new CalTrigTool separate from XtalDigiTool
  * v2r3p1     05-Oct-2005 ZF  Save GltDigi Cal trigger info per xtal-face instead of per tower.
