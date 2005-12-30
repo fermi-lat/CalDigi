@@ -2,7 +2,7 @@
  * @file CalDigiAlg.cxx
  * @brief implementation  of the algorithm CalDigiAlg.
  *
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.47 2005/12/07 18:36:30 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.48 2005/12/29 19:14:21 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -308,7 +308,7 @@ StatusCode CalDigiAlg::createDigis() {
   sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
   if (sc.isFailure()) return sc;
 
-  return StatusCode::FAILURE;
+  return StatusCode::SUCCESS;
 }
 
 /** \brief collect deposited energies from McIntegratingHits and store in map sorted by XtalID. 
