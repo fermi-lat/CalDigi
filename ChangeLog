@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: fewtrell  Thu Dec 29 17:32:27 PST 2005
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+fixed dummy bug in prev. tag
+    *
+------------------------------------------------------------
+User: fewtrell  Thu Dec 29 17:32:27 PST 2005
 CalDigi/doc
 
 Modified Files:
