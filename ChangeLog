@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: fewtrell  Thu Dec 29 17:32:27 PST 2005
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+fixed dummy bug in prev. tag
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r3p4, operation: add
 Package: CalDigi
