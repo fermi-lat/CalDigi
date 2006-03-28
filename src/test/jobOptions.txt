@@ -10,7 +10,7 @@ ApplicationMgr.DLLs+= {"RootIo","CalDigi","CalUtil", "CalibSvc", "CalXtalRespons
 // setup basic event loop stuff
 //
 ApplicationMgr.ExtSvc = { 
-    "GlastEventSelector/EventSelector" , 
+//    "GlastEventSelector/EventSelector" , 
     "EventCnvSvc"
     };
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
