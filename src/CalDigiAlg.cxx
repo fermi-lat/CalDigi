@@ -2,7 +2,7 @@
  * @file CalDigiAlg.cxx
  * @brief implementation  of the algorithm CalDigiAlg.
  *
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.48 2005/12/29 19:14:21 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.49 2005/12/30 01:32:27 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -279,8 +279,8 @@ StatusCode CalDigiAlg::createDigis() {
                                        *curDigi,
                                        lacBits,
                                        trigBits,
-                                       glt
-                                       );
+                                       glt,
+                                       true);
         if (sc.isFailure()) continue;   // bad hit
 
         // move on to next xtal if there is no log-accept.
@@ -317,8 +317,6 @@ multimap used to associate mcIntegratingHit to id. There can be multiple
 hits for the same id.  
 */
 StatusCode CalDigiAlg::fillSignalEnergies() {
-  StatusCode  sc = StatusCode::SUCCESS;
-
   // get McIntegratingHit collection. Abort if empty.
   SmartDataPtr<Event::McIntegratingHitVector> 
     McCalHits(eventSvc(), EventModel::MC::McIntegratingHitCol );
