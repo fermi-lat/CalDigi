@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Jun  7 11:02:29 PDT 2006
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+converted pointers to auto_ptr where appropriate
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r3p7, operation: add
 Package: CalDigi
