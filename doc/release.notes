@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.43 2005/12/29 21:42:31 fewtrell Exp $
+$Id: release.notes,v 1.44 2005/12/30 01:32:26 fewtrell Exp $
 @verbatim
  * Package CalDigi
+ * v2r3p6     07-Jun-2006 ZF  changed some pointers to auto_ptr
  * v2r3p5     29-Dec-2005 ZF  fixed dummy bug in previous tag.
  * v2r3p4     29-Dec-2005 ZF  Minor change to return codes, shouldn't change any behavior.
  * v2r3p2     07-Dec-2005 ZF  Update to new CalTrigTool separate from XtalDigiTool
