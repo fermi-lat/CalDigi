@@ -2,7 +2,7 @@
  * @file CalDigiAlg.cxx
  * @brief implementation  of the algorithm CalDigiAlg.
  *
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.49 2005/12/30 01:32:27 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.50 2006/04/26 20:27:33 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -212,12 +212,12 @@ StatusCode CalDigiAlg::createDigis() {
   StatusCode  sc;
 
   // collection of xtal digis for entire event.
-  Event::CalDigiCol* digiCol = new Event::CalDigiCol;
+  auto_ptr<Event::CalDigiCol> digiCol(new Event::CalDigiCol);
 
   Event::RelTable<Event::CalDigi, Event::McIntegratingHit> digiHit;
   digiHit.init();
   
-  // used for xtals w/ no hits.
+  // used for xtals w/ no hits. (still need to be processed for noise)
   vector<const Event::McIntegratingHit*> nullList;
 
   // get pointer to EventHeader (has runId, evtId, etc...)
@@ -263,7 +263,7 @@ StatusCode CalDigiAlg::createDigis() {
         // we still process empty xtals (noise simulation may cause hits)
         if (hitListIt == m_idMcIntPreDigi.end())
           hitList = &nullList;
-        else hitList = &(m_idMcIntPreDigi[mapId]);
+        else hitList = &(hitListIt->second);
 
         // note - important to reinitialize to 0 for each iteration
         lacBits.fill(false);
@@ -299,11 +299,9 @@ StatusCode CalDigiAlg::createDigis() {
     } // lyr loop
   } // twr loop
 
-  sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol);
-  if (sc.isFailure()) {
-    delete digiCol;
+  sc = eventSvc()->registerObject(EventModel::Digi::CalDigiCol, digiCol.release());
+  if (sc.isFailure())
     return sc;
-  }
 
   sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,digiHit.getAllRelations());
   if (sc.isFailure()) return sc;
