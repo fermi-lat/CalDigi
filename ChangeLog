@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: fewtrell  Thu Jun 15 13:43:11 PDT 2006
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+set up for CalUtil v3r0
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r3p8, operation: add
 Package: CalDigi
