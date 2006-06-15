@@ -81,7 +81,7 @@ class CalDigiAlg : public Algorithm {
 
   /// type of readout range: BEST or ALL
   StringProperty m_rangeTypeStr;
-  CalXtalId::CalTrigMode m_rangeMode;
+  idents::CalXtalId::CalTrigMode m_rangeMode;
 
   /// name of Tool for calculating single xtal digi response.
   StringProperty m_xtalDigiToolName;
