@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: fewtrell  Thu Jun 15 13:43:11 PDT 2006
+CalDigi/src/test
+
+Modified Files:
+	jobOptions.txt test_CalDigi.cxx 
+Log Message:
+set up for CalUtil v3r0
+    *
+------------------------------------------------------------
+User: fewtrell  Thu Jun 15 13:43:11 PDT 2006
 CalDigi/src
 
 Modified Files:
