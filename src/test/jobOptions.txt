@@ -4,7 +4,7 @@
 
 // primary DLLs
 
-ApplicationMgr.DLLs+= {"RootIo","CalDigi","CalUtil", "CalibSvc", "CalXtalResponse" };
+ApplicationMgr.DLLs+= {"RootIo","CalDigi","CalibSvc", "CalXtalResponse" };
 
 // ----------------------------
 // setup basic event loop stuff

@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi.cxx,v 1.3 2002/09/23 16:30:39 richard Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi.cxx,v 1.4 2005/12/07 18:36:31 fewtrell Exp $
 
 // Include files
 // Gaudi system includes
@@ -9,15 +9,11 @@
 #include "GaudiKernel/Algorithm.h"
 
 // TDS class declarations: input data, and McParticle tree
-
 #include "Event/TopLevel/EventModel.h"
-
 #include "Event/Digi/CalDigi.h"
 
-// Define the class here instead of in a header file: not needed anywhere but here!
-//------------------------------------------------------------------------------
 /** 
-    A simple algorithm.
+    Algorithm to test CalDigi package.
 
   
 */
@@ -33,7 +29,6 @@ private:
   int m_count; 
   //! the GlastDetSvc used for access to detector info
 };
-//------------------------------------------------------------------------
 
 // necessary to define a Factory for this algorithm
 // expect that the xxx_load.cxx file contains a call     
@@ -42,8 +37,6 @@ private:
 static const AlgFactory<test_CalDigi>  Factory;
 const IAlgFactory& test_CalDigiFactory = Factory;
 
-//------------------------------------------------------------------------
-//! ctor
 test_CalDigi::test_CalDigi(const std::string& name, ISvcLocator* pSvcLocator)
   :
   Algorithm(name, pSvcLocator), 
@@ -51,8 +44,7 @@ test_CalDigi::test_CalDigi(const std::string& name, ISvcLocator* pSvcLocator)
 {
 }
 
-//------------------------------------------------------------------------
-//! set parameters and attach to various perhaps useful services.
+/// set parameters and attach to various perhaps useful services.
 StatusCode test_CalDigi::initialize(){
   StatusCode  sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
@@ -61,8 +53,7 @@ StatusCode test_CalDigi::initialize(){
   return sc;
 }
 
-//------------------------------------------------------------------------
-//! process an event
+/// process an event
 StatusCode test_CalDigi::execute()
 {
   StatusCode  sc = StatusCode::SUCCESS;
@@ -83,8 +74,7 @@ StatusCode test_CalDigi::execute()
   return sc;
 }
 
-//------------------------------------------------------------------------
-//! clean up, summarize
+/// clean up, summarize
 StatusCode test_CalDigi::finalize(){
   StatusCode  sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
