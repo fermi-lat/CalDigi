@@ -2,7 +2,7 @@
  * @file CalDigiAlg.cxx
  * @brief implementation  of the algorithm CalDigiAlg.
  *
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.50 2006/04/26 20:27:33 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.51 2006/06/07 18:02:29 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -155,7 +155,7 @@ StatusCode CalDigiAlg::initialize() {
     string tmpStr; vector<double> tmpVec;
     sc = detSvc->getShapeByID(volId, &tmpStr, &tmpVec);
     if (!sc.isFailure()) {
-      msglog << MSG::VERBOSE << "Cal unit detected twr_bay=" << testTwr << endreq;
+      msglog << MSG::VERBOSE << "Cal unit detected twr_bay=" << testTwr.val() << endreq;
       m_twrList.push_back(testTwr);
     }
   }
@@ -251,7 +251,9 @@ StatusCode CalDigiAlg::createDigis() {
       for (ColNum col; col.isValid(); col++) {
 
         // assemble current calXtalId
-        const CalXtalId mapId(twr,lyr,col);
+        const CalXtalId mapId(twr.val(),
+                              lyr.val(),
+                              col.val());
 
         // list of mc hits for this xtal.
         vector<const Event::McIntegratingHit*>* hitList;
