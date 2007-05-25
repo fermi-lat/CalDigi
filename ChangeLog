@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: fewtrell  Fri May 25 15:12:53 PDT 2007
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+using new CalUtil interface w/out automatic casts.
+    *
+------------------------------------------------------------
 TAG
 Tag name: v2r3p9, operation: add
 Package: CalDigi
