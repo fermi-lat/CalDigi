@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi.cxx,v 1.4 2005/12/07 18:36:31 fewtrell Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi.cxx,v 1.5 2006/06/15 20:43:11 fewtrell Exp $
 
 // Include files
 // Gaudi system includes
@@ -14,6 +14,8 @@
 
 /** 
     Algorithm to test CalDigi package.
+
+    I don't know much about this - Z. Fewtrell
 
   
 */

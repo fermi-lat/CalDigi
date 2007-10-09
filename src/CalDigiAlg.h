@@ -1,101 +1,99 @@
-#ifndef _GlastDigi_CalDigiAlg_H
-#define _GlastDigi_CalDigiAlg_H
+#ifndef CalDigiAlg_H
+#define CalDigiAlg_H
+
 // LOCAL INCLUDES
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
-#include "CalXtalResponse/IXtalDigiTool.h"
-#include "CalXtalResponse/ICalTrigTool.h"
+#include "CalXtalResponse/ICalSignalTool.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
+#include "Event/Digi/CalDigi.h"
+
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/Algorithm.h"
-#include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
-#include "TTree.h"
+
+class IGlastDetSvc;
 
 // STD INCLUDES
-#include <vector>
-#include <map>
 
 /** @class CalDigiAlg
- * @brief Algorithm to convert from McIntegratingHit objects into 
- * CalDigi objects and store them in the TDS. Groups hits by xtal & calls
- * CalXtalResponse/XtalDigiTool for each xtal.  Also calculates CALLO & 
- * CALHI triggers & writes them to GltDigi class in TDS.
+ * @brief Algorithm to convert McIntegratingHit objects into 
+ * CalDigi objects and store them in the TDS.   
+ * 
+ * also stores McIntegratingHit  <-> CalDigi relational table in TDS
  *
- * Author:  A.Chekhtman
+ * jobOptions:
+ * CalSignalTool (default="CalSignalTool") - used to convert McIntegratingHits to diode signals
+ * XtalDigiTool (default="XtalDigiTool") - used to convert diode signals to CalDigi objects
+ *
+ * @author:  A. Chehtman 
+ * @author:  Z. Fewtrell
  *
  */
 
-using namespace std;
-using namespace CalUtil;
+class IXtalDigiTool;
+class ITrgConfigSvc;
 
 class CalDigiAlg : public Algorithm {
 
- public:
+public:
 
-  CalDigiAlg(const string& name, ISvcLocator* pSvcLocator); 
+  CalDigiAlg(const std::string& name, ISvcLocator* pSvcLocator); 
 
   StatusCode initialize();
   StatusCode execute();
-  StatusCode finalize();
+  StatusCode finalize() {return StatusCode::SUCCESS;}
  
- protected:
+private:
+  /// sum MC hit deposits into diode signals
   StatusCode fillSignalEnergies();
-  StatusCode createDigis();
 
- private:
+  /// gerenate output CalDigi objects
+  StatusCode registerDigis();
+
+  /// check TDS & create DigiEvent if needed
+  StatusCode ensureDigiEventExists();
+
+  /// get geometry constants from detector service
+  StatusCode retrieveConstants();
+
+  /// determine readout mode for this event based on trigger bits.
+  StatusCode CalDigiAlg::getTrgConditions(idents::CalXtalId::CalTrigMode &calTrigMode,
+                                          bool &zeroSupp);
 
   /// list of active tower bays, populated at run time
-  vector<TwrNum> m_twrList;
+  std::vector<CalUtil::TwrNum> m_twrList;
 
   //-- CONSTANTS --//
-  /// x tower count
-  int m_xNum;  
-  /// y tower count
-  int m_yNum;  
-    
-  /// volume ID enumeration
-  int m_eTowerCAL;  
   /// volume ID enumeration
   int m_eLATTowers;
+
   /// volume ID enumeration
+  int m_eTowerCAL;  
+
+  /// volume ID enum
   int m_eMeasureX;
-  /// volume ID enumeration
+
+  /// volume ID enum
   int m_eXtal;
-  
-  /// number of layers (ie in z)
-  int m_CalNLayer;  
-  // number of Xtals per layer
-  int m_nCsIPerLayer;  
 
-  /// map to contain the McIntegratingHit vs XtaliD relational table
-  typedef map< idents::CalXtalId,  vector< const Event::McIntegratingHit*> > 
-    PreDigiMap;
-
-  /// map to contain the McIntegratingHit vs XtaliD relational table
-  PreDigiMap m_idMcIntPreDigi;   
-
-  /// map to contain the McIntegratingHit vs XtaliD relational table
-  multimap< idents::CalXtalId, Event::McIntegratingHit* > m_idMcInt;   
-
-  /// type of readout range: BEST or ALL
-  StringProperty m_rangeTypeStr;
-  idents::CalXtalId::CalTrigMode m_rangeMode;
-
-  /// name of Tool for calculating single xtal digi response.
+  /// name of Tool for calculating single xtal digi response from diode signals
   StringProperty m_xtalDigiToolName;
   /// pointer to xtal digi tool
   IXtalDigiTool* m_xtalDigiTool;
 
-  /// name of Tool for calculating single xtal trigger response.
-  StringProperty m_calTrigToolName;
-  /// pointer to xtal trig tool
-  ICalTrigTool* m_calTrigTool;
+  /// name of CalSignalTool tool, used for calculating diode signal levels from McIntegratingHits
+  StringProperty m_calSignalToolName;
 
-  /// optional get EvtHdr info which is used by XtalDigiTool/XtalDigiTuple for RunID & EvtID info
-  /// XtalDigiTuple is off by default, so we'll cut a small amount of code out by making this optional.
-  BooleanProperty m_getEvtHdr;
+  /// ptr to CalSignalTool tool
+  ICalSignalTool  *m_calSignalTool;
+
+  /// used for constants & conversion routines.
+  IGlastDetSvc* m_detSvc;
+
+  /// used to get readout mode for current event.
+  ITrgConfigSvc *m_trgConfigSvc;
 
 };
 

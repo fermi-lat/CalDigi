@@ -10,10 +10,13 @@
  * simulated readout, as laid out in these 
  * <a href="http://www-glast.slac.stanford.edu/software/DataStructuresTF/20011220/CalorimeterDigiRequirements.htm"> requirements</a>.
  * 
- * CalDigiAlg takes Hits from McIntegratingHit and performs the following steps:
- * - group McIntegratingHit by cal crystal
- * - call CalXtalResponse/IXtalDigiTool to calculate adc output for each crystal
- * - save CalDigi & GltDigi cal_trigger information to TDS
+ * CalDigiAlg takes perrforms the following steps:
+ * - invoke CalSignalTool to sum all McIntegratingHits into Cal crystal diodes, either by CsI scintillation or direct diode deposit.
+ * - call TrgConfigSvc to determine readout mode (allrange/bestrange , zeroSupression) for current event digis.
+ * - call CalXtalResponse/IXtalDigiTool to generate CalDigis for individual crystals
+ * - ignore crystals under LAC threshold if zeroSuppression is requested by trigger configuration.
+ * - store McIntegratingHit <> CalDigi relations to file
+ * - save CalDigiinformation to TDS
  *
  * <b>Thresholds and Energy Deposit</b>
  *
@@ -32,9 +35,6 @@
  *
  * @section jobOptions jobOptions
  *
- * @param CalDigiAlg.RangeType
- *  Select the number of readout ranges
- *  Available choices are "BEST" and "ALL"
  * @param CalDigiAlg.xtalDigiToolName
  *  Select the tool to perform the conversion from energy to ADC units for individual xtals
  *  Available choice is "XtalDigiTool"
