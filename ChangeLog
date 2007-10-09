@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: fewtrell  Tue Oct  9 12:08:22 PDT 2007
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+readout mode now depends on trigger word / context.  uses CalSignalTool from CalXtalResponse
+    *
+------------------------------------------------------------
 User: fewtrell  Fri May 25 15:12:53 PDT 2007
 CalDigi/src
 
