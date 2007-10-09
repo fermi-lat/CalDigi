@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: fewtrell  Tue Oct  9 12:08:23 PDT 2007
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h mainpage.h 
+Log Message:
+readout mode now depends on trigger word / context.  uses CalSignalTool from CalXtalResponse
+    *
+------------------------------------------------------------
+User: fewtrell  Tue Oct  9 12:08:23 PDT 2007
 CalDigi/doc
 
 Modified Files:
