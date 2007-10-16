@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Tue Oct 16 12:14:47 PDT 2007
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h mainpage.h 
+Log Message:
+CalDigiAlg will now fall back to default readouts if trigger information is not present
+
+    *
+------------------------------------------------------------
 User: fewtrell  Tue Oct 16 11:37:51 PDT 2007
 CalDigi/src
 
