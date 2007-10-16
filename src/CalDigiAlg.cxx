@@ -4,7 +4,7 @@
  *
  * @author Zach Fewtrell zachary.fewtrell@nrl.navy.mil
  * 
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.52 2007/05/25 22:12:53 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.53 2007/10/09 19:08:23 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -57,8 +57,10 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
 {
 
   // Declare the properties that may be set in the job options file
-  declareProperty("XtalDigiToolName", m_xtalDigiToolName = "XtalDigiTool");
-  declareProperty("CalSignalToolName", m_calSignalToolName = "CalSignalTool");
+  declareProperty("XtalDigiToolName",    m_xtalDigiToolName = "XtalDigiTool");
+  declareProperty("CalSignalToolName",   m_calSignalToolName = "CalSignalTool");
+  declareProperty("DefaultZeroSuppress", m_defaultZeroSuppress = true);
+  declareProperty("DefaultAllRange",     m_defaultAllRange = false);
 }
 
 /// initialize the algorithm. retrieve helper tools & services
@@ -113,7 +115,7 @@ StatusCode CalDigiAlg::initialize() {
 
   sc = service("TrgConfigSvc", m_trgConfigSvc, true); 
   if (sc.isFailure())
-    return sc;
+    m_trgConfigSvc = 0; //
 
   return StatusCode::SUCCESS;
 }
@@ -290,6 +292,12 @@ StatusCode CalDigiAlg::retrieveConstants() {
 
 StatusCode CalDigiAlg::getTrgConditions(idents::CalXtalId::CalTrigMode &rangeType,
                                         bool &zeroSupp) {
+  /// if trgConfigSvc is not available, return default answer
+  if (m_trgConfigSvc == 0) {
+    rangeType = (m_defaultAllRange) ? idents::CalXtalId::ALLRANGE : idents::CalXtalId::BESTRANGE;
+    zeroSupp = m_defaultZeroSuppress;
+    return StatusCode::SUCCESS;
+  }
   
   // get trigger word
   SmartDataPtr<Event::EventHeader> evtHdr(eventSvc(), EventModel::EventHeader);

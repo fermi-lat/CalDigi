@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.46 2006/06/15 20:43:11 fewtrell Exp $
+$Id: release.notes,v 1.47 2007/10/09 19:08:22 fewtrell Exp $
 @verbatim
  * Package CalDigi
+ * v3r0p1     16-Oct-2007 ZF  Now falls back to default readout mode if TrgConfigSvc is not available
  * v3r0p0     09-Oct-2007 ZF  Cal Readout mode now depends on Trigger word - use CalSignalTool from CalXtalResponse
  * v2r3p7     15-Jun-2006 ZF  minor namespace changes to use CalUtil v3r0
  * v2r3p6     07-Jun-2006 ZF  changed some pointers to auto_ptr
