@@ -35,9 +35,20 @@
  *
  * @section jobOptions jobOptions
  *
- * @param CalDigiAlg.xtalDigiToolName
- *  Select the tool to perform the conversion from energy to ADC units for individual xtals
- *  Available choice is "XtalDigiTool"
+ * @param CalDigiAlg.CalSignalToolName (default="CalSignalTool")
+ *  Select the tool to perform the conversion from mc energy to diode signals for all cal xtals.
+ *
+ * @param CalDigiAlg.XtalDigiToolName (default='XtalDigiTool")
+ *  Select the tool to perform the conversion from diode signal to ADC units for individual xtals
+ *
+ * @param TrgConfigSvcName (default='TrgConfigSvc')
+ *  (optional) Used to derive cal readout mode from trigger bits.  if set to "", then will fall back to default readout mode.
+ *
+ * @param DefaultZeroSuppress (default = 'true')
+ *  Set zeroSuppression to this value if Trigger information not available.
+ *
+ * @param DeafaultAllRange (default = 'false')
+ *  Set allrange mode to this value if Trigger information not available.
  *
  *
  * <hr>
