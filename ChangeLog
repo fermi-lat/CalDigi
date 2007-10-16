@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Tue Oct 16 11:37:51 PDT 2007
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+now falls back to default readout mode if TrgConfigSvc is not available
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v3r0p0, operation: add
 Package: CalDigi
