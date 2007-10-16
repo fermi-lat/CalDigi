@@ -92,9 +92,14 @@ private:
   /// used for constants & conversion routines.
   IGlastDetSvc* m_detSvc;
 
-  /// used to get readout mode for current event.
+  /// used to get readout mode for current event based on trigger bits. (optional)
   ITrgConfigSvc *m_trgConfigSvc;
 
+  /// fall back zero suppression mode if TrgConfigSvc not available (default=true)
+  BooleanProperty m_defaultZeroSuppress;
+
+  /// fall back 4range readout mode if TrgConfigSvc not available (default=false - single range readout)
+  BooleanProperty m_defaultAllRange;
 };
 
 #endif
