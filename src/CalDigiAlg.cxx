@@ -4,7 +4,7 @@
  *
  * @author Zach Fewtrell zachary.fewtrell@nrl.navy.mil
  * 
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.54 2007/10/16 18:37:51 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.55 2007/10/16 19:14:47 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -115,7 +115,7 @@ StatusCode CalDigiAlg::initialize() {
   m_twrList = CalUtil::findActiveTowers(*m_detSvc);
 
   /// locate optional TrgConfigSvc
-  if (m_trgConfigSvcName.length() != 0) {
+  if (m_trgConfigSvcName.value().length() != 0) {
     sc = service("TrgConfigSvc", m_trgConfigSvc, true); 
     if (sc.isFailure())
       m_trgConfigSvc = 0; //
@@ -199,7 +199,7 @@ StatusCode CalDigiAlg::registerDigis() {
   finalRelMap.init();
 
   /* Loop through (installed) towers and crystals; retrieve signal for each
-  */
+   */
   for (unsigned twrSeq = 0; twrSeq < m_twrList.size(); twrSeq++) {
     // get bay id of nth live tower
     const TwrNum twr(m_twrList[twrSeq]);
@@ -297,28 +297,30 @@ StatusCode CalDigiAlg::retrieveConstants() {
 StatusCode CalDigiAlg::getTrgConditions(idents::CalXtalId::CalTrigMode &rangeType,
                                         bool &zeroSupp) {
   /// if trgConfigSvc is not available, return default answer
-  if (m_trgConfigSvc == 0) {
-    rangeType = (m_defaultAllRange) ? idents::CalXtalId::ALLRANGE : idents::CalXtalId::BESTRANGE;
-    zeroSupp = m_defaultZeroSuppress;
-    return StatusCode::SUCCESS;
+  if (m_trgConfigSvc != 0) {
+  
+    // get trigger word
+    SmartDataPtr<Event::EventHeader> evtHdr(eventSvc(), EventModel::EventHeader);
+    // skip to default answer if no event header info in TDS
+    if (evtHdr != 0) {
+      const unsigned gltWord = evtHdr->trigger();
+  
+      // get readout mode from trigger context
+      TrgConfig const*const tcf  = m_trgConfigSvc->getTrgConfig();
+      const unsigned gltengine   = tcf->lut()->engineNumber(gltWord&31); 
+      zeroSupp= tcf->trgEngine()->zeroSuppression(gltengine);
+      rangeType = (tcf->trgEngine()->fourRangeReadout(gltengine)) ?
+        idents::CalXtalId::ALLRANGE : idents::CalXtalId::BESTRANGE;
+
+      return StatusCode::SUCCESS;
+    }
   }
   
-  // get trigger word
-  SmartDataPtr<Event::EventHeader> evtHdr(eventSvc(), EventModel::EventHeader);
-  if (!evtHdr) {
-    MsgStream msglog(msgSvc(), name());
-    msglog << MSG::ERROR << "Failed to retrieve Event" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  const unsigned gltWord = evtHdr->trigger();
+  // RETURN DEFAULTS if  no success
+  rangeType = (m_defaultAllRange) ? idents::CalXtalId::ALLRANGE : idents::CalXtalId::BESTRANGE;
+  zeroSupp = m_defaultZeroSuppress;
+  return StatusCode::SUCCESS;
   
-  // get readout mode from trigger context
-  TrgConfig const*const tcf  = m_trgConfigSvc->getTrgConfig();
-  const unsigned gltengine   = tcf->lut()->engineNumber(gltWord&31); 
-  zeroSupp= tcf->trgEngine()->zeroSuppression(gltengine);
-  rangeType = (tcf->trgEngine()->fourRangeReadout(gltengine)) ?
-    idents::CalXtalId::ALLRANGE : idents::CalXtalId::BESTRANGE;
-
+  
   return StatusCode::SUCCESS;
 }

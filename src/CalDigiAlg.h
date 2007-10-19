@@ -93,7 +93,7 @@ private:
   IGlastDetSvc* m_detSvc;
 
   /// name of optional TrgConfigSvc
-  StringProprety m_trgConfigSvcName;
+  StringProperty m_trgConfigSvcName;
   /// used to get readout mode for current event based on trigger bits. (optional)
   ITrgConfigSvc *m_trgConfigSvc;
 
