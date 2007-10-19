@@ -1,4 +1,16 @@
 ------------------------------------------------------------
+User: fewtrell  Fri Oct 19 11:23:51 PDT 2007
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h 
+Log Message:
+improved CalDigi fallback when trigger information is not available
+
+
+
+    *
+------------------------------------------------------------
 User: fewtrell  Tue Oct 16 12:14:47 PDT 2007
 CalDigi/src
 
