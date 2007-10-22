@@ -4,7 +4,7 @@
  *
  * @author Zach Fewtrell zachary.fewtrell@nrl.navy.mil
  * 
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.55 2007/10/16 19:14:47 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.56 2007/10/19 18:23:51 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -304,23 +304,26 @@ StatusCode CalDigiAlg::getTrgConditions(idents::CalXtalId::CalTrigMode &rangeTyp
     // skip to default answer if no event header info in TDS
     if (evtHdr != 0) {
       const unsigned gltWord = evtHdr->trigger();
-  
-      // get readout mode from trigger context
-      TrgConfig const*const tcf  = m_trgConfigSvc->getTrgConfig();
-      const unsigned gltengine   = tcf->lut()->engineNumber(gltWord&31); 
-      zeroSupp= tcf->trgEngine()->zeroSuppression(gltengine);
-      rangeType = (tcf->trgEngine()->fourRangeReadout(gltengine)) ?
-        idents::CalXtalId::ALLRANGE : idents::CalXtalId::BESTRANGE;
 
-      return StatusCode::SUCCESS;
+      // skip to default answer if trigger = -1 (means it has not been set yet)
+      if (gltWord != 0xffffffff) {
+        // get readout mode from trigger context
+        TrgConfig const*const tcf  = m_trgConfigSvc->getTrgConfig();
+        const unsigned gltengine   = tcf->lut()->engineNumber(gltWord&31); 
+
+        // set readout mode bits
+        zeroSupp= tcf->trgEngine()->zeroSuppression(gltengine);
+        rangeType = (tcf->trgEngine()->fourRangeReadout(gltengine)) ?
+          idents::CalXtalId::ALLRANGE : idents::CalXtalId::BESTRANGE;
+
+        /// final, sucessful data path, all other lead to defaults.
+        return StatusCode::SUCCESS;
+      }
     }
   }
   
   // RETURN DEFAULTS if  no success
   rangeType = (m_defaultAllRange) ? idents::CalXtalId::ALLRANGE : idents::CalXtalId::BESTRANGE;
   zeroSupp = m_defaultZeroSuppress;
-  return StatusCode::SUCCESS;
-  
-  
   return StatusCode::SUCCESS;
 }
