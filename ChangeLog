@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Mon Oct 22 08:46:35 PDT 2007
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+documenting new tag
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v3r1, operation: add
 Package: CalDigi
