@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Mon Oct 22 08:42:26 PDT 2007
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+Should fall back to default readout mode if trigger bit has not been set yet (i.e. gltWord == -1)
+
+    *
+------------------------------------------------------------
 User: fewtrell  Fri Oct 19 11:23:51 PDT 2007
 CalDigi/src
 
