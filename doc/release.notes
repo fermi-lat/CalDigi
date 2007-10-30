@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.48 2007/10/16 18:37:51 fewtrell Exp $
+$Id: release.notes,v 1.49 2007/10/22 15:46:35 fewtrell Exp $
 @verbatim
  * Package CalDigi
+ * v3r2       30-Oct-2007 HMK use gr_app
  * v3r1       22-Oct-2007 ZF  Now falls back to default readout mode under several conditions (Trigger bits not set, trgConfigSvc not available) - default readout modes settable in jobOptions
  * v3r0p1     16-Oct-2007 ZF  Now falls back to default readout mode if TrgConfigSvc is not available
  * v3r0p0     09-Oct-2007 ZF  Cal Readout mode now depends on Trigger word - use CalSignalTool from CalXtalResponse
