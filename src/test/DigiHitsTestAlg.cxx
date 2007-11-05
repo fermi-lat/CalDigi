@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/DigiHitsTestAlg.cxx,v 1.2 2002/08/26 18:49:04 richard Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/DigiHitsTestAlg.cxx,v 1.3 2005/12/07 18:36:31 fewtrell Exp $
 
 // Author:
 //   Marco Frailis
@@ -56,10 +56,10 @@ DigiHitsTestAlg::DigiHitsTestAlg(const std::string& name, ISvcLocator* pSvcLocat
 //------------------------------------------------------------------------------
 /*! */
 StatusCode DigiHitsTestAlg::initialize() {
-    
-    
   StatusCode sc = StatusCode::SUCCESS;
-    
+  MsgStream   msglog( msgSvc(), name() );    
+  msglog << MSG::INFO << "initialize" << endreq;
+
   return sc;
 }
 
@@ -68,14 +68,14 @@ StatusCode DigiHitsTestAlg::initialize() {
 StatusCode DigiHitsTestAlg::execute() {
     
   StatusCode  sc = StatusCode::SUCCESS;
-  MsgStream   log( msgSvc(), name() );    
+  MsgStream   msglog( msgSvc(), name() );    
 
 
   // First, the collection of CalDigis is retrieved from the TDS
   SmartDataPtr<Event::CalDigiCol> digiCol(eventSvc(),EventModel::Digi::CalDigiCol );
 
   if (digiCol == 0) {
-    log << MSG::DEBUG << "no calorimeter hits found" << endreq;
+    msglog << MSG::DEBUG << "no calorimeter hits found" << endreq;
     sc = StatusCode::FAILURE;
     return sc;
   }
@@ -90,14 +90,14 @@ StatusCode DigiHitsTestAlg::execute() {
   SmartDataPtr<DigiHitsCol> digiHitsCol(eventSvc(), EventModel::Digi::CalDigiHitTab );
 
   if (digiHitsCol == 0) {
-    log << MSG::DEBUG << "no CalDigi-Hits Relations found" << endreq;
+    msglog << MSG::DEBUG << "no CalDigi-Hits Relations found" << endreq;
     sc = StatusCode::FAILURE;
     return sc;
   }
  
   // How many Relations do we have?            
-  log << MSG::INFO << "Number of Relations = "
-      << digiHitsCol->size() << endreq;
+  msglog << MSG::INFO << "Number of Relations = "
+         << digiHitsCol->size() << endreq;
 
   // A Relational Table is initialized with the collection of Relations retrieved 
   // from the TDS
