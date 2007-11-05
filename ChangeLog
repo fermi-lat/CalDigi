@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: fewtrell  Mon Nov  5 14:01:53 PST 2007
+CalDigi/src/test
+
+Modified Files:
+	DigiHitsTestAlg.cxx jobOptions.txt 
+Log Message:
+very minor changes. changed some local variable names
+    *
+------------------------------------------------------------
 User: fewtrell  Mon Nov  5 14:01:52 PST 2007
 CalDigi/src
 
