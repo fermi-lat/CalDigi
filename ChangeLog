@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Tue Jan 22 11:39:40 PST 2008
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+use v0r18 of CalXtalResponse
+
+    *
+------------------------------------------------------------
 User: fewtrell  Tue Jan 22 11:39:39 PST 2008
 CalDigi/doc
 
