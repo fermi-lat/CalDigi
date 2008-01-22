@@ -4,7 +4,7 @@
  *
  * @author Zach Fewtrell zachary.fewtrell@nrl.navy.mil
  * 
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.56 2007/10/19 18:23:51 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.57 2007/10/22 15:42:26 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -91,7 +91,8 @@ StatusCode CalDigiAlg::initialize() {
     return sc;
   }
 
-  sc = toolSvc()->retrieveTool(m_xtalDigiToolName, 
+  sc = toolSvc()->retrieveTool("XtalDigiTool",
+                               m_xtalDigiToolName, 
                                m_xtalDigiTool, 
                                this); // not shared
   if (sc.isFailure() ) {
@@ -99,7 +100,8 @@ StatusCode CalDigiAlg::initialize() {
     return sc;
   }
   
-  sc = toolSvc()->retrieveTool(m_calSignalToolName,
+  sc = toolSvc()->retrieveTool("CalSignalTool",
+                               m_calSignalToolName,
                                m_calSignalTool,
                                0); // intended to be shared
   if (sc.isFailure() ) {
@@ -167,6 +169,15 @@ also register TDS digi data.
 
 mc -> diode signal is done with CalSignalTool
 diode signal -> digi generation is done w/ XtalDigiTool
+
+ * CalDigiAlg takes perrforms the following steps:
+ * - invoke CalSignalTool to sum all McIntegratingHits into Cal crystal diodes, either by CsI scintillation or direct diode deposit.
+ * - call TrgConfigSvc to determine readout mode (allrange/bestrange , zeroSupression) for current event digis.
+ * - call CalXtalResponse/IXtalDigiTool to generate CalDigis for individual crystals
+ * - ignore crystals under LAC threshold if zeroSuppression is requested by trigger configuration.
+ * - store McIntegratingHit <> CalDigi relations to file
+ * - save CalDigiinformation to TDS
+
 */
 StatusCode CalDigiAlg::registerDigis() {
   StatusCode  sc;
@@ -175,7 +186,7 @@ StatusCode CalDigiAlg::registerDigis() {
   auto_ptr<Event::CalDigiCol> digiCol(new Event::CalDigiCol);
 
   // store log-accept results
-  CalUtil::CalArray<CalUtil::FaceNum, bool> lacBits;
+  CalUtil::CalVec<CalUtil::FaceNum, bool> lacBits;
 
   // input list of xtalIdx <> mchit relations from CalSignalTool
   const ICalSignalTool::CalRelationMap *calRelMap = m_calSignalTool->getCalRelationMap();
@@ -221,15 +232,8 @@ StatusCode CalDigiAlg::registerDigis() {
 
         //-- get signal map--//
         // look up xtal in hit map
-        const CalUtil::XtalIdx xtalIdx(mapId);
-        ICalSignalTool::XtalSignalMap xtalSignalMap;
-        sc = m_calSignalTool->getXtalSignalMap(xtalIdx, xtalSignalMap);
-        if (sc.isFailure())
-          return sc;
-        
-        
-        sc = m_xtalDigiTool->calculate(xtalSignalMap,
-                                       *curDigi,
+
+        sc = m_xtalDigiTool->calculate(*curDigi,
                                        lacBits,
                                        zeroSupp);
         if (sc.isFailure()) 
@@ -242,6 +246,7 @@ StatusCode CalDigiAlg::registerDigis() {
         // register this crystal <> MC relationship
         // find all hits for this xtal
         typedef ICalSignalTool::CalRelationMap::const_iterator CalRelationIt;
+        const CalUtil::XtalIdx xtalIdx(mapId);
         pair<CalRelationIt, CalRelationIt> xtalHitMatches(calRelMap->equal_range(xtalIdx));
         for (CalRelationIt it(xtalHitMatches.first);
              it != xtalHitMatches.second;
