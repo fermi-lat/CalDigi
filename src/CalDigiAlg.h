@@ -5,10 +5,10 @@
 
 // GLAST INCLUDES
 #include "CalUtil/CalDefs.h"
+#include "CalUtil/CalConfig.h"
 #include "CalXtalResponse/ICalSignalTool.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
 #include "Event/Digi/CalDigi.h"
-
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/Algorithm.h"
@@ -102,6 +102,10 @@ private:
 
   /// fall back 4range readout mode if TrgConfigSvc not available (default=false - single range readout)
   BooleanProperty m_defaultAllRange;
+
+  /// store first range option (-1 = best range first, 0-3 = lex8-hex1 first)
+  CalUtil::CalFirstRng m_firstRng;
+  
 };
 
 #endif

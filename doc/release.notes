@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.50 2007/10/30 02:50:36 heather Exp $
+$Id: release.notes,v 1.51 2008/01/22 19:39:39 fewtrell Exp $
 @verbatim
  * Package CalDigi
+ * v3r3       19-Feb-2008 AVM support (option) forced first range selection in CalDigi.
  * v3r2p1     17-Jan-2008 ZF  use v0r18 of CalXtalResponse
  * v3r2       30-Oct-2007 HMK use gr_app
  * v3r1       22-Oct-2007 ZF  Now falls back to default readout mode under several conditions (Trigger bits not set, trgConfigSvc not available) - default readout modes settable in jobOptions
