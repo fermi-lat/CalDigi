@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: makeev  Tue Feb 19 12:32:27 PST 2008
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h mainpage.h 
+Log Message:
+new forced first range feature in CalDigi
+    *
+------------------------------------------------------------
+User: makeev  Tue Feb 19 12:32:27 PST 2008
 CalDigi/doc
 
 Modified Files:
