@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.51 2008/01/22 19:39:39 fewtrell Exp $
+$Id: release.notes,v 1.52 2008/02/19 20:32:27 makeev Exp $
 @verbatim
  * Package CalDigi
+ * v3r3p1     21-Feb-2008 AVM fixed a bug that was causing CalDigiAlg to crash
  * v3r3       19-Feb-2008 AVM support (option) forced first range selection in CalDigi.
  * v3r2p1     17-Jan-2008 ZF  use v0r18 of CalXtalResponse
  * v3r2       30-Oct-2007 HMK use gr_app
