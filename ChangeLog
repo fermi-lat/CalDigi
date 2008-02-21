@@ -1,4 +1,16 @@
 ------------------------------------------------------------
+User: makeev  Thu Feb 21 08:11:45 PST 2008
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h 
+Log Message:
+a bug that was causing CalDigiAlg to crash was fixed. The forced/auto CAL
+R/O range selection is done in jobOptions by setting CalDigiAlg.FirstRangeReadout
+string property to one of the following: "autoRng", "lex8", "lex1", "hex8", "hex1".
+
+    *
+------------------------------------------------------------
 User: makeev  Thu Feb 21 08:11:30 PST 2008
 CalDigi/doc
 
