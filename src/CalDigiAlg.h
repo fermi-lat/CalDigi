@@ -103,10 +103,9 @@ private:
   /// fall back 4range readout mode if TrgConfigSvc not available (default=false - single range readout)
   BooleanProperty m_defaultAllRange;
 
-  /// store first range option (-1 = best range first, 0-3 = lex8-hex1 first)
-  CalUtil::CalFirstRng m_firstRng;
+  /// store first range option ("autoRng" ---> best range first, "lex8", "lex1", "hex8", "hex1" ---> lex8-hex1 first)
+  StringProperty m_firstRng;
   
 };
 
 #endif
-
