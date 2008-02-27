@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: fewtrell  Wed Feb 27 12:25:26 PST 2008
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+now support generation of CalDiagnosticData
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-03-01, operation: add
 Package: CalDigi
