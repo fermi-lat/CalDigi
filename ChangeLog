@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: fewtrell  Wed Feb 27 12:25:26 PST 2008
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h mainpage.h 
+Log Message:
+now support generation of CalDiagnosticData
+    *
+------------------------------------------------------------
+User: fewtrell  Wed Feb 27 12:25:26 PST 2008
 CalDigi/doc
 
 Modified Files:
