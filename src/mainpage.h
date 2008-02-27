@@ -49,11 +49,14 @@
  *
  * @param DefaultAllRange (default = 'false')
  *  Set allrange mode to this value if Trigger information not available.
- * @param FirstRangeReadout (default = -1)
- *   (Optinally force first range in output CalDigis (as opposed to best range first))
- *   -1 default = best range first
- *   0,1,2,3 = force first range to LEX8 through HEX1.
  *
+ * @param FirstRangeReadout (default = 'autoRng')
+ *   (Optionally force first range in output CalDigis (as opposed to best range first))
+ *   'autoRng' default = best range first
+ *   "LEX8","LEX1",...,"HEX1"= force first range to LEX8 through HEX1.
+ *
+ * @param CreateDiagnosticData (default = 'false')
+ *     Optionally create cal diagnostic contribution
  *
  * <hr>
  * @section notes release.notes

@@ -9,6 +9,7 @@
 #include "CalXtalResponse/ICalSignalTool.h"
 #include "Event/MonteCarlo/McIntegratingHit.h"
 #include "Event/Digi/CalDigi.h"
+#include "Event/RelTable/Relation.h"
 
 // EXTLIB INCLUDES
 #include "GaudiKernel/Algorithm.h"
@@ -23,9 +24,8 @@ class IGlastDetSvc;
  * 
  * also stores McIntegratingHit  <-> CalDigi relational table in TDS
  *
- * jobOptions:
- * CalSignalTool (default="CalSignalTool") - used to convert McIntegratingHits to diode signals
- * XtalDigiTool (default="XtalDigiTool") - used to convert diode signals to CalDigi objects
+ * jobOptions (see mainpage.h)
+ *
  *
  * @author:  A. Chehtman 
  * @author:  Z. Fewtrell
@@ -34,6 +34,7 @@ class IGlastDetSvc;
 
 class IXtalDigiTool;
 class ITrgConfigSvc;
+class ICalDiagnosticTool;
 
 class CalDigiAlg : public Algorithm {
 
@@ -49,8 +50,25 @@ private:
   /// sum MC hit deposits into diode signals
   StatusCode fillSignalEnergies();
 
-  /// gerenate output CalDigi objects
+  /// generate & register output CalDigi objects
   StatusCode registerDigis();
+
+  /// store relationship between cal digis & mc integrating hits
+  typedef Event::RelTable<Event::CalDigi, Event::McIntegratingHit> CalDigiMcRelMap;
+
+  /// generate output CalDigi objects, caldigi<>mc rel table
+  /// @param xtalMcRelMap input xtalId <> McIntegrating hit map
+  /// @param digiCol output CalDigi collection 
+  /// @param digiMcRelMap output CalDigi <> McIntegrating hit map 
+  StatusCode genDigis(const idents::CalXtalId::CalTrigMode calTrigMode,
+                      const bool zeroSupp,
+                      const ICalSignalTool::CalRelationMap &xtalMcRelMap,
+                      Event::CalDigiCol &digiCol,
+                      CalDigiMcRelMap &digiMcRelMap
+                      );
+
+  /// generate & register Cal diagnostic contribution
+  StatusCode registerDiagnosticData();
 
   /// check TDS & create DigiEvent if needed
   StatusCode ensureDigiEventExists();
@@ -105,7 +123,15 @@ private:
 
   /// store first range option ("autoRng" ---> best range first, "lex8", "lex1", "hex8", "hex1" ---> lex8-hex1 first)
   StringProperty m_firstRng;
-  
+
+  /// enable generation of Cal Diagnostic data in digi
+  BooleanProperty m_createDiagnosticData;
+
+  /// name of optional calDiagnosticTool
+  StringProperty m_calDiagnosticToolName;
+
+  /// ptr to optional calDiagnosticTool
+  ICalDiagnosticTool *m_calDiagnosticTool;
 };
 
 #endif
