@@ -4,7 +4,7 @@
  *
  * @author Zach Fewtrell zachary.fewtrell@nrl.navy.mil
  * 
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.59 2008/02/19 20:32:27 makeev Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.60 2008/02/21 16:11:45 makeev Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -24,12 +24,12 @@
 #include "CalUtil/CalDefs.h"
 #include "GlastSvc/GlastDetSvc/IGlastDetSvc.h"
 #include "CalXtalResponse/IXtalDigiTool.h"
+#include "CalXtalResponse/ICalDiagnosticTool.h"
 #include "CalUtil/CalGeom.h"                     // findActiveTowers()
 #include "Trigger/ITrgConfigSvc.h"
 #include "configData/gem/TrgConfig.h" 
 
 // Relational Table
-#include "Event/RelTable/Relation.h"
 #include "Event/RelTable/RelTable.h"
 
 // std stuff
@@ -54,7 +54,8 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   m_calSignalTool(0),
   m_detSvc(0),
   m_trgConfigSvc(0),
-  m_firstRng("autoRng")
+  m_firstRng("autoRng"),
+  m_calDiagnosticTool(0)
 {
 
   // Declare the properties that may be set in the job options file
@@ -64,6 +65,8 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   declareProperty("DefaultZeroSuppress", m_defaultZeroSuppress = true);
   declareProperty("DefaultAllRange",     m_defaultAllRange = false);
   declareProperty("FirstRangeReadout",   m_firstRng= "autoRng"); 
+  declareProperty("CreateDiagnosticData", m_createDiagnosticData="false");
+  declareProperty("CalDiagnosticToolName", m_calDiagnosticToolName="CalDiagnosticTool");
 }
 
 /// initialize the algorithm. retrieve helper tools & services
@@ -110,6 +113,17 @@ StatusCode CalDigiAlg::initialize() {
     msglog << MSG::ERROR << "  can't create " << m_calSignalToolName << endreq;
     return sc;
   }
+
+  sc = toolSvc()->retrieveTool("CalDiagnosticTool",
+                               m_calDiagnosticToolName,
+                               m_calDiagnosticTool,
+                               0); // intended to be shared
+  if (sc.isFailure() ) {
+    msglog << MSG::ERROR << "  can't create " << m_calDiagnosticToolName << endreq;
+    return sc;
+  }
+
+
 
   sc = retrieveConstants();
   if (sc.isFailure())
@@ -166,33 +180,28 @@ StatusCode CalDigiAlg::ensureDigiEventExists() {
 
 /** \brief Loop through each existing xtal & generate digis.
 
-also populate mcHit->Digi relational table.
-also register TDS digi data.
+    also populate mcHit->Digi relational table.
+    also register TDS digi data.
 
-mc -> diode signal is done with CalSignalTool
-diode signal -> digi generation is done w/ XtalDigiTool
+    mc -> diode signal is done with CalSignalTool
+    diode signal -> digi generation is done w/ XtalDigiTool
 
- * CalDigiAlg takes perrforms the following steps:
- * - invoke CalSignalTool to sum all McIntegratingHits into Cal crystal diodes, either by CsI scintillation or direct diode deposit.
- * - call TrgConfigSvc to determine readout mode (allrange/bestrange , zeroSupression) for current event digis.
- * - call CalXtalResponse/IXtalDigiTool to generate CalDigis for individual crystals
- * - ignore crystals under LAC threshold if zeroSuppression is requested by trigger configuration.
- * - store McIntegratingHit <> CalDigi relations to file
- * - save CalDigiinformation to TDS
+    * CalDigiAlg takes perrforms the following steps:
+    * - invoke CalSignalTool to sum all McIntegratingHits into Cal crystal diodes, either by CsI scintillation or direct diode deposit.
+    * - call TrgConfigSvc to determine readout mode (allrange/bestrange , zeroSupression) for current event digis.
+    * - call CalXtalResponse/IXtalDigiTool to generate CalDigis for individual crystals
+    * - ignore crystals under LAC threshold if zeroSuppression is requested by trigger configuration.
+    * - store McIntegratingHit <> CalDigi relations to file
+    * - optionall generate Cal Diagnostic data words with ICalDiagnosticTool
+    * - save CalDigi info TDS
 
-*/
+    */
 StatusCode CalDigiAlg::registerDigis() {
   StatusCode  sc;
 
-  // collection of xtal digis for entire event.
-  auto_ptr<Event::CalDigiCol> digiCol(new Event::CalDigiCol);
-
-  // store log-accept results
-  CalUtil::CalVec<CalUtil::FaceNum, bool> lacBits;
-
   // input list of xtalIdx <> mchit relations from CalSignalTool
-  const ICalSignalTool::CalRelationMap *calRelMap = m_calSignalTool->getCalRelationMap();
-  if (calRelMap == 0) {
+  const ICalSignalTool::CalRelationMap *xtalMcRelMap = m_calSignalTool->getCalRelationMap();
+  if (xtalMcRelMap == 0) {
     MsgStream msglog(msgSvc(), name());
     msglog << MSG::ERROR << "Can't retrieve CalRelationMap" << endreq;
 
@@ -205,64 +214,21 @@ StatusCode CalDigiAlg::registerDigis() {
   sc = getTrgConditions(calTrigMode, zeroSupp);
   if (sc.isFailure())
     return sc;
-
   
+  /// TDS CalDigi collection
+  auto_ptr<Event::CalDigiCol> digiCol(new Event::CalDigiCol());
+
   // TDS list of digi <> mchit relations
-  Event::RelTable<Event::CalDigi, Event::McIntegratingHit> finalRelMap;
-  finalRelMap.init();
+  CalDigiMcRelMap digiMcRelMap;
+  digiMcRelMap.init();
 
-  /* Loop through (installed) towers and crystals; retrieve signal for each
-   */
-  for (unsigned twrSeq = 0; twrSeq < m_twrList.size(); twrSeq++) {
-    // get bay id of nth live tower
-    const TwrNum twr(m_twrList[twrSeq]);
-    for (LyrNum lyr; lyr.isValid(); lyr++)
-      for (ColNum col; col.isValid(); col++) {
-
-        // assemble current calXtalId
-        const CalXtalId mapId(twr.val(),
-                              lyr.val(),
-                              col.val());
-
-        // note - important to reinitialize to 0 for each iteration
-        fill(lacBits.begin(), lacBits.end(), false);
-        
-        // new digi for this xtal
-        // auto_ptr will automatically delete it if ownership of object
-        // is not passed on to TDS data
-        auto_ptr<Event::CalDigi> curDigi(new Event::CalDigi(calTrigMode, mapId));     
-
-        //-- get signal map--//
-        // look up xtal in hit map
-                
-        sc = m_xtalDigiTool->calculate(*curDigi,
-                                       lacBits,
-                                       zeroSupp,
-                                       m_firstRng);
-        if (sc.isFailure()) 
-          return sc;
-
-        // move on to next xtal if there is no log-accept.
-        if (zeroSupp &&
-            find(lacBits.begin(), lacBits.end(), true) == lacBits.end()) continue;
-
-        // register this crystal <> MC relationship
-        // find all hits for this xtal
-        typedef ICalSignalTool::CalRelationMap::const_iterator CalRelationIt;
-        const CalUtil::XtalIdx xtalIdx(mapId);
-        pair<CalRelationIt, CalRelationIt> xtalHitMatches(calRelMap->equal_range(xtalIdx));
-        for (CalRelationIt it(xtalHitMatches.first);
-             it != xtalHitMatches.second;
-             it++)
-          finalRelMap.addRelation(new Event::Relation<Event::CalDigi, 
-                                  Event::McIntegratingHit>(curDigi.get(),
-                                                           it->second));
-
-        // add the digi to the digi collection
-        digiCol->push_back(curDigi.release());
-
-      } // col loop
-  } // twr loop
+  // collection of xtal digis for entire event.
+  if (genDigis(calTrigMode, 
+               zeroSupp,
+               *xtalMcRelMap,
+               *digiCol,
+               digiMcRelMap).isFailure())
+    return StatusCode::FAILURE;
 
 
   /// register CalDigi in TDS
@@ -272,8 +238,13 @@ StatusCode CalDigiAlg::registerDigis() {
 
 
   // register mc <> digi relations relations
-  sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab,finalRelMap.getAllRelations());
+  sc = eventSvc()->registerObject(EventModel::Digi::CalDigiHitTab, 
+                                  digiMcRelMap.getAllRelations());
   if (sc.isFailure()) return sc;
+
+  if (m_createDiagnosticData)
+    if (registerDiagnosticData().isFailure())
+      return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 }
@@ -335,3 +306,107 @@ StatusCode CalDigiAlg::getTrgConditions(idents::CalXtalId::CalTrigMode &rangeTyp
   zeroSupp = m_defaultZeroSuppress;
   return StatusCode::SUCCESS;
 }
+
+
+StatusCode CalDigiAlg::genDigis(const idents::CalXtalId::CalTrigMode calTrigMode,
+                                const bool zeroSupp,
+                                const ICalSignalTool::CalRelationMap &xtalMcRelMap,
+                                Event::CalDigiCol &digiCol,
+                                CalDigiMcRelMap &digiMcRelMap
+                                ) {
+  
+  /* Loop through (installed) towers and crystals; retrieve signal for each
+   */
+  for (unsigned twrSeq = 0; twrSeq < m_twrList.size(); twrSeq++) {
+    // get bay id of nth live tower
+    const TwrNum twr(m_twrList[twrSeq]);
+    for (LyrNum lyr; lyr.isValid(); lyr++)
+      for (ColNum col; col.isValid(); col++) {
+
+        // assemble current calXtalId
+        const CalXtalId mapId(twr.val(),
+                              lyr.val(),
+                              col.val());
+
+        // store log-accept results
+        CalUtil::CalVec<CalUtil::FaceNum, bool> lacBits;
+        
+        // new digi for this xtal
+        // auto_ptr will automatically delete it if ownership of object
+        // is not passed on to TDS data
+        auto_ptr<Event::CalDigi> curDigi(new Event::CalDigi(calTrigMode, mapId));     
+
+        //-- get signal map--//
+        // look up xtal in hit map
+                
+        if(m_xtalDigiTool->calculate(*curDigi,
+                                     lacBits,
+                                     zeroSupp,
+                                     m_firstRng).isFailure())
+          return StatusCode::FAILURE;
+
+        // move on to next xtal if there is no log-accept.
+        if (zeroSupp &&
+            find(lacBits.begin(), lacBits.end(), true) == lacBits.end()) continue;
+
+        // register this crystal <> MC relationship
+        // find all hits for this xtal
+        typedef ICalSignalTool::CalRelationMap::const_iterator CalRelationIt;
+        const CalUtil::XtalIdx xtalIdx(mapId);
+        pair<CalRelationIt, CalRelationIt> xtalHitMatches(xtalMcRelMap.equal_range(xtalIdx));
+        for (CalRelationIt it(xtalHitMatches.first);
+             it != xtalHitMatches.second;
+             it++)
+          digiMcRelMap.addRelation(new Event::Relation<Event::CalDigi, 
+                                   Event::McIntegratingHit>(curDigi.get(),
+                                                            it->second));
+        
+        // add the digi to the digi collection
+        digiCol.push_back(curDigi.release());
+
+      } // col loop
+  } // twr loop
+                                                
+  return StatusCode::SUCCESS;
+}
+
+StatusCode CalDigiAlg::registerDiagnosticData() {
+  /// retrieve TDS Diagnostic Data
+  SmartDataPtr<LdfEvent::DiagnosticData> diagTds(eventSvc(), "/Event/Diagnostic");
+
+  // check to see if diagnostic data is present in Event.
+  if (!diagTds) {
+    // if not present, then create a new one
+    LdfEvent::DiagnosticData *diagData = new LdfEvent::DiagnosticData();
+
+    // register the new object.
+    if (eventSvc()->registerObject("/Event/Diagnostic", diagData).isFailure()) {
+      MsgStream msglog(msgSvc(), name());
+      msglog << MSG::ERROR << "could not register " << "/Event/Diagnostic" << endreq;
+      return StatusCode::FAILURE;
+    }
+    
+    // reset SmartDataPtr
+    diagTds = SmartDataPtr<LdfEvent::DiagnosticData>(eventSvc(), "/Event/Diagnostic");
+  }
+
+
+  /// loop through all installed towers
+  for (vector<TwrNum>::const_iterator twrIt(m_twrList.begin());
+       twrIt != m_twrList.end();
+       twrIt++) {
+    /// loop on each layer in tower
+    for (LyrNum lyr; lyr.isValid(); lyr++) {
+      auto_ptr<LdfEvent::CalDiagnosticData> calDiag(m_calDiagnosticTool->getDiagnosticData(*twrIt, lyr));
+      if (calDiag.get() == 0)
+        return StatusCode::FAILURE;
+
+      /// diagTds will store a copy of my CalDiagnosticData class, i
+      /// am free to delete this object after this call
+      diagTds->addCalDiagnostic(*(calDiag.get()));
+    }
+  }
+  
+  return StatusCode::SUCCESS;
+}
+
