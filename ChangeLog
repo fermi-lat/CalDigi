@@ -2,6 +2,14 @@
 TAG
 Tag name: CalDigi-03-04-00, operation: add
 Package: CalDigi
+User: glastrm  Mon Apr  7 08:05:51 2008
+Files:
+
+    *
+------------------------------------------------------------
+TAG
+Tag name: CalDigi-03-04-00, operation: add
+Package: CalDigi
 User: glastrm  Wed Feb 27 12:30:22 2008
 Files:
   CalDigi/.cvsignore  1.2
