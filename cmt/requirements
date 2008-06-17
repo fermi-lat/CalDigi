@@ -4,7 +4,7 @@ author Richard Dubois <richard@slac.stanford.edu>
 author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
 author Zachary Fewtrell <zachary.fewtrell@nrl.navy.mil>
 
-# $Id: requirements,v 1.23 2007/10/09 19:08:22 fewtrell Exp $
+# $Id: requirements,v 1.24 2007/10/30 02:50:36 heather Exp $
 branches src mgr doc
 
 use GlastPolicy
@@ -13,7 +13,7 @@ use CalXtalResponse
 use GlastSvc
 use CalUtil
 use Event
-use Trigger
+use ConfigSvc
 use configData
 
 
