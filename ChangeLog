@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: echarles  Tue Jun 17 11:49:24 PDT 2008
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+tag v3r5: Switched from using TrgConfigSvc to ConfigSvc
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-04-00, operation: add
 Package: CalDigi
