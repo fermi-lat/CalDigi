@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: echarles  Tue Jun 17 11:49:24 PDT 2008
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx CalDigiAlg.h 
+Log Message:
+tag v3r5: Switched from using TrgConfigSvc to ConfigSvc
+    *
+------------------------------------------------------------
+User: echarles  Tue Jun 17 11:49:24 PDT 2008
 CalDigi/doc
 
 Modified Files:
