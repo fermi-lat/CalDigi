@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.53 2008/02/21 16:11:29 makeev Exp $
+$Id: release.notes,v 1.54 2008/02/27 20:25:26 fewtrell Exp $
 @verbatim
  * Package CalDigi
+ * v3r5       17-Jun-2008 EAC Switched from using TrgConfigSvc to ConfigSvc
  * v3r4       27-Feb-2008 ZGF added support for generation of CalDiagnosticData
  * v3r3p1     21-Feb-2008 AVM fixed a bug from previous update
  * v3r3       19-Feb-2008 AVM support (option) forced first range selection in CalDigi.

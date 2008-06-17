@@ -33,7 +33,7 @@ class IGlastDetSvc;
  */
 
 class IXtalDigiTool;
-class ITrgConfigSvc;
+class IConfigSvc;
 class ICalDiagnosticTool;
 
 class CalDigiAlg : public Algorithm {
@@ -110,15 +110,15 @@ private:
   /// used for constants & conversion routines.
   IGlastDetSvc* m_detSvc;
 
-  /// name of optional TrgConfigSvc
-  StringProperty m_trgConfigSvcName;
+  /// name of optional ConfigSvc
+  StringProperty m_configSvcName;
   /// used to get readout mode for current event based on trigger bits. (optional)
-  ITrgConfigSvc *m_trgConfigSvc;
+  IConfigSvc *m_configSvc;
 
-  /// fall back zero suppression mode if TrgConfigSvc not available (default=true)
+  /// fall back zero suppression mode if ConfigSvc not available (default=true)
   BooleanProperty m_defaultZeroSuppress;
 
-  /// fall back 4range readout mode if TrgConfigSvc not available (default=false - single range readout)
+  /// fall back 4range readout mode if ConfigSvc not available (default=false - single range readout)
   BooleanProperty m_defaultAllRange;
 
   /// store first range option ("autoRng" ---> best range first, "lex8", "lex1", "hex8", "hex1" ---> lex8-hex1 first)

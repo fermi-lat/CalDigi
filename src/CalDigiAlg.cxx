@@ -4,7 +4,7 @@
  *
  * @author Zach Fewtrell zachary.fewtrell@nrl.navy.mil
  * 
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.60 2008/02/21 16:11:45 makeev Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.61 2008/02/27 20:25:26 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -26,7 +26,7 @@
 #include "CalXtalResponse/IXtalDigiTool.h"
 #include "CalXtalResponse/ICalDiagnosticTool.h"
 #include "CalUtil/CalGeom.h"                     // findActiveTowers()
-#include "Trigger/ITrgConfigSvc.h"
+#include "ConfigSvc/IConfigSvc.h"
 #include "configData/gem/TrgConfig.h" 
 
 // Relational Table
@@ -53,7 +53,7 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   m_xtalDigiTool(0),
   m_calSignalTool(0),
   m_detSvc(0),
-  m_trgConfigSvc(0),
+  m_configSvc(0),
   m_firstRng("autoRng"),
   m_calDiagnosticTool(0)
 {
@@ -61,7 +61,7 @@ CalDigiAlg::CalDigiAlg(const string& name, ISvcLocator* pSvcLocator) :
   // Declare the properties that may be set in the job options file
   declareProperty("CalSignalToolName",   m_calSignalToolName = "CalSignalTool");
   declareProperty("XtalDigiToolName",    m_xtalDigiToolName = "XtalDigiTool");
-  declareProperty("TrgConfigSvcName",    m_trgConfigSvcName = "TrgConfigSvc");
+  declareProperty("ConfigSvcName",    m_configSvcName = "ConfigSvc");
   declareProperty("DefaultZeroSuppress", m_defaultZeroSuppress = true);
   declareProperty("DefaultAllRange",     m_defaultAllRange = false);
   declareProperty("FirstRangeReadout",   m_firstRng= "autoRng"); 
@@ -132,11 +132,11 @@ StatusCode CalDigiAlg::initialize() {
   //-- find out which tems are installed.
   m_twrList = CalUtil::findActiveTowers(*m_detSvc);
 
-  /// locate optional TrgConfigSvc
-  if (m_trgConfigSvcName.value().length() != 0) {
-    sc = service("TrgConfigSvc", m_trgConfigSvc, true); 
+  /// locate optional ConfigSvc
+  if (m_configSvcName.value().length() != 0) {
+    sc = service("ConfigSvc", m_configSvc, true); 
     if (sc.isFailure())
-      m_trgConfigSvc = 0; //
+      m_configSvc = 0; //
   }
 
   return StatusCode::SUCCESS;
@@ -188,7 +188,7 @@ StatusCode CalDigiAlg::ensureDigiEventExists() {
 
     * CalDigiAlg takes perrforms the following steps:
     * - invoke CalSignalTool to sum all McIntegratingHits into Cal crystal diodes, either by CsI scintillation or direct diode deposit.
-    * - call TrgConfigSvc to determine readout mode (allrange/bestrange , zeroSupression) for current event digis.
+    * - call ConfigSvc to determine readout mode (allrange/bestrange , zeroSupression) for current event digis.
     * - call CalXtalResponse/IXtalDigiTool to generate CalDigis for individual crystals
     * - ignore crystals under LAC threshold if zeroSuppression is requested by trigger configuration.
     * - store McIntegratingHit <> CalDigi relations to file
@@ -275,8 +275,8 @@ StatusCode CalDigiAlg::retrieveConstants() {
 
 StatusCode CalDigiAlg::getTrgConditions(idents::CalXtalId::CalTrigMode &rangeType,
                                         bool &zeroSupp) {
-  /// if trgConfigSvc is not available, return default answer
-  if (m_trgConfigSvc != 0) {
+  /// if ConfigSvc is not available, return default answer
+  if (m_configSvc != 0) {
   
     // get trigger word
     SmartDataPtr<Event::EventHeader> evtHdr(eventSvc(), EventModel::EventHeader);
@@ -287,7 +287,7 @@ StatusCode CalDigiAlg::getTrgConditions(idents::CalXtalId::CalTrigMode &rangeTyp
       // skip to default answer if trigger = -1 (means it has not been set yet)
       if (gltWord != 0xffffffff) {
         // get readout mode from trigger context
-        TrgConfig const*const tcf  = m_trgConfigSvc->getTrgConfig();
+        TrgConfig const*const tcf  = m_configSvc->getTrgConfig();
         const unsigned gltengine   = tcf->lut()->engineNumber(gltWord&31); 
 
         // set readout mode bits
