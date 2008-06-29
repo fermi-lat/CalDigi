@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Sun Jun 29 16:58:27 PDT 2008
+CalDigi/src/test
+
+Modified Files:
+	jobOptions.txt 
+Log Message:
+fix jobOptions for test app to work  w/ new ConfigSvc instead of old TrigConfigSvc
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-05-00, operation: add
 Package: CalDigi
