@@ -59,8 +59,9 @@ GlastDetSvc.visitorMode="recon";
 #include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
 
 // The following is for the new Trigger Configuration Service
-ApplicationMgr.DLLs += {"Trigger"};
-TriggerAlg.engine="TrgConfigSvc"; // use TrgConfigSvc to configure trigger engines. The following options control the configuration:
+//ApplicationMgr.DLLs += {"ConfigSvc"};
+//TriggerAlg.engine="TrgConfigSvc"; // use TrgConfigSvc to configure trigger engines. The following options control the configuration:
+CalDigiAlg.ConfigSvcName="";
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 2;
