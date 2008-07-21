@@ -1,10 +1,10 @@
 package CalDigi
 
+author Zachary Fewtrell <zachary.fewtrell@nrl.navy.mil>
 author Richard Dubois <richard@slac.stanford.edu>
 author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
-author Zachary Fewtrell <zachary.fewtrell@nrl.navy.mil>
 
-# $Id: requirements,v 1.24 2007/10/30 02:50:36 heather Exp $
+# $Id: requirements,v 1.25 2008/06/17 18:49:24 echarles Exp $
 branches src mgr doc
 
 use GlastPolicy
