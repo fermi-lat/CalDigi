@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Mon Jul 21 10:32:20 PDT 2008
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+Z. Fewtrel is really the primary maintainer of this pkg
+
+    *
+------------------------------------------------------------
 User: glastrm  Mon Jul 21 08:17:26 PDT 2008
 GlastRelease-scons/CalDigi/src/test
 
