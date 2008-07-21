@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: glastrm  Mon Jul 21 08:17:26 PDT 2008
+GlastRelease-scons/CalDigi/src/test
+
+Modified Files:
+	jobOptions.txt 
+Log Message:
+Removed dependency on CMT env variables
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-05-01, operation: add
 Package: CalDigi
