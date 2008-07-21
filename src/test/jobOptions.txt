@@ -52,7 +52,7 @@ ApplicationMgr.DLLs += {"GlastSvc"};
 ApplicationMgr.ExtSvc += { "GlastDetSvc"};
 GlastDetSvc.topVolume="LAT"; 
 
-GlastDetSvc.xmlfile="$(XMLGEODBSROOT)/xml/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // use default CalResponse config
