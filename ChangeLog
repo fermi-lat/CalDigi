@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: fewtrell  Mon Jul 28 14:02:47 PDT 2008
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+Removed dependency on CMT env variables
+
+    *
+------------------------------------------------------------
 User: fewtrell  Mon Jul 21 10:32:20 PDT 2008
 CalDigi/cmt
 
