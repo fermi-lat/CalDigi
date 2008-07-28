@@ -1,5 +1,31 @@
 ------------------------------------------------------------
 TAG
+Tag name: CalDigi-03-05-02, operation: add
+Package: CalDigi
+User: glastrm  Mon Jul 28 14:30:19 2008
+Files:
+  CalDigi/.cvsignore  1.2
+  CalDigi/ChangeLog  1.246
+  CalDigi/cmt/.cvsignore  1.2
+  CalDigi/cmt/requirements  1.26
+  CalDigi/doc/.cvsignore  1.1.1.1
+  CalDigi/doc/release.notes  1.56
+  CalDigi/doc/images/muonEnergy.jpg  1.1
+  CalDigi/doc/images/taper.jpg  1.1
+  CalDigi/src/CalDigiAlg.cxx  1.62
+  CalDigi/src/mainpage.h  1.21
+  CalDigi/src/CalDigiAlg.h  1.29
+  CalDigi/src/Dll/CalDigi_load.cxx  1.5
+  CalDigi/src/Dll/CalDigi_dll.cxx  1.1
+  CalDigi/src/test/DigiHitsTestAlg.cxx  1.4
+  CalDigi/src/test/test_CalDigi_load.cxx  1.2
+  CalDigi/src/test/muon_mc.root  1.5
+  CalDigi/src/test/jobOptions.txt  1.16
+  CalDigi/src/test/test_CalDigi.cxx  1.6
+
+    *
+------------------------------------------------------------
+TAG
 Tag name: v3r5p2, operation: add
 Package: CalDigi
 User: fewtrell  Mon Jul 28 14:02:59 2008
