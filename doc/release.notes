@@ -1,9 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.55 2008/06/17 18:49:24 echarles Exp $
+$Id: release.notes,v 1.56 2008/07/28 21:02:47 fewtrell Exp $
 @verbatim
  * Package CalDigi
+ * v3r5p3     07-Aug-2008 ZGF Quit quietly if MC data is not present.
  * v3r5p2     28-Jun-2008 ZGF Removed dependency on CMT env variables
  * v3r5       17-Jun-2008 EAC Switched from using TrgConfigSvc to ConfigSvc
  * v3r4       27-Feb-2008 ZGF added support for generation of CalDiagnosticData

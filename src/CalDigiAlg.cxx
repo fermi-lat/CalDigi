@@ -4,7 +4,7 @@
  *
  * @author Zach Fewtrell zachary.fewtrell@nrl.navy.mil
  * 
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.61 2008/02/27 20:25:26 fewtrell Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.62 2008/06/17 18:49:24 echarles Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -198,6 +198,12 @@ StatusCode CalDigiAlg::ensureDigiEventExists() {
     */
 StatusCode CalDigiAlg::registerDigis() {
   StatusCode  sc;
+
+  // check for McIntegratingHit collection. Abort if empty.
+  SmartDataPtr<Event::McIntegratingHitVector> 
+    McCalHits(eventSvc(), EventModel::MC::McIntegratingHitCol );
+  if (McCalHits == 0)
+    return StatusCode::SUCCESS;
 
   // input list of xtalIdx <> mchit relations from CalSignalTool
   const ICalSignalTool::CalRelationMap *xtalMcRelMap = m_calSignalTool->getCalRelationMap();
