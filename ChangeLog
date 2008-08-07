@@ -1,5 +1,15 @@
 ------------------------------------------------------------
 User: fewtrell  Thu Aug  7 13:19:09 PDT 2008
+CalDigi/src
+
+Modified Files:
+	CalDigiAlg.cxx 
+Log Message:
+quit quietly if MC data is not present.
+
+    *
+------------------------------------------------------------
+User: fewtrell  Thu Aug  7 13:19:09 PDT 2008
 CalDigi/doc
 
 Modified Files:
