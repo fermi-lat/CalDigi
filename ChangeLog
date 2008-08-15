@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: ecephas  Fri Aug 15 14:42:33 PDT 2008
+GlastRelease-scons/CalDigi
+
+Added Files:
+	CalDigiLib.py 
+Log Message:
+Added Lib file (e.g., <package>Lib.py) for each package that creates a library.
+    *
+------------------------------------------------------------
 User: ecephas  Fri Aug 15 14:22:39 PDT 2008
 GlastRelease-scons/CalDigi
 
