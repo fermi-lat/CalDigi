@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: ecephas  Fri Aug 15 14:22:39 PDT 2008
+GlastRelease-scons/CalDigi
+
+Added Files:
+	SConscript 
+Log Message:
+Added SConscript files for packages
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-05-03, operation: add
 Package: CalDigi
