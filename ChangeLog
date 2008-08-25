@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: ecephas  Mon Aug 25 12:34:01 PDT 2008
+GlastRelease-scons/CalDigi
+
+Modified Files:
+	SConscript 
+Log Message:
+Made formatting changes to the parameters of libEnv.SharedLibrary call
+    *
+------------------------------------------------------------
 User: ecephas  Fri Aug 15 14:42:33 PDT 2008
 GlastRelease-scons/CalDigi
 
