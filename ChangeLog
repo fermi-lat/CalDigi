@@ -1,4 +1,19 @@
 ------------------------------------------------------------
+User: ecephas  Mon Aug 25 12:37:58 PDT 2008
+GlastRelease-scons/CalDigi
+
+Modified Files:
+	CalDigiLib.py 
+Log Message:
+Added the following calls to CalDigiLib.py
+
+     env.Tool('configDataLib')
+     env.Tool('EventLib')
+     env.Tool('CalUtilLib')
+     env.Tool('xmlBaseLib')
+
+    *
+------------------------------------------------------------
 User: ecephas  Mon Aug 25 12:34:01 PDT 2008
 GlastRelease-scons/CalDigi
 
