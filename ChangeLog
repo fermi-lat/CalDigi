@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: usher  Wed Oct 15 08:43:19 PDT 2008
+CalDigi/src
+
+Added Files:
+	CalDigiMergeAlg.cxx 
+Log Message:
+Initial import of CalDigiMerge algorithm for merging CalDigis with those from the simulation
+    *
+------------------------------------------------------------
+User: usher  Wed Oct 15 08:43:19 PDT 2008
 CalDigi/src/Dll
 
 Modified Files:
