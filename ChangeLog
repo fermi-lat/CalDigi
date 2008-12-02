@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: usher  Mon Dec  1 16:01:39 PST 2008
+CalDigi/src/Dll
+
+Modified Files:
+	CalDigi_load.cxx 
+Log Message:
+Merging moved into the Overlay package, remove from here and re-tag
+    *
+------------------------------------------------------------
 User: usher  Mon Dec  1 16:00:54 PST 2008
 CalDigi/src
 
