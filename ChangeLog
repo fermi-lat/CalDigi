@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+TAG
+Tag name: v3r7, operation: mov
+Package: CalDigi
+User: glastrm  Mon Dec  1 16:30:52 2008
+Files:
+  CalDigi/SConscript  1.4
+
+    *
+------------------------------------------------------------
 User: glastrm  Mon Dec  1 16:30:46 PST 2008
 CalDigi
 
