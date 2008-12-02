@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: usher  Mon Dec  1 16:00:54 PST 2008
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+Merging moved into the Overlay package, remove from here and re-tag
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-06-00, operation: add
 Package: CalDigi
