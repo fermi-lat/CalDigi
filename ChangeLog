@@ -1,5 +1,13 @@
 ------------------------------------------------------------
 TAG
+Tag name: GlastRelease-15-49-00, operation: add
+Package: CalDigi
+User: glastrm  Fri Jan  9 13:16:36 2009
+Files:
+
+    *
+------------------------------------------------------------
+TAG
 Tag name: GlastRelease-15-50-10, operation: del
 Package: CalDigi
 User: glastrm  Fri Jan  9 08:30:02 2009
