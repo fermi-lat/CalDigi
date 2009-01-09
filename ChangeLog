@@ -1,5 +1,33 @@
 ------------------------------------------------------------
 TAG
+Tag name: GlastRelease-15-50-10, operation: del
+Package: CalDigi
+User: glastrm  Fri Jan  9 08:30:02 2009
+Files:
+  CalDigi/.cvsignore  1.2
+  CalDigi/ChangeLog  1.264
+  CalDigi/CalDigiLib.py  1.2
+  CalDigi/SConscript  1.4
+  CalDigi/cmt/.cvsignore  1.2
+  CalDigi/cmt/requirements  1.27
+  CalDigi/doc/.cvsignore  1.1.1.1
+  CalDigi/doc/release.notes  1.59
+  CalDigi/doc/images/muonEnergy.jpg  1.1
+  CalDigi/doc/images/taper.jpg  1.1
+  CalDigi/src/CalDigiAlg.cxx  1.63
+  CalDigi/src/mainpage.h  1.21
+  CalDigi/src/CalDigiAlg.h  1.29
+  CalDigi/src/Dll/CalDigi_load.cxx  1.7
+  CalDigi/src/Dll/CalDigi_dll.cxx  1.1
+  CalDigi/src/test/DigiHitsTestAlg.cxx  1.4
+  CalDigi/src/test/test_CalDigi_load.cxx  1.2
+  CalDigi/src/test/muon_mc.root  1.5
+  CalDigi/src/test/jobOptions.txt  1.16
+  CalDigi/src/test/test_CalDigi.cxx  1.6
+
+    *
+------------------------------------------------------------
+TAG
 Tag name: GlastRelease-15-50-10, operation: add
 Package: CalDigi
 User: glastrm  Thu Jan  8 15:00:22 2009
