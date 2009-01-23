@@ -1,4 +1,18 @@
 ------------------------------------------------------------
+TAG
+Tag name: CalDigi-03-05-03, operation: mov
+Package: CalDigi
+User: glastrm  Thu Jan 22 16:31:22 2009
+Files:
+  CalDigi/SConscript  1.5
+  CalDigi/SConscript  1.5
+  CalDigi/SConscript  1.5
+  CalDigi/CalDigiLib.py  1.2
+  CalDigi/CalDigiLib.py  1.2
+  CalDigi/CalDigiLib.py  1.2
+
+    *
+------------------------------------------------------------
 User: ecephas  Thu Jan 22 16:06:47 PST 2009
 GlastRelease-scons/CalDigi
 
