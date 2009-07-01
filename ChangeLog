@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: heather  Wed Jul  1 08:49:21 PDT 2009
+CalDigi/doc
+
+Modified Files:
+	release.notes 
+Log Message:
+add EOH to release.notes
+    *
+------------------------------------------------------------
 TAG
 Tag name: v3r6, operation: del
 Package: CalDigi
