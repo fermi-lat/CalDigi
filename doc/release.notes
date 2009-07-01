@@ -1,8 +1,10 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.58 2008/11/12 19:55:07 lsrea Exp $
+$Id: release.notes,v 1.59 2008/12/02 00:00:54 usher Exp $
 @verbatim
+ * EOH *
+
  * Package CalDigi
  * v3r7        1-Dec-2008  TU Moving CalDigiMergeAlg to the Overlay package
  * v3r6       12-Nov-2008 LSR Mods for Digi merging
