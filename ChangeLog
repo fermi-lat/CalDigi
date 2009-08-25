@@ -1,4 +1,16 @@
 ------------------------------------------------------------
+User: jrb  Tue Aug 25 16:20:16 PDT 2009
+GlastRelease-scons/CalDigi
+
+Modified Files:
+	.cvsignore CalDigiLib.py SConscript 
+Log Message:
+SConscript: convert to use registerTargets
+CalDigiLib.py: Add gaudi dependency
+.cvsignore:   ignore *.pyc, build
+
+    *
+------------------------------------------------------------
 User: heather  Wed Jul  1 08:49:21 PDT 2009
 CalDigi/doc
 
