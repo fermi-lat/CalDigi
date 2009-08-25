@@ -7,3 +7,5 @@ Win32*
 Visual
 VC7*
 VC8*
+build
+*.pyc
