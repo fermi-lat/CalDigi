@@ -1,11 +1,12 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.59 2008/12/02 00:00:54 usher Exp $
+$Id: release.notes,v 1.60 2009/07/01 15:49:21 heather Exp $
 @verbatim
  * EOH *
 
  * Package CalDigi
+ * CalDigi-03-07-01 HMK Add use of RootConvert for unit test
  * v3r7        1-Dec-2008  TU Moving CalDigiMergeAlg to the Overlay package
  * v3r6       12-Nov-2008 LSR Mods for Digi merging
  * v3r5p3     07-Aug-2008 ZGF Quit quietly if MC data is not present.
