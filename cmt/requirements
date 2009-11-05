@@ -1,11 +1,11 @@
 package CalDigi
-version v3r7
+version v3r7p1
 
 author Zachary Fewtrell <zachary.fewtrell@nrl.navy.mil>
 author Richard Dubois <richard@slac.stanford.edu>
 author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
 
-# $Id: requirements,v 1.26 2008/07/21 17:32:20 fewtrell Exp $
+# $Id: requirements,v 1.27 2008/12/02 00:00:54 usher Exp $
 branches src mgr doc
 
 use GlastPolicy
@@ -24,6 +24,7 @@ apply_pattern packageShr
 private
 
 #used only by test app
+use RootConvert v* -no_auto_imports
 use RootIo
 use CalibSvc
 use gr_app
