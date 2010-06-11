@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: jrb  Thu Jun 10 17:33:19 PDT 2010
+GlastRelease-scons/CalDigi
+
+Modified Files:
+	SConscript 
+Log Message:
+updates for SCons build
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-07-01, operation: add
 Package: CalDigi
