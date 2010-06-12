@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: jrb  Fri Jun 11 18:31:19 PDT 2010
+GlastRelease-scons/CalDigi/src/test
+
+Modified Files:
+	jobOptions.txt 
+Log Message:
+in jo files replace occurrences of PKGROOT/src with PKGJOBOPTIONSPATH
+    *
+------------------------------------------------------------
 User: jrb  Thu Jun 10 17:33:19 PDT 2010
 GlastRelease-scons/CalDigi
 
