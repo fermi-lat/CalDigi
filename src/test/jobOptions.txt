@@ -56,7 +56,7 @@ GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // use default CalResponse config
-#include "$CALXTALRESPONSEROOT/src/defaultOptions.txt"
+#include "$CALXTALRESPONSEJOBOPTIONSPATH/defaultOptions.txt"
 
 // The following is for the new Trigger Configuration Service
 //ApplicationMgr.DLLs += {"ConfigSvc"};
