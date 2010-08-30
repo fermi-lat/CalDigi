@@ -1,5 +1,18 @@
 ------------------------------------------------------------
 User: heather  Mon Aug 30 11:07:21 PDT 2010
+CalDigi/src/test
+
+Modified Files:
+      Tag: GlastReleasev18r6p1
+	DigiHitsTestAlg.cxx jobOptions.txt test_CalDigi.cxx 
+Removed Files:
+      Tag: GlastReleasev18r6p1
+	test_CalDigi_load.cxx 
+Log Message:
+update branch with Gaudi v21r7 mods
+    *
+------------------------------------------------------------
+User: heather  Mon Aug 30 11:07:21 PDT 2010
 CalDigi/src
 
 Modified Files:
