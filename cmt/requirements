@@ -1,11 +1,11 @@
 package CalDigi
-version v3r7p1
+version v3r7p1gr01
 
 author Zachary Fewtrell <zachary.fewtrell@nrl.navy.mil>
 author Richard Dubois <richard@slac.stanford.edu>
 author Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>
 
-# $Id: requirements,v 1.27 2008/12/02 00:00:54 usher Exp $
+# $Id: requirements,v 1.28 2009/11/05 18:41:58 heather Exp $
 branches src mgr doc
 
 use GlastPolicy
@@ -27,6 +27,7 @@ private
 use RootConvert v* -no_auto_imports
 use RootIo
 use CalibSvc
+use RootmapPolicy * GlastPolicy
 use gr_app
 
 #the following prepend makes the includes folder available locally only: avoid the package_include
@@ -35,7 +36,9 @@ macro_prepend includes "-I $(CALDIGIROOT) " WIN32 "/I $(CALDIGIROOT) "
 
 apply_pattern package_headers
 
-library CalDigi *.cxx Dll/*.cxx ${CalDigi_headers}
+library CalDigi *.cxx ${CalDigi_headers}
+
+apply_pattern generate_rootmap library=CalDigi
 
 apply_pattern package_Cshlibflags 
 

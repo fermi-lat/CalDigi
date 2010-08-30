@@ -4,7 +4,7 @@
  *
  * @author Zach Fewtrell zachary.fewtrell@nrl.navy.mil
  * 
- *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.62 2008/06/17 18:49:24 echarles Exp $
+ *  $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/CalDigiAlg.cxx,v 1.63 2008/08/07 20:19:09 fewtrell Exp $
  */
 // LOCAL include files
 #include "CalDigiAlg.h"
@@ -36,8 +36,9 @@
 
 
 // Define the factory for this algorithm
-static const AlgFactory<CalDigiAlg>  Factory;
-const IAlgFactory& CalDigiAlgFactory = Factory;
+//static const AlgFactory<CalDigiAlg>  Factory;
+//const IAlgFactory& CalDigiAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(CalDigiAlg);
 
 using namespace std;
 using idents::CalXtalId;

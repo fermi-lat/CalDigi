@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi.cxx,v 1.5 2006/06/15 20:43:11 fewtrell Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/test_CalDigi.cxx,v 1.6 2007/10/09 19:08:23 fewtrell Exp $
 
 // Include files
 // Gaudi system includes
@@ -36,8 +36,9 @@ private:
 // expect that the xxx_load.cxx file contains a call     
 //     DLL_DECL_ALGORITHM( test_CalDigi );
 
-static const AlgFactory<test_CalDigi>  Factory;
-const IAlgFactory& test_CalDigiFactory = Factory;
+//static const AlgFactory<test_CalDigi>  Factory;
+//const IAlgFactory& test_CalDigiFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(test_CalDigi);
 
 test_CalDigi::test_CalDigi(const std::string& name, ISvcLocator* pSvcLocator)
   :
