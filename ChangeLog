@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: heather  Mon Aug 30 11:07:20 PDT 2010
+CalDigi/cmt
+
+Modified Files:
+      Tag: GlastReleasev18r6p1
+	requirements 
+Log Message:
+update branch with Gaudi v21r7 mods
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-07-02, operation: add
 Package: CalDigi
