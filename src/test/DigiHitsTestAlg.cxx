@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/DigiHitsTestAlg.cxx,v 1.3 2005/12/07 18:36:31 fewtrell Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/src/test/DigiHitsTestAlg.cxx,v 1.4.358.1 2010/08/30 18:07:21 heather Exp $
 
 // Author:
 //   Marco Frailis
@@ -41,8 +41,9 @@ public:
 };
 
 
-static const AlgFactory<DigiHitsTestAlg>  Factory;
-const IAlgFactory& DigiHitsTestAlgFactory = Factory;
+//static const AlgFactory<DigiHitsTestAlg>  Factory;
+//const IAlgFactory& DigiHitsTestAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(DigiHitsTestAlg);
 
 
 //------------------------------------------------------------------------------
