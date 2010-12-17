@@ -52,11 +52,11 @@ ApplicationMgr.DLLs += {"GlastSvc"};
 ApplicationMgr.ExtSvc += { "GlastDetSvc"};
 GlastDetSvc.topVolume="LAT"; 
 
-GlastDetSvc.xmlfile="$(XMLGEODBSXMLPATH)/flight/flightSegVols.xml";
+GlastDetSvc.xmlfile="$XMLGEODBSXMLPATH/flight/flightSegVols.xml";
 GlastDetSvc.visitorMode="recon";
 
 // use default CalResponse config
-#include "$CALXTALRESPONSEJOBOPTIONSPATH/defaultOptions.txt"
+#include "$CALXTALRESPONSEJOBOPTIONSPATH/defaultOptions.txt" 
 
 // The following is for the new Trigger Configuration Service
 //ApplicationMgr.DLLs += {"ConfigSvc"};
@@ -66,7 +66,7 @@ CalDigiAlg.ConfigSvcName="";
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 2;
 ApplicationMgr.EvtMax = 5;
-mcRootReaderAlg.mcRootFile="$(CALDIGIROOT)/src/test/muon_mc.root";
+mcRootReaderAlg.mcRootFile="$CALDIGIJOBOPTIONSPATH/test/muon_mc.root";
 
 
 
