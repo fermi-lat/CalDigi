@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: lsrea  Fri Dec 17 14:39:53 PST 2010
+CalDigi/src/test
+
+Modified Files:
+	jobOptions.txt 
+Log Message:
+Scons fixes
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-07-03, operation: add
 Package: CalDigi
