@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Fri Jan 14 11:29:58 PST 2011
+GlastRelease-scons/CalDigi/src
+
+Modified Files:
+      Tag: GlastReleasev18r7p1
+	CalDigiAlg.h 
+Log Message:
+fix carriage control
+    *
+------------------------------------------------------------
 TAG
 Tag name: CalDigi-03-07-04, operation: add
 Package: CalDigi
