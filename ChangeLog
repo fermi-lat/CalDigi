@@ -2,6 +2,17 @@
 TAG
 Tag name: GlastRelease-19-03-07, operation: add
 Package: CalDigi
+User: heather  Wed Sep  7 10:36:50 2011
+Files:
+  CalDigi/src/CalDigiAlg.cxx  1.63
+  CalDigi/src/mainpage.h  1.21
+  CalDigi/src/CalDigiAlg.h  1.29
+
+    *
+------------------------------------------------------------
+TAG
+Tag name: GlastRelease-19-03-07, operation: add
+Package: CalDigi
 User: heather  Wed Sep  7 10:36:44 2011
 Files:
   CalDigi/doc/.cvsignore  1.1.1.1
