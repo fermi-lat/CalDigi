@@ -1,5 +1,17 @@
 ------------------------------------------------------------
 TAG
+Tag name: GlastRelease-19-03-07, operation: add
+Package: CalDigi
+User: heather  Wed Sep  7 10:36:38 2011
+Files:
+  CalDigi/.cvsignore  1.3
+  CalDigi/ChangeLog  1.315
+  CalDigi/CalDigiLib.py  1.3
+  CalDigi/SConscript  1.11
+
+    *
+------------------------------------------------------------
+TAG
 Tag name: GlastRelease-19-03-07, operation: del
 Package: CalDigi
 User: glastrm  Tue Sep  6 14:13:54 2011
