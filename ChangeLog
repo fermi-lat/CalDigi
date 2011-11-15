@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: jrb  Mon Nov 14 16:27:52 PST 2011
+GlastRelease-scons/CalDigi/src
+
+Modified Files:
+	CalDigiAlg.h mainpage.h 
+Log Message:
+Fix carriage control for vc90
+    *
+------------------------------------------------------------
 TAG
 Tag name: GlastRelease-17-35-24-gr13, operation: add
 Package: CalDigi
