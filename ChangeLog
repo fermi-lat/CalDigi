@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: heather  Mon Dec 12 12:37:34 PST 2011
+GlastRelease-scons/CalDigi
+
+Modified Files:
+	SConscript 
+Log Message:
+Gaudi v21r7
+    *
+------------------------------------------------------------
 TAG
 Tag name: GlastRelease-17-35-24-gr16, operation: add
 Package: CalDigi
