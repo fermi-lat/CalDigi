@@ -1,5 +1,16 @@
 ------------------------------------------------------------
 User: heather  Mon Dec 12 12:37:35 PST 2011
+GlastRelease-scons/CalDigi/src/test
+
+Modified Files:
+	DigiHitsTestAlg.cxx jobOptions.txt test_CalDigi.cxx 
+Removed Files:
+	test_CalDigi_load.cxx 
+Log Message:
+Gaudi v21r7
+    *
+------------------------------------------------------------
+User: heather  Mon Dec 12 12:37:35 PST 2011
 GlastRelease-scons/CalDigi/src
 
 Modified Files:
