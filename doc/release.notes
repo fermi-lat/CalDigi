@@ -1,14 +1,17 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.63 2010/12/02 01:38:41 jrb Exp $
+$Id: release.notes,v 1.64 2010/12/17 22:44:41 lsrea Exp $
 @verbatim
  * EOH *
 
+ CalDigi-03-08-00 05-Dec-2011  HMK  Merge in Gaudi v21r7 updates
  CalDigi-03-07-04 17-Dec-2010  lsrea SCons fixes
  CalDigi-03-07-03 01-Dec-2010    jrb Make new main branch tag for SCons RM
+ CalDigi-03-07-02-gr01 06-Oct-2010 hmk Upgrade Gaudi v21r7 along branch
  CalDigi-03-07-02 12-Jun-2010    jrb upgrades for SCons builds
  * Package CalDigi
+ * CalDigi-03-07-01-gr01 HMK Move to Gaudi v21r7
  * CalDigi-03-07-01 HMK Add use of RootConvert for unit test
  * v3r7        1-Dec-2008  TU Moving CalDigiMergeAlg to the Overlay package
  * v3r6       12-Nov-2008 LSR Mods for Digi merging

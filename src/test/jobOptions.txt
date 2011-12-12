@@ -10,11 +10,13 @@ ApplicationMgr.DLLs+= {"RootIo","CalDigi","CalibSvc", "CalXtalResponse" };
 // setup basic event loop stuff
 //
 ApplicationMgr.ExtSvc = { 
-//    "GlastEventSelector/EventSelector" , 
+    "DbEvtSelector/EventSelector" , 
     "EventCnvSvc"
     };
 EventPersistencySvc.CnvServices = {"EventCnvSvc"};
-EventSelector.Input = "NONE";
+//EventSelector.Input = "NONE";
+
+ApplicationMgr.HistogramPersistency = "NONE";
 
 // Start up a CalibDataSvc 
 ApplicationMgr.ExtSvc += {"CalibDataSvc"};
