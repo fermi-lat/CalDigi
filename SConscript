@@ -1,7 +1,8 @@
 # -*- python -*-
-# $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/SConscript,v 1.10 2010/12/02 01:38:41 jrb Exp $
+# $Header: /nfs/slac/g/glast/ground/cvs/GlastRelease-scons/CalDigi/SConscript,v 1.9.2.2 2010/10/20 18:08:23 jrb Exp $
 # Authors: Richard Dubois <richard@slac.stanford.edu>, Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>,Zachary Fewtrell <zachary.fewtrell@nrl.navy.mil>
-# Version: CalDigi-03-07-04
+# Version: CalDigi-03-08-00
+
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
@@ -10,7 +11,8 @@ libEnv = baseEnv.Clone()
 
 libEnv.Tool('addLinkDeps', package='CalDigi', toBuild='component')
 
-CalDigi = libEnv.SharedLibrary('CalDigi', listFiles(['src/*.cxx','src/Dll/*.cxx']))
+CalDigi = libEnv.ComponentLibrary('CalDigi', listFiles(['src/*.cxx']))
+
 
 progEnv.Tool('CalDigiLib')
 
