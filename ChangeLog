@@ -1,5 +1,18 @@
 ------------------------------------------------------------
 User: heather  Thu Jan 26 07:57:01 PST 2012
+CalDigi/src/test
+
+Modified Files:
+      Tag: GlastRelease-17-35-24-br01
+	DigiHitsTestAlg.cxx jobOptions.txt test_CalDigi.cxx 
+Removed Files:
+      Tag: GlastRelease-17-35-24-br01
+	test_CalDigi_load.cxx 
+Log Message:
+Gaudi v21r7
+    *
+------------------------------------------------------------
+User: heather  Thu Jan 26 07:57:01 PST 2012
 CalDigi/src
 
 Modified Files:
