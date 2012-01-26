@@ -1,10 +1,11 @@
 /** @file release.notes
     @brief package CalDigi
 
-$Id: release.notes,v 1.63 2010/12/02 01:38:41 jrb Exp $
+$Id: release.notes,v 1.64 2010/12/17 22:44:41 lsrea Exp $
 @verbatim
  * EOH *
 
+ CalDigi-03-07-04-gr01 26-Jan-2012 hmk Gaudi v21r7
  CalDigi-03-07-04 17-Dec-2010  lsrea SCons fixes
  CalDigi-03-07-03 01-Dec-2010    jrb Make new main branch tag for SCons RM
  CalDigi-03-07-02 12-Jun-2010    jrb upgrades for SCons builds
