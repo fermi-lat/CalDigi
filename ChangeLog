@@ -2,6 +2,14 @@
 TAG
 Tag name: GlastRelease-19-04-01-gr08, operation: add
 Package: CalDigi
+User: heather  Thu Feb  9 16:08:42 2012
+Files:
+
+    *
+------------------------------------------------------------
+TAG
+Tag name: GlastRelease-19-04-01-gr08, operation: add
+Package: CalDigi
 User: heather  Thu Feb  9 12:33:07 2012
 Files:
   CalDigi/.cvsignore  1.3
