@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: jrb  Fri Aug 17 17:17:53 PDT 2012
+GlastRelease-scons/CalDigi
+
+Modified Files:
+	CalDigiLib.py 
+Log Message:
+support no-install headers on Windows
+    *
+------------------------------------------------------------
 TAG
 Tag name: GlastRelease-20-04-02, operation: add
 Package: CalDigi
