@@ -1,7 +1,7 @@
 # -*- python -*-
-# $Header: /nfs/slac/g/glast/ground/cvs/GlastRelease-scons/CalDigi/SConscript,v 1.9.2.2 2010/10/20 18:08:23 jrb Exp $
+# $Header: /nfs/slac/g/glast/ground/cvs/CalDigi/SConscript,v 1.12 2011/12/12 20:37:34 heather Exp $
 # Authors: Richard Dubois <richard@slac.stanford.edu>, Alexander Chekhtman <chehtman@ssd5.nrl.navy.mil>,Zachary Fewtrell <zachary.fewtrell@nrl.navy.mil>
-# Version: CalDigi-03-08-00
+# Version: CalDigi-03-09-00
 
 Import('baseEnv')
 Import('listFiles')
