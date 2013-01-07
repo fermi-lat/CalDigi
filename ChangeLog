@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: heather  Mon Jan  7 12:21:41 PST 2013
+CalDigi/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+getting cmt builds going again
+    *
+------------------------------------------------------------
 TAG
 Tag name: GlastRelease-20-08-01, operation: add
 Package: CalDigi
