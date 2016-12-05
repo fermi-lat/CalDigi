@@ -2,6 +2,14 @@
 TAG
 Tag name: GlastRelease-20-10-04-gr01, operation: add
 Package: CalDigi
+User: heather  Mon Dec  5 09:21:00 2016
+Files:
+
+    *
+------------------------------------------------------------
+TAG
+Tag name: GlastRelease-20-10-04-gr01, operation: add
+Package: CalDigi
 User: heather  Mon Dec  5 08:59:16 2016
 Files:
   CalDigi/.cvsignore  1.3
